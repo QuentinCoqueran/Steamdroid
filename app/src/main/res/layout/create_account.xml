@@ -28,15 +28,10 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/create_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_button_label" />
-        <Button
-            android:id="@+id/create_account_redirect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_account_redirect" />
+            android:text="@string/create_account" />
     </LinearLayout>
 
 </LinearLayout>

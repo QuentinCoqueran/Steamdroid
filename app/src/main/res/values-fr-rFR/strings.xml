@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">steamdroid</string>
-    <string name="email_label">email</string>
-    <string name="password_label">mot de passe</string>
+    <string name="app_name">Steamdroid</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Mot de passe</string>
     <string name="login_button_label">connexion</string>
+    <string name="create_account_redirect">Créer un compte</string>
+    <string name="create_account">Créer le compte</string>
 </resources>
