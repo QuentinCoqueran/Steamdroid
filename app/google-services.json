@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1048005645274",
+    "firebase_url": "https://steamdroid-backend-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "steamdroid-backend",
+    "storage_bucket": "steamdroid-backend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048005645274:android:fe6caef263039c310ba6e3",
+        "android_client_info": {
+          "package_name": "com.example.steamdroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048005645274-68e8jkjr6jooufpg73c8ihvlo8oljgud.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsP5ao_axy3bfXLRn5C5KE5GwCzOzIQRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048005645274-68e8jkjr6jooufpg73c8ihvlo8oljgud.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
