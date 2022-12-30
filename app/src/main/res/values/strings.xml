@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">Steamdroid</string>
-    <string name="email_label">Email</string>
+    <string name="email_label">E-mail</string>
     <string name="password_label">Password</string>
-    <string name="login_button_label">log in</string>
+    <string name="login_button_label">Log In</string>
     <string name="create_account_redirect">Create account</string>
     <string name="create_account">Create account</string>
+    <string name="welcome_string">Welcome !</string>
+    <string name="sign_in_string">"Please login or create a new account to use the app"</string>
+    <string name="texte_en_bas_de_page"><u>Forgot your password</u></string>
 </resources>

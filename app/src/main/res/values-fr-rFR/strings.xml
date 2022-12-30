@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Steamdroid</string>
-    <string name="email_label">Email</string>
+    <string name="email_label">E-mail</string>
     <string name="password_label">Mot de passe</string>
-    <string name="login_button_label">connexion</string>
-    <string name="create_account_redirect">Créer un compte</string>
-    <string name="create_account">Créer le compte</string>
+    <string name="login_button_label">Se connecter</string>
+    <string name="create_account_redirect">Créer un nouveau compte</string>
+    <string name="create_account">Créer un nouveau compte</string>
+    <string name="welcome_string">Bienvenue !</string>
+    <string name="sign_in_string">Veuillez vous connecter ou créer un nouveau compte pour utiliser l\'application</string>
+    <string name="texte_en_bas_de_page"><u>Mot de passe oublié</u></string>
 </resources>
