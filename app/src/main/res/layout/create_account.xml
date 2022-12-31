@@ -1,37 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     android:padding="16dp">
-    <TextView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="@string/email_label" />
-    <EditText
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/google_sans_bold"
+            android:gravity="center"
+            android:text="@string/subscribe_label"
+            android:textColor="@color/white"
+            android:textSize="43sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/proxima_nova_font"
+            android:gravity="center"
+            android:text="@string/subscribe_text_label"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/username_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/input_border_rounded"
+        android:fontFamily="@font/proxima_nova_font"
+        android:gravity="center"
+        android:hint="@string/username_label"
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        android:textColor="@color/placeholder"
+        android:textColorHint="@color/white" />
+
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/email_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/password_label" />
-    <EditText
+        android:layout_marginTop="15dp"
+        android:background="@drawable/input_border_rounded"
+        android:fontFamily="@font/proxima_nova_font"
+        android:gravity="center"
+        android:hint="@string/email_label"
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        android:textColor="@color/placeholder"
+        android:textColorHint="@color/white" />
+
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/password_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword" />
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/create_account"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_account" />
-    </LinearLayout>
+        android:layout_marginTop="15dp"
+        android:background="@drawable/input_border_rounded"
+        android:fontFamily="@font/proxima_nova_font"
+        android:gravity="center"
+        android:hint="@string/password_label"
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        android:textColor="@color/placeholder"
+        android:textColorHint="@color/white" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/password_confirm_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/input_border_rounded"
+        android:fontFamily="@font/proxima_nova_font"
+        android:gravity="center"
+        android:hint="@string/password_confirm_label"
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        android:textColor="@color/placeholder"
+        android:textColorHint="@color/white" />
+
+    <Button
+        android:id="@+id/create_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/button_border_rounded"
+        android:fontFamily="@font/proxima_nova_font"
+        android:text="@string/subscribe_button_label"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/log_in_redirect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/btn_border_rounded_transparent"
+        android:fontFamily="@font/proxima_nova_font"
+        android:text="@string/login_button_label"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
 </LinearLayout>

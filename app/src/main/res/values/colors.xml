@@ -10,4 +10,5 @@
     <color name="background">#1a2025</color>
     <color name="background_input">#1e262c</color>
     <color name="forget">#abb4b7</color>
+    <color name="placeholder">#ADADAD</color>
 </resources>

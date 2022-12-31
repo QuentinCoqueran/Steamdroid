@@ -7,6 +7,11 @@
     <string name="create_account_redirect">Créer un nouveau compte</string>
     <string name="create_account">Créer un nouveau compte</string>
     <string name="welcome_string">Bienvenue !</string>
-    <string name="sign_in_string">Veuillez vous connecter ou créer un nouveau compte pour utiliser l\'application</string>
+    <string name="sign_in_string">Veuillez vous connecter ou créer un nouveau compte pour utiliser l\'application.</string>
     <string name="texte_en_bas_de_page"><u>Mot de passe oublié</u></string>
+    <string name="subscribe_label">Inscription</string>
+    <string name="subscribe_text_label">Veuillez saisir ces différentes informations, afin que vos listes soient sauvegardées.</string>
+    <string name="username_label">Nom d\'utilisateur</string>
+    <string name="password_confirm_label">Vérification du mot de passe</string>
+    <string name="subscribe_button_label">S\'inscrire</string>
 </resources>

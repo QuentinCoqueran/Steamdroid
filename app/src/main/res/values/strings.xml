@@ -6,6 +6,11 @@
     <string name="create_account_redirect">Create account</string>
     <string name="create_account">Create account</string>
     <string name="welcome_string">Welcome !</string>
-    <string name="sign_in_string">"Please login or create a new account to use the app"</string>
+    <string name="sign_in_string">Please login or create a new account to use the app.</string>
     <string name="texte_en_bas_de_page"><u>Forgot your password</u></string>
+    <string name="subscribe_label">Subscribe</string>
+    <string name="subscribe_text_label">Please enter this information, so that your lists are saved.</string>
+    <string name="username_label">Username</string>
+    <string name="password_confirm_label">Confirm password</string>
+    <string name="subscribe_button_label">Validate</string>
 </resources>
