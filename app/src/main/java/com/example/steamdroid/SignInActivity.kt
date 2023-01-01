@@ -28,6 +28,7 @@ class SignInActivity : Activity() {
         val passwordInput = findViewById<TextView>(R.id.password_input)
         val loginButton = findViewById<TextView>(R.id.login_button)
         val createAccountRedirect = findViewById<TextView>(R.id.create_account_redirect)
+        val forgotPasswordRedirect = findViewById<TextView>(R.id.text_view)
         loginButton.setOnClickListener {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
@@ -39,6 +40,9 @@ class SignInActivity : Activity() {
         }
         createAccountRedirect.setOnClickListener {
             startActivity(Intent(this, CreateAccountActivity::class.java))
+        }
+        forgotPasswordRedirect.setOnClickListener {
+            startActivity(Intent(this, InitializationPasswordActivity::class.java))
         }
         // [START initialize_auth]
         // Initialize Firebase Auth

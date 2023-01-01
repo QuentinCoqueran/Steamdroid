@@ -20,4 +20,7 @@
     <string name="email_error_required">Email is required</string>
     <string name="password_error_required">Password is required</string>
     <string name="username_error_required">Username is required</string>
+    <string name="forgot_password_string">Forgot your password</string>
+    <string name="forgot_password_text">Please enter your email to reset your password</string>
+    <string name="reset_action">Resend my password</string>
 </resources>
