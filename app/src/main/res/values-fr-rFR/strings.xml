@@ -24,4 +24,8 @@
     <string name="forgot_password_string">Mot de passe oublié</string>
     <string name="forgot_password_text">Veuillez saisir votre email pour réinitialiser votre mot de passe</string>
     <string name="reset_action">Renvoyer mon mot de passe</string>
+    <string name="home">Accueil</string>
+    <string name="search_string">Rechercher un jeu…</string>
+    <string name="to_know_more">En savoir plus</string>
+    <string name="c_est_vraiment_un_super_jeu">Vraiment un super jeu !</string>
 </resources>

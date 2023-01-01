@@ -23,4 +23,8 @@
     <string name="forgot_password_string">Forgot your password</string>
     <string name="forgot_password_text">Please enter your email to reset your password</string>
     <string name="reset_action">Resend my password</string>
+    <string name="home">Home</string>
+    <string name="search_string">Search a game…</string>
+    <string name="to_know_more">Find out more</string>
+    <string name="c_est_vraiment_un_super_jeu">Really good game !</string>
 </resources>
