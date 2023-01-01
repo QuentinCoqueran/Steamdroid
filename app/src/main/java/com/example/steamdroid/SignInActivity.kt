@@ -41,16 +41,15 @@ class SignInActivity : Activity() {
         createAccountRedirect.setOnClickListener {
             startActivity(Intent(this, CreateAccountActivity::class.java))
         }
-        forgotPasswordRedirect.setOnClickListener {
+/*        forgotPasswordRedirect.setOnClickListener {
             startActivity(Intent(this, InitializationPasswordActivity::class.java))
+        }*/
+        forgotPasswordRedirect.setOnClickListener {
+            startActivity(Intent(this, HomeActivity::class.java))
         }
-        // [START initialize_auth]
-        // Initialize Firebase Auth
         auth = Firebase.auth
-        // [END initialize_auth]
     }
 
-    // [START on_start_check_user]
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
