@@ -24,4 +24,5 @@
     <string name="forgot_password_string">Mot de passe oublié</string>
     <string name="forgot_password_text">Veuillez saisir votre email pour réinitialiser votre mot de passe</string>
     <string name="reset_action">Renvoyer mon mot de passe</string>
+    <string name="game_details">Détails du jeu</string>
 </resources>
