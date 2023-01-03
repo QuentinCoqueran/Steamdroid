@@ -28,6 +28,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".GameDetailsActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".InitializationPasswordActivity"
             android:exported="true">
             <intent-filter>

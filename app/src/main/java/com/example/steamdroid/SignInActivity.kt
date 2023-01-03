@@ -42,7 +42,7 @@ class SignInActivity : Activity() {
             startActivity(Intent(this, CreateAccountActivity::class.java))
         }
         forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, InitializationPasswordActivity::class.java))
+            startActivity(Intent(this, GameDetailsActivity::class.java))
         }
         // [START initialize_auth]
         // Initialize Firebase Auth

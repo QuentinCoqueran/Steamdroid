@@ -39,9 +39,7 @@ class InitializationPasswordActivity : Activity() {
         logInRedirect.setOnClickListener {
             startActivity(Intent(this, SignInActivity::class.java))
         }
-
         auth = FirebaseAuth.getInstance()
-
     }
 
     private fun sendEmail(emailInput: TextInputEditText?) {
@@ -61,7 +59,5 @@ class InitializationPasswordActivity : Activity() {
                 }
             }
         }
-
     }
-
 }
