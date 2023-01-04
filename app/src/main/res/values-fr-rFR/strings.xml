@@ -8,7 +8,7 @@
     <string name="create_account">Créer un nouveau compte</string>
     <string name="welcome_string">Bienvenue !</string>
     <string name="sign_in_string">Veuillez vous connecter ou créer un nouveau compte pour utiliser l\'application.</string>
-    <string name="texte_en_bas_de_page"><u>Mot de passe oublié</u></string>
+    <string name="text_en_bas_de_page"><u>Mot de passe oublié</u></string>
     <string name="subscribe_label">Inscription</string>
     <string name="subscribe_text_label">Veuillez saisir ces différentes informations, afin que vos listes soient sauvegardées.</string>
     <string name="username_label">Nom d\'utilisateur</string>
@@ -28,4 +28,5 @@
     <string name="search_string">Rechercher un jeu…</string>
     <string name="to_know_more">En savoir plus</string>
     <string name="c_est_vraiment_un_super_jeu">Vraiment un super jeu !</string>
+    <string name="bestsellers"><u>Les meilleures ventes</u></string>
 </resources>
