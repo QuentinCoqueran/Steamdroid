@@ -7,5 +7,7 @@ class HomeActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
+        //call class BestsellersApiSteam method getResponse()
+        BestsellersApiSteam().getResponse()
     }
 }
