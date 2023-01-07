@@ -17,6 +17,7 @@
     <string name="username_error">Username already exist</string>
     <string name="email_error">Email already exist</string>
     <string name="email_error_regex">Email not correct </string>
+    <string name="password_error_regex">Password not correct</string>
     <string name="email_error_required">Email is required</string>
     <string name="password_error_required">Password is required</string>
     <string name="username_error_required">Username is required</string>

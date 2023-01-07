@@ -1,17 +1,20 @@
 package com.example.steamdroid
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.databinding.HomeBinding
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
+import com.google.firebase.auth.FirebaseAuth
 
 
 class HomeActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isConnected()
         setContentView(R.layout.home)
         BestsellersApiSteam().getResponse()
         val binding = HomeBinding.inflate(layoutInflater)
@@ -35,5 +38,13 @@ class HomeActivity : Activity() {
         )
         recyclerView.adapter = ProductAdapter(products)
         recyclerView.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun isConnected() {
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+        if (user == null) {
+            startActivity(Intent(this, SignInActivity::class.java))
+        }
     }
 }

@@ -18,6 +18,7 @@
     <string name="username_error">"Nom d'utilisateur déjà existant "</string>
     <string name="email_error">Email déjà existant</string>
     <string name="email_error_regex">Email incorrect</string>
+    <string name="password_error_regex">Mot de passe incorrect</string>
     <string name="email_error_required">Email nécessaire</string>
     <string name="password_error_required">Mot de passe nécessaire</string>
     <string name="username_error_required">Nom d\'utilisateur nécessaire</string>

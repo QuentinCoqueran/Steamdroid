@@ -113,7 +113,11 @@ class CreateAccountActivity : Activity() {
             passwordInput.error = null
             checkPass = false
             if (passwordInput.text.toString().isNotEmpty()) {
-                if (passwordInput.text.toString() != validatePassword.text.toString()) {
+                if (passwordInput.text.toString().length < 6) {
+                    passwordInput.setBackgroundResource(R.drawable.border_red)
+                    passwordInput.error = resources.getString(R.string.password_error_regex)
+                    checkPass = false
+                }else if (passwordInput.text.toString() != validatePassword.text.toString()) {
                     validatePassword.setBackgroundResource(R.drawable.border_red)
                     validatePassword.error = resources.getString(R.string.password_error)
                     checkPass = false
@@ -147,7 +151,12 @@ class CreateAccountActivity : Activity() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     updateUI(user)
+                    //redirect to home activity
+                    SignInActivity().signIn(email, password,false)
+                    startActivity(Intent(this, HomeActivity::class.java))
                 } else {
+                    println("createUserWithEmail:failure")
+                    println(task.exception)
                     updateUI(null)
                 }
             }

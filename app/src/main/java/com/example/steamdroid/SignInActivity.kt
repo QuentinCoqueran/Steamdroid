@@ -24,6 +24,8 @@ class SignInActivity : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in)
+        auth = Firebase.auth
+        isConnected()
         val emailInput = findViewById<EditText>(R.id.email_input)
         val passwordInput = findViewById<TextView>(R.id.password_input)
         val loginButton = findViewById<TextView>(R.id.login_button)
@@ -47,7 +49,14 @@ class SignInActivity : Activity() {
         forgotPasswordRedirect.setOnClickListener {
             startActivity(Intent(this, HomeActivity::class.java))
         }
-        auth = Firebase.auth
+    }
+
+    private fun isConnected() {
+        val user = auth.currentUser
+        if (user != null) {
+            auth.signOut();
+            startActivity(Intent(this, HomeActivity::class.java))
+        }
     }
 
     public override fun onStart() {
@@ -60,8 +69,8 @@ class SignInActivity : Activity() {
     }
     // [END on_start_check_user]
 
-    private fun signIn(email: String, password: String) {
-        // [START sign_in_with_email]
+    fun signIn(email: String, password: String, redirect : Boolean = true) {
+        auth = Firebase.auth
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -69,6 +78,10 @@ class SignInActivity : Activity() {
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
                     updateUI(user)
+                    //redirect to home
+                    if(redirect) {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                    }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -79,7 +92,6 @@ class SignInActivity : Activity() {
                     updateUI(null)
                 }
             }
-        // [END sign_in_with_email]
     }
 
     private fun sendEmailVerification() {
