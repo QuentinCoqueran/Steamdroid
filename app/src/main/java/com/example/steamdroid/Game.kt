@@ -2,39 +2,91 @@ package com.example.steamdroid
 
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 
-class Game (
-    val gameName: String,
-    val editorName: String,
-    val backGroundImg: String, // header_img
-    val backGroundImgTitle: String, // background
-    val icone: String
+data class Game (
+    var gameName: String? = null,
+    var gameDescription: String? = null,
+    var editorName: List<String>? = null,
+    var backGroundImg: String? = null, // header_img
+    var backGroundImgTitle: String? = null, // background
+    /*var icone: String? = null, // A definir*/
+    var price: String? = null //price_overview
 )
 
 class GameTypeAdapter : TypeAdapter<Game>() {
 
-    override fun read(`in`: JsonReader): Game {
-        `in`.beginObject()
-        var gameName: String? = null
-        var editorName: String? = null
-        var backGroundImg: String? = null
-        var backGroundImgTitle: String? = null
-        var icone: String? = null
-        println(`in`)
-        while (`in`.hasNext()) {
-
-            when (`in`.nextName()) {
-                "" -> gameName = `in`.nextString()
-                "editorName" -> editorName = `in`.nextString()
-                "header_img" -> backGroundImg = `in`.nextString()
-                "background" -> backGroundImgTitle = `in`.nextString()
-                "icone" -> icone = `in`.nextString()
-                else -> `in`.skipValue()
+    override fun read(input: JsonReader): Game {
+        val game = Game()
+        val token  = input.peek()
+        if (token == JsonToken.BEGIN_OBJECT) {
+            input.beginObject()
+            while (input.peek() != JsonToken.END_OBJECT) {
+                if (input.peek() == JsonToken.BEGIN_OBJECT) {
+                    input.beginObject()
+                    while (input.peek() != JsonToken.END_OBJECT) {
+                        if (input.peek() == JsonToken.BEGIN_OBJECT) {
+                            input.beginObject()
+                            while (input.peek() != JsonToken.END_OBJECT) { // Boucle data
+                                if (input.peek() == JsonToken.NAME) {
+                                    when (input.nextName()) {
+                                        "name" -> {
+                                            game.gameName = input.nextString()
+                                        }
+                                        "detailed_description" -> {
+                                            game.gameDescription = input.nextString().take(100)
+                                        }
+                                        "developers" -> {
+                                            if (input.peek() == JsonToken.BEGIN_ARRAY) {
+                                                input.beginArray()
+                                                val editorList = mutableListOf<String>()
+                                                while (input.peek() != JsonToken.END_ARRAY) {
+                                                    input.nextString().let { editorList.add(it) }
+                                                }
+                                                input.endArray()
+                                                game.editorName = editorList
+                                            }
+                                        }
+                                        "header_image" -> {
+                                            game.backGroundImg = input.nextString()
+                                        }
+                                        "price_overview" -> {
+                                            if (input.peek() == JsonToken.BEGIN_OBJECT) {
+                                                input.beginObject()
+                                                while (input.peek() != JsonToken.END_OBJECT) {
+                                                    if (input.peek() == JsonToken.NAME && input.nextName() == "final_formatted") {
+                                                        game.price = input.nextString()
+                                                    }else {
+                                                        input.skipValue()
+                                                    }
+                                                }
+                                                input.endObject()
+                                            }
+                                        }
+                                        "background" -> {
+                                            game.backGroundImgTitle = input.nextString()
+                                        }
+                                        else -> input.skipValue()
+                                    }
+                                }else {
+                                    input.skipValue()
+                                }
+                            }
+                            input.endObject()
+                        } else {
+                            input.skipValue()
+                        }
+                    }
+                    input.endObject()
+                }
+                else {
+                    input.skipValue()
+                }
             }
+            input.endObject()
         }
-        `in`.endObject()
-        return Game(gameName!!, editorName!!, backGroundImg!!, backGroundImgTitle!!, icone!!)
+        return game;
     }
 
     override fun write(out: JsonWriter?, value: Game?) {
