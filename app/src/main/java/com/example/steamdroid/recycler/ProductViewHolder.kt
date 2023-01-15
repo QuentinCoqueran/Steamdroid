@@ -21,7 +21,7 @@ class ProductViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     @SuppressLint("SetTextI18n")
     fun updateView(product: Product) {
         productName.text = product.gameName
-        productBrand.text = product.gameEditor
+        productBrand.text = product.gameEditor.toString()
         productPrice.text = product.gamePrice.toString() + " €"
         Glide.with(productImg.context).load(product.gameImage).into(productImg)
         Glide.with(productBackgroundImage.context).load(product.backgroundImage).into(productBackgroundImage)

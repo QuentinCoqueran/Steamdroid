@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.steamdroid.home.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -43,12 +44,12 @@ class SignInActivity : Activity() {
         createAccountRedirect.setOnClickListener {
             startActivity(Intent(this, CreateAccountActivity::class.java))
         }
-/*        forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, InitializationPasswordActivity::class.java))
-        }*/
         forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
+            startActivity(Intent(this, InitializationPasswordActivity::class.java))
         }
+/*        forgotPasswordRedirect.setOnClickListener {
+            startActivity(Intent(this, HomeActivity::class.java))
+        }*/
     }
 
     private fun isConnected() {
@@ -69,7 +70,7 @@ class SignInActivity : Activity() {
     }
     // [END on_start_check_user]
 
-    fun signIn(email: String, password: String, redirect : Boolean = true) {
+    fun signIn(email: String, password: String, redirect: Boolean = true) {
         auth = Firebase.auth
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -79,7 +80,7 @@ class SignInActivity : Activity() {
                     val user = auth.currentUser
                     updateUI(user)
                     //redirect to home
-                    if(redirect) {
+                    if (redirect) {
                         startActivity(Intent(this, HomeActivity::class.java))
                     }
                 } else {

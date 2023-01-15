@@ -10,6 +10,6 @@ class GameDetailsActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.game_details)
-        GameDetailsRequest().getGame(431960)
+        //GameDetailsRequest().getGame(431960)
     }
 }
