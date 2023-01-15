@@ -31,4 +31,6 @@
     <string name="to_know_more">En savoir plus</string>
     <string name="c_est_vraiment_un_super_jeu">Vraiment un super jeu !</string>
     <string name="bestsellers"><u>Les meilleures ventes</u></string>
+    <string name="search_label">Recherche</string>
+
 </resources>

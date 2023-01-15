@@ -58,10 +58,4 @@ class GameDetailsRequest {
     }
 }
 
-interface SteamApi {
-    @GET("/api/appdetails")
-    fun getGame(@Query("appids") gameId: Number): Call<Game>
 
-    @GET("/appreviews/{gameId}?json=1")
-    fun getGameReviews(@Path("gameId") gameId: Number): Call<GameReview>
-}

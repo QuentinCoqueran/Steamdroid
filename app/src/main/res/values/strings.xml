@@ -30,4 +30,5 @@
     <string name="c_est_vraiment_un_super_jeu">Really good game !</string>
     <string name="bestsellers"><u>The Bestsellers</u></string>
     <string name="game_details">Game details</string>
+    <string name="search_label">Search</string>
 </resources>

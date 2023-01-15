@@ -58,6 +58,8 @@ class SignInActivity : Activity() {
             auth.signOut();
             startActivity(Intent(this, HomeActivity::class.java))
         }
+
+        //startActivity(Intent(this, SearchGameActivity::class.java)) // TODO: remove this line (test purpose)
     }
 
     public override fun onStart() {
