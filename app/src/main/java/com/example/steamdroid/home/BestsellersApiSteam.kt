@@ -15,7 +15,7 @@ class BestsellersApiSteam {
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
 
-    private val service: BestSellersService = retrofit.create(BestSellersService::class.java)
+    private val service: SteamApi = retrofit.create(SteamApi::class.java)
 
     fun getResponse(callback: (BestSellersResponse?) -> Unit) {
         val call = service.getResponse()
@@ -41,9 +41,5 @@ class BestsellersApiSteam {
     }
 }
 
-interface BestSellersService {
-    @GET("/ISteamChartsService/GetMostPlayedGames/v1/?")
-    fun getResponse(): Call<BestSellersResponse>
-}
 
 
