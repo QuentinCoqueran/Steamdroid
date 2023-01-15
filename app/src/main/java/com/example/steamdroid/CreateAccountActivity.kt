@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Patterns
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
+import com.example.steamdroid.home.HomeActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
