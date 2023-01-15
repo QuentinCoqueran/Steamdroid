@@ -1,5 +1,6 @@
 package com.example.steamdroid
 
+import com.example.steamdroid.home.BestSellersResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -14,4 +15,7 @@ interface SteamApi {
 
     @GET("/actions/SearchApps/{search}")
     fun searchGame(@Path("search") search: String): Call<List<SearchGame>>
+
+    @GET("/ISteamChartsService/GetMostPlayedGames/v1/?")
+    fun getResponse(): Call<BestSellersResponse>
 }
