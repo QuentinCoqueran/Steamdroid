@@ -1,4 +1,5 @@
 package com.example.steamdroid
+
 import com.google.firebase.firestore.auth.User
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -14,7 +15,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 
-class GameDetailsRequest{
+class GameDetailsRequest {
 
     var gson: Gson = GsonBuilder()
         .registerTypeAdapter(Game::class.java, GameTypeAdapter())
@@ -24,23 +25,25 @@ class GameDetailsRequest{
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
-    fun getGame(gameId: Number) {
+    fun getGame(gameId: Number, callback: (Game?) -> Unit) {
         val api = retrofit.create(SteamApi::class.java)
         val call = api.getGame(gameId)
-        println(call.request().url())
+//        println(call.request().url())
         call.enqueue(object : Callback<Game> {
 
             override fun onResponse(call: Call<Game>, response: Response<Game>) {
                 if (response.isSuccessful) {
                     val game: Game? = response.body()
-                    println("GAME: $game")
+                    callback(game)
                 } else {
-                    println("RESPONSE ERROR")
+                    callback(null)
                 }
             }
+
             override fun onFailure(call: Call<Game>, t: Throwable) {
                 println(call.request().headers())
                 t.printStackTrace()
+                callback(null)
                 /*println("ERROR: ${t.cause} EROOOOOOOOOOOOR")*/
             }
         })
@@ -55,10 +58,4 @@ class GameDetailsRequest{
     }
 }
 
-interface SteamApi {
-    @GET("/api/appdetails")
-    fun getGame(@Query("appids") gameId: Number): Call<Game>
 
-    @GET("/appreviews/{gameId}?json=1")
-    fun getGameReviews(@Path("gameId") gameId: Number): Call<GameReview>
-}

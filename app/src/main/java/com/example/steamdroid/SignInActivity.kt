@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.steamdroid.home.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -24,6 +25,8 @@ class SignInActivity : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in)
+        auth = Firebase.auth
+        isConnected()
         val emailInput = findViewById<EditText>(R.id.email_input)
         val passwordInput = findViewById<TextView>(R.id.password_input)
         val loginButton = findViewById<TextView>(R.id.login_button)
@@ -42,15 +45,23 @@ class SignInActivity : Activity() {
             startActivity(Intent(this, CreateAccountActivity::class.java))
         }
         forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, GameDetailsActivity::class.java))
+            startActivity(Intent(this, InitializationPasswordActivity::class.java))
         }
-        // [START initialize_auth]
-        // Initialize Firebase Auth
-        auth = Firebase.auth
-        // [END initialize_auth]
+/*        forgotPasswordRedirect.setOnClickListener {
+            startActivity(Intent(this, HomeActivity::class.java))
+        }*/
     }
 
-    // [START on_start_check_user]
+    private fun isConnected() {
+        val user = auth.currentUser
+        if (user != null) {
+            auth.signOut();
+            startActivity(Intent(this, HomeActivity::class.java))
+        }
+
+        //startActivity(Intent(this, SearchGameActivity::class.java)) // TODO: remove this line (test purpose)
+    }
+
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -61,8 +72,8 @@ class SignInActivity : Activity() {
     }
     // [END on_start_check_user]
 
-    private fun signIn(email: String, password: String) {
-        // [START sign_in_with_email]
+    fun signIn(email: String, password: String, redirect: Boolean = true) {
+        auth = Firebase.auth
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -70,6 +81,10 @@ class SignInActivity : Activity() {
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
                     updateUI(user)
+                    //redirect to home
+                    if (redirect) {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                    }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -80,7 +95,6 @@ class SignInActivity : Activity() {
                     updateUI(null)
                 }
             }
-        // [END sign_in_with_email]
     }
 
     private fun sendEmailVerification() {

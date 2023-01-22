@@ -8,7 +8,7 @@
     <string name="create_account">Créer un nouveau compte</string>
     <string name="welcome_string">Bienvenue !</string>
     <string name="sign_in_string">Veuillez vous connecter ou créer un nouveau compte pour utiliser l\'application.</string>
-    <string name="texte_en_bas_de_page"><u>Mot de passe oublié</u></string>
+    <string name="text_en_bas_de_page"><u>Mot de passe oublié</u></string>
     <string name="subscribe_label">Inscription</string>
     <string name="subscribe_text_label">Veuillez saisir ces différentes informations, afin que vos listes soient sauvegardées.</string>
     <string name="username_label">Nom d\'utilisateur</string>
@@ -18,6 +18,7 @@
     <string name="username_error">"Nom d'utilisateur déjà existant "</string>
     <string name="email_error">Email déjà existant</string>
     <string name="email_error_regex">Email incorrect</string>
+    <string name="password_error_regex">Mot de passe incorrect</string>
     <string name="email_error_required">Email nécessaire</string>
     <string name="password_error_required">Mot de passe nécessaire</string>
     <string name="username_error_required">Nom d\'utilisateur nécessaire</string>
@@ -25,4 +26,11 @@
     <string name="forgot_password_text">Veuillez saisir votre email pour réinitialiser votre mot de passe</string>
     <string name="reset_action">Renvoyer mon mot de passe</string>
     <string name="game_details">Détails du jeu</string>
+    <string name="home">Accueil</string>
+    <string name="search_string">Rechercher un jeu…</string>
+    <string name="to_know_more">En savoir plus</string>
+    <string name="c_est_vraiment_un_super_jeu">Vraiment un super jeu !</string>
+    <string name="bestsellers"><u>Les meilleures ventes</u></string>
+    <string name="search_label">Recherche</string>
+
 </resources>

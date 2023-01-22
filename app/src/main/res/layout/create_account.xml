@@ -72,7 +72,7 @@
         android:fontFamily="@font/proxima_nova_font"
         android:gravity="center"
         android:hint="@string/password_label"
-        android:inputType="textEmailAddress"
+        android:inputType="textPassword"
         android:padding="15dp"
         android:textColor="@color/placeholder"
         android:textColorHint="@color/white" />
@@ -86,7 +86,7 @@
         android:fontFamily="@font/proxima_nova_font"
         android:gravity="center"
         android:hint="@string/password_confirm_label"
-        android:inputType="textEmailAddress"
+        android:inputType="textPassword"
         android:padding="15dp"
         android:textColor="@color/placeholder"
         android:textColorHint="@color/white" />

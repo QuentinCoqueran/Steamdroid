@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Patterns
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
+import com.example.steamdroid.home.HomeActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -113,7 +114,11 @@ class CreateAccountActivity : Activity() {
             passwordInput.error = null
             checkPass = false
             if (passwordInput.text.toString().isNotEmpty()) {
-                if (passwordInput.text.toString() != validatePassword.text.toString()) {
+                if (passwordInput.text.toString().length < 6) {
+                    passwordInput.setBackgroundResource(R.drawable.border_red)
+                    passwordInput.error = resources.getString(R.string.password_error_regex)
+                    checkPass = false
+                }else if (passwordInput.text.toString() != validatePassword.text.toString()) {
                     validatePassword.setBackgroundResource(R.drawable.border_red)
                     validatePassword.error = resources.getString(R.string.password_error)
                     checkPass = false
@@ -137,7 +142,7 @@ class CreateAccountActivity : Activity() {
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            reload();
+            reload()
         }
     }
 
@@ -147,7 +152,12 @@ class CreateAccountActivity : Activity() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     updateUI(user)
+                    //redirect to home activity
+                    SignInActivity().signIn(email, password,false)
+                    startActivity(Intent(this, HomeActivity::class.java))
                 } else {
+                    println("createUserWithEmail:failure")
+                    println(task.exception)
                     updateUI(null)
                 }
             }
