@@ -17,7 +17,6 @@ class ProductViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private val productPrice = v.findViewById<TextView>(R.id.product_price)
     private val productBackgroundImage = v.findViewById<ImageView>(R.id.product_bg_img)
 
-
     @SuppressLint("SetTextI18n")
     fun updateView(product: Product) {
         productName.text = product.gameName
@@ -26,5 +25,4 @@ class ProductViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         Glide.with(productImg.context).load(product.gameImage).into(productImg)
         Glide.with(productBackgroundImage.context).load(product.backgroundImage).into(productBackgroundImage)
     }
-
 }

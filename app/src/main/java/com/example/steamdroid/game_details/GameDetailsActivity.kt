@@ -70,6 +70,16 @@ class GameDetailsActivity : Activity() {
                 gameDescription.visibility = View.GONE
             }
         }
+        backButton.setOnClickListener {
+            finish()
+        }
+        println("START")
+        GameDetailsRequest().getGameReviews(730, lang, 1) { reviews ->
+            if (reviews != null) {
+                println("DONE")
+            }
+        }
+        println("END")
         GameDetailsRequest().getGame(730, lang, currency ) { game ->
             if (game != null) {
                 if (game.gameName != null) {

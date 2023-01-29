@@ -16,8 +16,12 @@ interface SteamApi {
         @Query("cc") currency: String 
     ): Call<Game>
 
-    @GET("/appreviews/{gameId}?json=1")
-    fun getGameReviews(@Path("gameId") gameId: Number, @Query("l") lang: String): Call<GameReview>
+    @GET("/appreviews/{gameId}")
+    fun getGameReviews(
+        @Path("gameId") gameId: Number,
+        @Query("l") lang: String,
+        @Query("json") json: Number
+    ): Call<List<GameReview>>
 
     @GET("/IStoreService/GetAppList/v1/?access_token=bb0a74dd61eb8c96a4391bd12402a3c8")
     fun searchGame(): Call<MutableList<SearchGame>>
