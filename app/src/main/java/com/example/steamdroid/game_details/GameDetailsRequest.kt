@@ -1,18 +1,16 @@
-package com.example.steamdroid
+package com.example.steamdroid.game_details
 
-import com.google.firebase.firestore.auth.User
+import com.example.steamdroid.Game
+import com.example.steamdroid.model.GameReview
+import com.example.steamdroid.GameTypeAdapter
+import com.example.steamdroid.SteamApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import org.intellij.lang.annotations.Language
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
-import retrofit2.http.Query
 
 class GameDetailsRequest {
 
@@ -43,9 +41,9 @@ class GameDetailsRequest {
         })
     }
 
-    fun getGameReviews(gameId: Number, callback: Callback<GameReview>) {
+    fun getGameReviews(gameId: Number, lang: String, callback: Callback<GameReview>) {
         val api = retrofit.create(SteamApi::class.java)
-        val call = api.getGameReviews(gameId)
+        val call = api.getGameReviews(gameId, lang)
         call.enqueue(callback)
     }
 }

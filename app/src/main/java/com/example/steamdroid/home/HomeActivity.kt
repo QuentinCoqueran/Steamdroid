@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.BestsellersApiSteam
-import com.example.steamdroid.GameDetailsRequest
+import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.R
 import com.example.steamdroid.SignInActivity
 import com.example.steamdroid.databinding.HomeBinding

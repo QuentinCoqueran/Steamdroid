@@ -39,6 +39,7 @@ class GameTypeAdapter : TypeAdapter<Game>() {
                                             game.gameDescription = description.replace("<br />", "")
                                             game.gameDescription = game.gameDescription?.replace("<br>", "\n")
                                             game.gameDescription = game.gameDescription?.replace(Regex("<img.*/>") , "")
+                                            game.gameDescription = game.gameDescription?.replace("&quot;", "")
                                             if(game.gameDescription?.startsWith("\n") == true){
                                                 game.gameDescription = game.gameDescription?.substring(1)
                                             }
