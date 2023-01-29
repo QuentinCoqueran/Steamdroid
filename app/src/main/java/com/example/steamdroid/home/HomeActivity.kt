@@ -47,7 +47,7 @@ class HomeActivity : Activity() {
         val apiClient = BestsellersApiSteam()
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
-        var products: List<Product> = listOf();
+        val currency = if (currentLocale == "fr") "fr" else "us"
         apiClient.getResponse() { bestSellersResponse ->
             val products: List<Product> = listOf();
             for (i in bestSellersResponse!!.response.ranks) {

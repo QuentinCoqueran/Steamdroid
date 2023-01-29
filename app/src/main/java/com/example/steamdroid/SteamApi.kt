@@ -5,9 +5,14 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+
 interface SteamApi {
     @GET("/api/appdetails")
-    fun getGame(@Query("appids") gameId: Number, @Query("l") lang: String): Call<Game>
+    fun getGame(
+        @Query("appids") gameId: Number,
+        @Query("l") lang: String,
+        @Query("cc") currency: String 
+    ): Call<Game>
 
     @GET("/appreviews/{gameId}?json=1")
     fun getGameReviews(@Path("gameId") gameId: Number): Call<GameReview>

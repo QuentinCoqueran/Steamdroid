@@ -41,7 +41,7 @@ class GameDetailsActivity : Activity() {
 
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
-
+        val currency = if (currentLocale == "fr") "fr" else "us"
         descriptionButton.setOnClickListener {
             if (gameDescription.visibility == View.VISIBLE) {
                 descriptionButton.setBackgroundResource(R.drawable.btn_border_rounded_transparent_game_description)
@@ -69,7 +69,7 @@ class GameDetailsActivity : Activity() {
                 gameDescription.visibility = View.GONE
             }
         }
-        GameDetailsRequest().getGame(730, lang) { game ->
+        GameDetailsRequest().getGame(730, lang, currency ) { game ->
             if (game != null) {
                 if (game.gameName != null) {
                     Glide.with(this).load(game.backGroundImg).into(backgroundImage)
