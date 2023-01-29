@@ -23,7 +23,6 @@ class HomeActivity : Activity() {
         var count = 0;
         var products: List<Product> = listOf();
         val currentLocale = Locale.getDefault().language
-
         val lang = if (currentLocale == "fr") "french" else "english"
         apiClient.getResponse() { bestSellersResponse ->
             for (i in bestSellersResponse!!.response.ranks) {
