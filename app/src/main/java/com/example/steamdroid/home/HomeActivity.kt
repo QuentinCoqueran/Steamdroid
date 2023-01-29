@@ -12,6 +12,7 @@ import com.example.steamdroid.recycler.ProductAdapter
 import com.example.steamdroid.search.SearchGame
 import com.example.steamdroid.search.SearchGameRequest
 import com.google.firebase.auth.FirebaseAuth
+import java.util.*
 
 class HomeActivity : Activity() {
 
@@ -44,6 +45,9 @@ class HomeActivity : Activity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val apiClient = BestsellersApiSteam()
+        val currentLocale = Locale.getDefault().language
+        val lang = if (currentLocale == "fr") "french" else "english"
+        var products: List<Product> = listOf();
         apiClient.getResponse() { bestSellersResponse ->
             val products: List<Product> = listOf();
             for (i in bestSellersResponse!!.response.ranks) {

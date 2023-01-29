@@ -31,4 +31,6 @@
     <string name="bestsellers"><u>The Bestsellers</u></string>
     <string name="game_details">Game details</string>
     <string name="search_label">Search</string>
+    <string name="description">DESCRIPTION</string>
+    <string name="review">REVIEW</string>
 </resources>
