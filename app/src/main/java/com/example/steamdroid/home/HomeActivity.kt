@@ -18,15 +18,16 @@ import java.util.*
 class HomeActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isConnected()
+        //isConnected()
         val apiClient = BestsellersApiSteam()
         var count = 0;
         var products: List<Product> = listOf();
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
+        val currency = if (currentLocale == "fr") "fr" else "us"
         apiClient.getResponse() { bestSellersResponse ->
             for (i in bestSellersResponse!!.response.ranks) {
-                GameDetailsRequest().getGame(i.appid, lang) { game ->
+                GameDetailsRequest().getGame(i.appid, lang, currency) { game ->
                     if (game != null && game.gameName != null && game.editorName != null) {
                         products = products.plus(
                             Product(
