@@ -1,4 +1,4 @@
-package com.example.steamdroid
+package com.example.steamdroid.game_details
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
+import com.example.steamdroid.R
 import java.util.Locale
 
 class GameDetailsActivity : Activity() {

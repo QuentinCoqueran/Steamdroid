@@ -1,6 +1,13 @@
-package com.example.steamdroid
+package com.example.steamdroid.game_details
 
+<<<<<<< HEAD:app/src/main/java/com/example/steamdroid/GameDetailsRequest.kt
 
+=======
+import com.example.steamdroid.Game
+import com.example.steamdroid.model.GameReview
+import com.example.steamdroid.GameTypeAdapter
+import com.example.steamdroid.SteamApi
+>>>>>>> 93b27f0 (Game details almost done3):app/src/main/java/com/example/steamdroid/game_details/GameDetailsRequest.kt
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Call
@@ -39,9 +46,9 @@ class GameDetailsRequest {
         })
     }
 
-    fun getGameReviews(gameId: Number, callback: Callback<GameReview>) {
+    fun getGameReviews(gameId: Number, lang: String, callback: Callback<GameReview>) {
         val api = retrofit.create(SteamApi::class.java)
-        val call = api.getGameReviews(gameId)
+        val call = api.getGameReviews(gameId, lang)
         call.enqueue(callback)
     }
 }
