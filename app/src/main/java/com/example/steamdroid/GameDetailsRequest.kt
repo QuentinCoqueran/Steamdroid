@@ -14,7 +14,6 @@ import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
 class GameDetailsRequest {
 
     var gson: Gson = GsonBuilder()
@@ -25,30 +24,23 @@ class GameDetailsRequest {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
-    fun getGame(gameId: Number, callback: (Game?) -> Unit) {
+    fun getGame(gameId: Number, lang: String, callback: (Game?) -> Unit) {
         val api = retrofit.create(SteamApi::class.java)
-        val call = api.getGame(gameId)
-//        println(call.request().url())
+        val call = api.getGame(gameId, lang)
         call.enqueue(object : Callback<Game> {
-
             override fun onResponse(call: Call<Game>, response: Response<Game>) {
                 if (response.isSuccessful) {
+                    println("RESPONSE:" + response.body())
                     val game: Game? = response.body()
                     callback(game)
                 } else {
                     callback(null)
                 }
             }
-
             override fun onFailure(call: Call<Game>, t: Throwable) {
-                println(call.request().headers())
-                t.printStackTrace()
                 callback(null)
-                /*println("ERROR: ${t.cause} EROOOOOOOOOOOOR")*/
             }
         })
-        // print response
-        println(call.request().url())
     }
 
     fun getGameReviews(gameId: Number, callback: Callback<GameReview>) {
