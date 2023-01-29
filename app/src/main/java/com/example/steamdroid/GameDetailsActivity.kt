@@ -36,10 +36,10 @@ class GameDetailsActivity : Activity() {
         val gameName = findViewById<TextView>(R.id.gameName)
         val editorName = findViewById<TextView>(R.id.editorName)
         val gameDescription = findViewById<TextView>(R.id.gameDescription)
-        val currentLocale = Locale.getDefault().language
 
         val recyclerReview = findViewById<RecyclerView>(R.id.recycler_review)
 
+        val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
 
         descriptionButton.setOnClickListener {
