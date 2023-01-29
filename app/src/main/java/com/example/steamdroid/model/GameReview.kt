@@ -1,4 +1,4 @@
-package com.example.steamdroid
+package com.example.steamdroid.model
 
 class GameReview (
     val author: String,

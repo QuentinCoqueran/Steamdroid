@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GameDetailsActivity"
+            android:name=".game_details.GameDetailsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />

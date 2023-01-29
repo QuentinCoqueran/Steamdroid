@@ -1,6 +1,7 @@
 package com.example.steamdroid
 
 import com.example.steamdroid.home.BestSellersResponse
+import com.example.steamdroid.model.GameReview
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -16,7 +17,7 @@ interface SteamApi {
     ): Call<Game>
 
     @GET("/appreviews/{gameId}?json=1")
-    fun getGameReviews(@Path("gameId") gameId: Number): Call<GameReview>
+    fun getGameReviews(@Path("gameId") gameId: Number, @Query("l") lang: String): Call<GameReview>
 
     @GET("/actions/SearchApps/{search}")
     fun searchGame(@Path("search") search: String): Call<List<SearchGame>>
