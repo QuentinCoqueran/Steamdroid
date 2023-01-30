@@ -28,7 +28,6 @@ class GameDetailsRequest {
     fun getGame(gameId: Number, callback: (Game?) -> Unit) {
         val api = retrofit.create(SteamApi::class.java)
         val call = api.getGame(gameId)
-        println(call.request().url())
         call.enqueue(object : Callback<Game> {
 
             override fun onResponse(call: Call<Game>, response: Response<Game>) {
@@ -48,7 +47,6 @@ class GameDetailsRequest {
             }
         })
         // print response
-        println(call.request().url())
     }
 
     fun getGameReviews(gameId: Number, callback: Callback<GameReview>) {

@@ -9,6 +9,8 @@ import com.example.steamdroid.*
 import com.example.steamdroid.databinding.HomeBinding
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
+import com.example.steamdroid.search.SearchGame
+import com.example.steamdroid.search.SearchGameRequest
 import com.google.firebase.auth.FirebaseAuth
 
 class HomeActivity : Activity() {
