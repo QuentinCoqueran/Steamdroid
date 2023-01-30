@@ -1,13 +1,9 @@
-package com.example.steamdroid
+package com.example.steamdroid.search
 
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import com.google.gson.TypeAdapter
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonToken
-import com.google.gson.stream.JsonWriter
 import java.lang.reflect.Type
 
 data class SearchGame(
@@ -31,91 +27,3 @@ class SearchGameTypeAdapter : JsonDeserializer<List<SearchGame>> {
         return searchGameList
     }
 }
-
-
-/*
-class SearchGameTypeAdapter : TypeAdapter<MutableList<SearchGame>>() {
-
-    override fun read(input: JsonReader): MutableList<SearchGame> {
-        println("read")
-        val searchGameList = mutableListOf<SearchGame>()
-        val searchGame = SearchGame()
-        val token = input.peek()
-        println("token $token")
-        /*
-        if (input.peek() == JsonToken.BEGIN_OBJECT) {
-            input.beginObject()
-
-            while (input.peek() == JsonToken.NAME) {
-
-                println("name")
-                val appListTxt = input.nextName()
-                if (appListTxt == "applist") {
-                    println("applist")
-
-                    if (input.peek() == JsonToken.BEGIN_OBJECT) {
-                        input.beginObject()
-
-                        while (input.peek() == JsonToken.NAME) {
-
-                            println("name")
-                            val appTxt = input.nextName()
-                            if (appTxt == "apps") {
-                                println("apps")
-
-                                if (input.peek() == JsonToken.BEGIN_ARRAY) {
-                                    input.beginArray()
-
-                                    while (input.peek() == JsonToken.BEGIN_OBJECT) {
-                                        input.beginObject()
-
-                                        while (input.peek() == JsonToken.NAME) {
-                                            println("name")
-                                            val nextName = input.nextName()
-                                            if (nextName == "appid") {
-                                                println("appid")
-                                                searchGame.appId = input.nextLong()
-                                                searchGameList.add(searchGame)
-                                                //searchGameList.add(searchGame)
-                                            } else {
-                                                println("SKIP nextName : $nextName")
-                                                input.skipValue()
-                                            }
-                                        }
-
-                                        input.endObject()
-                                    }
-                                }
-                            } else {
-                                println("SKIP nextName : $appTxt")
-                                input.skipValue()
-                            }
-                        }
-                        input.endObject()
-
-                    }
-
-                } else {
-                    println("SKIP nextName : $appListTxt")
-                    input.skipValue()
-                }
-
-
-            }
-            input.endObject()
-            /* input.endArray()
-         }*/
-
-        }
-        */
-        println("return")
-        //println(searchGameList)
-        return searchGameList
-    }
-
-    override fun write(out: JsonWriter?, value: MutableList<SearchGame>) {
-        TODO("Not yet implemented")
-
-    }
-
-}*/

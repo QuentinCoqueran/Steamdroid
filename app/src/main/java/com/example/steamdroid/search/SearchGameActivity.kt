@@ -1,33 +1,27 @@
-package com.example.steamdroid
+package com.example.steamdroid.search
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.steamdroid.GameDetailsRequest
+import com.example.steamdroid.R
 import com.example.steamdroid.home.HomeActivity
 import com.example.steamdroid.home.HomeActivity.Companion.inProgress
 import com.example.steamdroid.home.HomeActivity.Companion.isLoaded
 import com.example.steamdroid.home.HomeActivity.Companion.searchGameList
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
-import org.checkerframework.checker.units.qual.s
-import java.lang.Thread.sleep
 
 class SearchGameActivity : Activity() {
 
@@ -47,7 +41,7 @@ class SearchGameActivity : Activity() {
         var actualList = mutableListOf<SearchGame>()
 
         var multiplier = 1
-        val cross = findViewById<ImageView>(R.id.white_cross);
+        val cross = findViewById<ImageView>(R.id.white_cross)
 
         cross.setOnClickListener {
             finish()
@@ -58,7 +52,7 @@ class SearchGameActivity : Activity() {
         println("start search")
 
         if (!isLoaded && !inProgress) {
-            SearchGameRequest().searchGame() { list ->
+            SearchGameRequest().searchGame { list ->
                 if (list != null) {
                     println("list GET")
                     //products = list
@@ -87,9 +81,8 @@ class SearchGameActivity : Activity() {
 
                     println("Enter pressed")
                     val search = searchInput.text.toString()
-                    var list = mutableListOf<SearchGame>()
 
-                    list = searchGameList.filter {
+                    val list: MutableList<SearchGame> = searchGameList.filter {
                         it.appName!!.contains(
                             search,
                             true
@@ -147,7 +140,7 @@ class SearchGameActivity : Activity() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    println("end of list");
+                    println("end of list")
 
                     isFinished = false
                     showWaitingDots()
