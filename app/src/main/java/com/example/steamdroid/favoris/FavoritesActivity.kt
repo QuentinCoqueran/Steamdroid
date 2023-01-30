@@ -1,40 +1,35 @@
-package com.example.steamdroid.wishlist
+package com.example.steamdroid.favoris
 
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
-import com.example.steamdroid.databinding.HomeBinding
-import com.example.steamdroid.databinding.WishlistBinding
+import com.example.steamdroid.databinding.FavorisBinding
 import com.example.steamdroid.game_details.GameDetailsRequest
-import com.example.steamdroid.home.BestSellersResponse
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import java.util.*
 
-
-class WishListActivity : Activity() {
+class FavoritesActivity : Activity() {
     private val handler = Handler()
     private var isFinished = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.wishlist)
+        setContentView(R.layout.favoris)
         //LOADER
         isFinished = false
         //RECYCLER VIEW
-        val binding = WishlistBinding.inflate(layoutInflater)
+        val binding = FavorisBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_wishlist)
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_favoris)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
         //////////////////////////////////////////
@@ -42,7 +37,7 @@ class WishListActivity : Activity() {
         var products: List<Product> = listOf();
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
-        getWishList() { it ->
+        getFavoritesListId() { it ->
             showWaitingDots()
             if (it != null) {
                 for (id in it) {
@@ -60,50 +55,50 @@ class WishListActivity : Activity() {
                         }
                         count++
                         if (count == it.size) {
-                            val txtMyLikes = findViewById<TextView>(R.id.text_view_likes)
-                            txtMyLikes.visibility = View.GONE
+                            val linearMyLikes = findViewById<LinearLayout>(R.id.linear_layout_likes)
+                            linearMyLikes.visibility = View.GONE
                             recyclerView.visibility = View.VISIBLE
-                            val adapter = ProductAdapter(products)
-                            recyclerView.adapter = adapter
-                            var closeBtn: ImageView = findViewById(R.id.close_wishlist_btn)
+                            val closeBtn: ImageView = findViewById(R.id.close_favoris)
                             closeBtn.setOnClickListener {
                                 finish()
                             }
+                            val adapter = ProductAdapter(products)
+                            recyclerView.adapter = adapter
                         }
                     }
                 }
             }
             isFinished = true
         }
-        val closeBtn: ImageView = findViewById(R.id.close_wishlist_btn)
+        val closeBtn: ImageView = findViewById(R.id.close_favoris)
         closeBtn.setOnClickListener {
             finish()
         }
     }
 
-    private fun getWishList(callback: (List<Number>?) -> Unit) {
-        var wishListId = listOf<Number>();
+    private fun getFavoritesListId(callback: (List<Number>?) -> Unit) {
+        var favoritesListId = listOf<Number>();
         val db = FirebaseFirestore.getInstance()
-        val docRef = db.collection("wishlist")
+        val docRef = db.collection("favorites")
         docRef.get().addOnSuccessListener { documents ->
             if (!documents.isEmpty) {
                 for (document in documents) {
-                    wishListId = wishListId.plus(document.get("id") as Number)
+                    favoritesListId = favoritesListId.plus(document.get("id") as Number)
                 }
-                callback(wishListId)
+                callback(favoritesListId)
             }
         }
     }
 
     fun showWaitingDots() {
-        val progressBar = findViewById<ProgressBar>(R.id.progressBarWishlist)
+        val progressBar = findViewById<ProgressBar>(R.id.progressBarFavorites)
         progressBar.visibility = View.VISIBLE
         updateDots()
     }
 
 
     private fun updateDots() {
-        val progressBar = findViewById<ProgressBar>(R.id.progressBarWishlist)
+        val progressBar = findViewById<ProgressBar>(R.id.progressBarFavorites)
         if (isFinished) {
             progressBar.visibility = View.GONE
             return

@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.example.steamdroid.game_details.GameDetailsActivity
+import com.example.steamdroid.wishlist.WishListActivity
 
 class SignInActivity : Activity() {
 
@@ -46,11 +47,14 @@ class SignInActivity : Activity() {
         createAccountRedirect.setOnClickListener {
             startActivity(Intent(this, CreateAccountActivity::class.java))
         }
+/*        forgotPasswordRedirect.setOnClickListener {
+            startActivity(Intent(this, GameDetailsActivity::class.java))
+        }*/
         forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, InitializationPasswordActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java))
         }
 /*        forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
+            startActivity(Intent(this, WishListActivity::class.java))
         }*/
     }
 

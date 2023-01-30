@@ -21,20 +21,20 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/close_wishlist_btn"
+                android:id="@+id/close_favoris"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:src="@drawable/close" />
 
             <TextView
-                android:id="@+id/text_view"
+                android:id="@+id/text_view_likes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/google_sans_bold"
-                android:text="@string/my_wishlist"
+                android:text="@string/my_favourites"
                 android:textColor="@color/white"
                 android:textSize="24sp" />
 
@@ -42,31 +42,31 @@
     </androidx.cardview.widget.CardView>
 
     <ProgressBar
-        android:id="@+id/progressBarWishlist"
+        android:id="@+id/progressBarFavorites"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_wishlist"
+        android:id="@+id/recycler_view_favoris"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/linear_layout_wishlist"
+        android:id="@+id/linear_layout_likes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/empty_wishlist"
+            android:id="@+id/empty_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/empty_whishlist" />
+            android:src="@drawable/empty_likes" />
 
         <TextView
             android:id="@+id/text_view_empty_likes"
@@ -75,7 +75,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="80dp"
             android:fontFamily="@font/proxima_nova_font"
-            android:text="@string/you_dont_have_any_wishlist_yet"
+            android:text="@string/you_dont_have_any_likes_yet"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
@@ -86,8 +86,9 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/proxima_nova_font"
-            android:text="@string/you_dont_have_any_wishlist_yet_v2"
+            android:text="@string/you_dont_have_any_likes_yet_v2"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
+
 </LinearLayout>
