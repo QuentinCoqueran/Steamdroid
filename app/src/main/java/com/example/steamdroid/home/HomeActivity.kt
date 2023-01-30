@@ -5,20 +5,41 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.steamdroid.BestsellersApiSteam
-import com.example.steamdroid.GameDetailsRequest
-import com.example.steamdroid.R
-import com.example.steamdroid.SignInActivity
+import com.example.steamdroid.*
 import com.example.steamdroid.databinding.HomeBinding
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.google.firebase.auth.FirebaseAuth
 
 class HomeActivity : Activity() {
+
+    companion object {
+        var searchGameList = mutableListOf<SearchGame>()
+        var isLoaded = false
+        var inProgress = false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isConnected()
         setContentView(R.layout.home)
+
+
+        if (!isLoaded){
+            inProgress = true
+            SearchGameRequest().searchGame(){ list ->
+                if (list != null) {
+                    searchGameList = list
+                    inProgress = false
+                    isLoaded = true
+                }else{
+                    inProgress = false
+                }
+            }
+        }
+
+        println("HOME ACTIVITY");
+
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val apiClient = BestsellersApiSteam()
         apiClient.getResponse() { bestSellersResponse ->
@@ -47,6 +68,8 @@ class HomeActivity : Activity() {
         }
         val binding = HomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
     }
 
     private fun isConnected() {

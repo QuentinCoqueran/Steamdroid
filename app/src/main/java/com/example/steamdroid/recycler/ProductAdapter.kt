@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.steamdroid.R
 import com.example.steamdroid.model.Product
 
-class ProductAdapter(private val products : List<Product>) : RecyclerView.Adapter<ProductViewHolder>() {
+class ProductAdapter(private var products : List<Product>) : RecyclerView.Adapter<ProductViewHolder>() {
         override fun getItemCount(): Int = products.size
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -24,6 +24,12 @@ class ProductAdapter(private val products : List<Product>) : RecyclerView.Adapte
         override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
             holder.updateView(products[position])
         }
+
+        fun updateProducts(newProducts: List<Product>) {
+            products = products.plus(newProducts)
+        }
+
+
 
 }
 

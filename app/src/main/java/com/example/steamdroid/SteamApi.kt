@@ -12,6 +12,6 @@ interface SteamApi {
     @GET("/appreviews/{gameId}?json=1")
     fun getGameReviews(@Path("gameId") gameId: Number): Call<GameReview>
 
-    @GET("/actions/SearchApps/{search}")
-    fun searchGame(@Path("search") search: String): Call<List<SearchGame>>
+    @GET("/IStoreService/GetAppList/v1/?access_token=bb0a74dd61eb8c96a4391bd12402a3c8")
+    fun searchGame(): Call<MutableList<SearchGame>>
 }

@@ -1,4 +1,6 @@
 package com.example.steamdroid
+import com.example.steamdroid.home.HomeActivity.Companion.inProgress
+import com.example.steamdroid.model.Product
 import com.google.firebase.firestore.auth.User
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -17,52 +19,79 @@ import retrofit2.http.Query
 class SearchGameRequest{
 
     var gson: Gson = GsonBuilder()
-        .registerTypeAdapter(SearchGame::class.java, SearchGameTypeAdapter())
+        .registerTypeAdapter(List::class.java, SearchGameTypeAdapter())
         .create()
     private val retrofitAppId = Retrofit.Builder()
-        .baseUrl("https://steamcommunity.com")
+        .baseUrl("https://api.steampowered.com")
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
-    private val retrofitGameDetail = Retrofit.Builder()
-        .baseUrl("https://steamcommunity.com")
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build()
+    //fun searchGame(callback: (MutableList<Product>?) -> Unit) {
+    fun searchGame(callback: (MutableList<SearchGame>?) -> Unit) {
 
-    fun searchGame(search: String) {
+        println("searchGame")
         val api = retrofitAppId.create(SteamApi::class.java)
-        val call = api.searchGame(search)
+        println("api")
+        val call = api.searchGame()
         println("after ?")
 
         println(call.request().url())
-        call.enqueue(object : Callback<List<SearchGame>> {
 
-            override fun onResponse(call: Call<List<SearchGame>>, response: Response<List<SearchGame>>) {
+        var isFinished = false
+
+        call.enqueue(object : Callback<MutableList<SearchGame>> {
+
+            override fun onResponse(call: Call<MutableList<SearchGame>>, response: Response<MutableList<SearchGame>>) {
                 println("TEST onResponse")
                 if (response.isSuccessful) {
                     println("RESPONSE SUCCESS:")
                     val list = response.body()
                     println("LIST: $list")
+                    /*
+                    val products = mutableListOf<Product>()
+                    var cpt = 0
 
-                    /*for (game in list!!) {
-                        println("GAME: $game")
-                        println("GAME ID: ${game.appid}")
-                        getGameDetails(game.appid)
+                    for (game in list!!) {
+
+                        GameDetailsRequest().getGame(game.appId!!) { gameDetails ->
+
+                            if (gameDetails != null) {
+
+                                products.add(
+                                    Product(
+                                        gameDetails.gameName.orEmpty(),
+                                        gameDetails.price.orEmpty(),
+                                        gameDetails.backGroundImg.orEmpty(),
+                                        gameDetails.editorName.orEmpty(),
+                                        gameDetails.backGroundImgTitle.orEmpty(),
+                                    )
+                                )
+                            }else{
+                                println("NULL")
+                            }
+                            cpt++
+                            if (cpt == list.size) {
+                                callback(products)
+                            }
+                        }
+
                     }*/
 
+                    callback(list)
 
                 } else {
                     println("RESPONSE ERROR: $response")
+                    callback(null)
                 }
             }
-            override fun onFailure(call: Call<List<SearchGame>>, t: Throwable) {
+            override fun onFailure(call: Call<MutableList<SearchGame>>, t: Throwable) {
                 println("TEST onFailure")
                 t.printStackTrace()
+                inProgress = false
                 /*println("ERROR: ${t.cause} EROOOOOOOOOOOOR")*/
             }
         })
-        // print response
-        println(call.request().url())
+
     }
 
 
