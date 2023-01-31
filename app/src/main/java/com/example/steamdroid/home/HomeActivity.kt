@@ -53,7 +53,6 @@ class HomeActivity : Activity() {
         val lang = if (currentLocale == "fr") "french" else "english"
         val currency = if (currentLocale == "fr") "fr" else "us"
         apiClient.getResponse() { bestSellersResponse ->
-            val products: List<Product> = listOf();
             for (i in bestSellersResponse!!.response.ranks) {
                 GameDetailsRequest().getGame(i.appid, lang, currency) { game ->
                     if (game != null) {
@@ -62,19 +61,24 @@ class HomeActivity : Activity() {
                                 game.gameName.orEmpty(),
                                 game.price.orEmpty(),
                                 game.backGroundImg.orEmpty(),
-                                game.editorName.orEmpty(),
+                                game.editorName.orEmpty()[0],
                                 game.backGroundImgTitle.orEmpty()
                             )
                         )
                     }
+                    count++
+                    if (count == bestSellersResponse.response.ranks.size) {
+                        setContentView(R.layout.home)
+                        val binding = HomeBinding.inflate(layoutInflater)
+                        setContentView(binding.root)
+                        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+                        val adapter = ProductAdapter(products)
+                        recyclerView.adapter = adapter
+                        recyclerView.layoutManager = LinearLayoutManager(this)
+                        recyclerView.setHasFixedSize(true)
+                    }
                 }
             }
-            val adapter = ProductAdapter(products)
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.setHasFixedSize(true)
-            recyclerView.adapter = ProductAdapter(products)
-            recyclerView.layoutManager = LinearLayoutManager(this)
         }
         val binding = HomeBinding.inflate(layoutInflater)
         setContentView(binding.root)

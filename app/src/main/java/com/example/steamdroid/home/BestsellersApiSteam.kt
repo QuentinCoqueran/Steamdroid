@@ -1,7 +1,6 @@
 package com.example.steamdroid
 
 import com.example.steamdroid.home.BestSellersResponse
-import com.google.firebase.firestore.auth.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

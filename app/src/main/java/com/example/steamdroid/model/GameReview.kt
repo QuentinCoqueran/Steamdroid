@@ -33,5 +33,3 @@ class GameReviewTypeAdapter : JsonDeserializer<List<GameReview>> {
         return reviews
     }
 }
-
-
