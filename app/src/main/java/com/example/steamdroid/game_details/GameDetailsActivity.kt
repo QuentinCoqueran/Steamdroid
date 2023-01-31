@@ -5,17 +5,20 @@ import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.example.steamdroid.R
 import com.example.steamdroid.recycler.GameReviewAdpater
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
 
 class GameDetailsActivity : Activity() {
@@ -43,9 +46,13 @@ class GameDetailsActivity : Activity() {
 
         val recyclerReview = findViewById<RecyclerView>(R.id.recycler_review)
 
+        // Language
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
         val currency = if (currentLocale == "fr") "fr" else "us"
+
+        val db = FirebaseFirestore.getInstance()
+
         descriptionButton.setOnClickListener {
             if (gameDescription.visibility == View.VISIBLE) {
                 descriptionButton.setBackgroundResource(R.drawable.btn_border_rounded_transparent_game_description)
@@ -113,5 +120,39 @@ class GameDetailsActivity : Activity() {
             }
         }
         gameDescription.movementMethod = ScrollingMovementMethod()
+
+        val successTextFavorites = if(currentLocale == "fr") "Ajouté aux favoris" else "Added to favorites"
+        val errorTextFavorites = if(currentLocale == "fr") "Ce jeu est deja dans vos favoris" else "This game is already in your favorites"
+        val successTextWishlist = if(currentLocale == "fr") "Ajouté à votre liste de souhaits" else "Added to your wishlist"
+        val errorTextWishlist = if(currentLocale == "fr") "Ce jeu est deja dans votre liste de souhaits" else "This game is already in your wishlist"
+
+        likeButton.setOnClickListener {
+            val collection = db.collection("favorites")
+            collection.whereEqualTo("id", 10).get()
+                .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    val docRef = collection.document()
+                    docRef.set(mapOf("id" to 10))
+                        .addOnSuccessListener { Toast.makeText(this, successTextFavorites, Toast.LENGTH_SHORT).show() }
+                } else {
+                    Toast.makeText(this, errorTextFavorites, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        wishlistButton.setOnClickListener {
+            val collection = db.collection("wishlist")
+            collection.whereEqualTo("id", 10).get()
+                .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    val docRef = collection.document()
+                    docRef.set(mapOf("id" to 10))
+                        .addOnSuccessListener {
+                            Toast.makeText(this, successTextWishlist, Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(this, errorTextWishlist, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }
