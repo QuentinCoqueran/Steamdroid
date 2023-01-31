@@ -1,68 +1,77 @@
 package com.example.steamdroid
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.example.steamdroid.home.HomeActivity
-import com.example.steamdroid.search.SearchGameActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.example.steamdroid.game_details.GameDetailsActivity
-import com.example.steamdroid.wishlist.WishListActivity
 
-class SignInActivity : Activity() {
+
+class SignInFragment : Fragment() {
 
     // [START declare_auth]
     private lateinit var auth: FirebaseAuth
+    private lateinit var navController: NavController
+
     // [END declare_auth]
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.sign_in, container, false)
+    }
 
-
-    @SuppressLint("MissingInflatedId")
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.sign_in)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
         auth = Firebase.auth
         isConnected()
-        val emailInput = findViewById<EditText>(R.id.email_input)
-        val passwordInput = findViewById<TextView>(R.id.password_input)
-        val loginButton = findViewById<TextView>(R.id.login_button)
-        val createAccountRedirect = findViewById<TextView>(R.id.create_account_redirect)
-        val forgotPasswordRedirect = findViewById<TextView>(R.id.text_view)
+        val emailInput = view.findViewById<EditText>(R.id.email_input)
+        val passwordInput = view.findViewById<TextView>(R.id.password_input)
+        val loginButton = view.findViewById<TextView>(R.id.login_button)
+        val createAccountRedirect = view.findViewById<TextView>(R.id.create_account_redirect)
+        val forgotPasswordRedirect = view.findViewById<TextView>(R.id.text_view)
         loginButton.setOnClickListener {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 signIn(email, password)
             } else {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
         createAccountRedirect.setOnClickListener {
-            startActivity(Intent(this, CreateAccountActivity::class.java))
+            navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
         }
-/*        forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, GameDetailsActivity::class.java))
-        }*/
+        //GAME DETAILS
         forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
+            navController.navigate(R.id.action_signInFragment_to_gameDetailsFragment)
         }
+        //HOME
 /*        forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, WishListActivity::class.java))
+            navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
         }*/
+
     }
 
     private fun isConnected() {
         val user = auth.currentUser
         if (user != null) {
             auth.signOut();
-            startActivity(Intent(this, HomeActivity::class.java))
+            navController.navigate(R.id.action_signInFragment_to_homeFragment)
         }
 
     }
@@ -80,7 +89,7 @@ class SignInActivity : Activity() {
     fun signIn(email: String, password: String, redirect: Boolean = true) {
         auth = Firebase.auth
         auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
+            .addOnCompleteListener(context as Activity) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
@@ -88,13 +97,13 @@ class SignInActivity : Activity() {
                     updateUI(user)
                     //redirect to home
                     if (redirect) {
-                        startActivity(Intent(this, HomeActivity::class.java))
+                        navController.navigate(R.id.action_signInFragment_to_homeFragment)
                     }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(
-                        baseContext, "Authentication failed.",
+                        context, "Authentication failed.",
                         Toast.LENGTH_SHORT
                     ).show()
                     updateUI(null)
@@ -102,15 +111,6 @@ class SignInActivity : Activity() {
             }
     }
 
-    private fun sendEmailVerification() {
-        // [START send_email_verification]
-        val user = auth.currentUser!!
-        user.sendEmailVerification()
-            .addOnCompleteListener(this) { task ->
-                // Email Verification sent
-            }
-        // [END send_email_verification]
-    }
 
     private fun updateUI(user: FirebaseUser?) {
 

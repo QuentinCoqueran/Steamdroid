@@ -17,10 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.example.steamdroid.R
 import com.example.steamdroid.game_details.GameDetailsRequest
-import com.example.steamdroid.home.HomeActivity
-import com.example.steamdroid.home.HomeActivity.Companion.inProgress
-import com.example.steamdroid.home.HomeActivity.Companion.isLoaded
-import com.example.steamdroid.home.HomeActivity.Companion.searchGameList
+import com.example.steamdroid.home.HomeFragment
+import com.example.steamdroid.home.HomeFragment.Companion.inProgress
+import com.example.steamdroid.home.HomeFragment.Companion.isLoaded
+import com.example.steamdroid.home.HomeFragment.Companion.searchGameList
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import java.util.*
@@ -47,7 +47,7 @@ class SearchGameActivity : Activity() {
 
         cross.setOnClickListener {
             finish()
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, HomeFragment::class.java)
             startActivity(intent)
         }
 

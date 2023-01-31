@@ -1,68 +1,88 @@
 package com.example.steamdroid.home
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.*
 import com.example.steamdroid.databinding.HomeBinding
 import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.R
-import com.example.steamdroid.SignInActivity
-import com.example.steamdroid.favoris.FavoritesActivity
+import com.example.steamdroid.favoris.FavoritesFragment
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
+import com.example.steamdroid.search.SearchGame
 import com.example.steamdroid.search.SearchGameActivity
-import com.example.steamdroid.wishlist.WishListActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
 
-class HomeActivity : Activity() {
+class HomeFragment : Fragment() {
     private val handler = Handler()
     private var isFinished = true
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private lateinit var navController: NavController
+
+    companion object {
+        var searchGameList = mutableListOf<SearchGame>()
+        var isLoaded = false
+        var inProgress = false
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.home, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+
         //isConnected()
-        setContentView(R.layout.home)
         //LOADER
         isFinished = false
+
         //RECYCLER VIEW
         val binding = HomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        //setOn(binding.root)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
         //////////////////////////////////////////
 
-        val btnWishList: ImageView = findViewById(R.id.image_view_star)
+        val btnWishList: ImageView = view.findViewById(R.id.image_view_star)
         btnWishList.setOnClickListener {
-            val intent = Intent(this, WishListActivity::class.java)
-            startActivity(intent)
+            navController.navigate(R.id.action_homeFragment_to_wishListFragment)
         }
-        val btnFavorite: ImageView = findViewById(R.id.image_view_like)
+        val btnFavorite: ImageView = view.findViewById(R.id.image_view_like)
         btnFavorite.setOnClickListener {
-            val intent = Intent(this, FavoritesActivity::class.java)
-            startActivity(intent)
+            navController.navigate(R.id.action_homeFragment_to_favoritesFragment)
         }
 
         val apiClient = BestsellersApiSteam()
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
         val currency = if (currentLocale == "fr") "fr" else "us"
-        val products: List<Product> = listOf()
         var count = 0
+        var products: List<Product> = listOf()
         apiClient.getResponse() { bestSellersResponse ->
             showWaitingDots()
             for (i in bestSellersResponse!!.response.ranks) {
                 GameDetailsRequest().getGame(i.appid, lang, currency) { game ->
-                    if (game != null) {
-                        products.plus(
+                    if (game?.gameName != null && game.editorName != null) {
+                        products = products.plus(
                             Product(
                                 game.gameName.orEmpty(),
                                 game.price.orEmpty(),
@@ -80,19 +100,13 @@ class HomeActivity : Activity() {
                     }
                 }
             }
-            val adapter = ProductAdapter(products)
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.setHasFixedSize(true)
-            recyclerView.adapter = ProductAdapter(products)
-            recyclerView.layoutManager = LinearLayoutManager(this)
         }
 
-        val searchInput = findViewById<View>(R.id.search_input)
+        val searchInput = view.findViewById<View>(R.id.search_input)
         searchInput.setOnClickListener {
             println("search input clicked")
-            val intent = Intent(this, SearchGameActivity::class.java)
-            startActivity(intent)
+            //val intent = Intent(this, SearchGameActivity::class.java)
+            //startActivity(intent)
         }
     }
 
@@ -100,21 +114,25 @@ class HomeActivity : Activity() {
         val auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
         if (user == null) {
-            startActivity(Intent(this, SignInActivity::class.java))
+            navController.navigate(R.id.action_homeFragment_to_signInFragment)
         }
     }
 
     fun showWaitingDots() {
-        val progressBar = findViewById<ProgressBar>(R.id.progressBarHome)
-        progressBar.visibility = View.VISIBLE
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarHome)
+        if (progressBar != null) {
+            progressBar.visibility = View.VISIBLE
+        }
         updateDots()
     }
 
 
     private fun updateDots() {
-        val progressBar = findViewById<ProgressBar>(R.id.progressBarHome)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarHome)
         if (isFinished) {
-            progressBar.visibility = View.GONE
+            if (progressBar != null) {
+                progressBar.visibility = View.GONE
+            }
             return
         }
         handler.postDelayed({ updateDots() }, 1000)

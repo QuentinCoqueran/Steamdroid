@@ -1,13 +1,16 @@
 package com.example.steamdroid
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
-import com.example.steamdroid.home.HomeActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -15,20 +18,28 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
-class CreateAccountActivity : Activity() {
+class CreateAccountFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var navController: NavController
 
-    @SuppressLint("MissingInflatedId")
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.create_account)
-        val emailInput = findViewById<TextInputEditText>(R.id.email_input)
-        val passwordInput = findViewById<TextInputEditText>(R.id.password_input)
-        val usernameInput = findViewById<TextInputEditText>(R.id.username_input)
-        val createAccount = findViewById<Button>(R.id.create_account)
-        val logInRedirect = findViewById<Button>(R.id.log_in_redirect)
-        val validatePassword = findViewById<TextInputEditText>(R.id.password_confirm_label)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.create_account, container, false)
+    }
+
+    public override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+        val emailInput = view.findViewById<TextInputEditText>(R.id.email_input)
+        val passwordInput = view.findViewById<TextInputEditText>(R.id.password_input)
+        val usernameInput = view.findViewById<TextInputEditText>(R.id.username_input)
+        val createAccount = view.findViewById<Button>(R.id.create_account)
+        val logInRedirect = view.findViewById<Button>(R.id.log_in_redirect)
+        val validatePassword = view.findViewById<TextInputEditText>(R.id.password_confirm_label)
         var checkPass = false
         createAccount.setOnClickListener {
             val email = emailInput.text.toString()
@@ -54,7 +65,7 @@ class CreateAccountActivity : Activity() {
 
         //redirect to log in page
         logInRedirect.setOnClickListener {
-            startActivity(Intent(this, SignInActivity::class.java))
+            navController.navigate(R.id.action_createAccountFragment_to_signInFragment2)
         }
 
         usernameInput.doOnTextChanged { text, _, _, _ ->
@@ -118,7 +129,7 @@ class CreateAccountActivity : Activity() {
                     passwordInput.setBackgroundResource(R.drawable.border_red)
                     passwordInput.error = resources.getString(R.string.password_error_regex)
                     checkPass = false
-                }else if (passwordInput.text.toString() != validatePassword.text.toString()) {
+                } else if (passwordInput.text.toString() != validatePassword.text.toString()) {
                     validatePassword.setBackgroundResource(R.drawable.border_red)
                     validatePassword.error = resources.getString(R.string.password_error)
                     checkPass = false
@@ -148,13 +159,14 @@ class CreateAccountActivity : Activity() {
 
     private fun createAccount(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
+            .addOnCompleteListener(context as Activity) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     updateUI(user)
                     //redirect to home activity
-                    SignInActivity().signIn(email, password,false)
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    SignInFragment().signIn(email, password, false)
+                    //startActivity(Intent(this, HomeActivity::class.java))
+                    navController.navigate(R.id.action_createAccountFragment_to_homeFragment)
                 } else {
                     println("createUserWithEmail:failure")
                     println(task.exception)
@@ -178,7 +190,7 @@ class CreateAccountActivity : Activity() {
             "password" to password
         )
         val db = FirebaseFirestore.getInstance()
-        db.collection("steamandroid").add(user).addOnCompleteListener(this) { task ->
+        db.collection("steamandroid").add(user).addOnCompleteListener(context as Activity) { task ->
             if (task.isSuccessful) {
                 createAccount(email, password)
             } else {

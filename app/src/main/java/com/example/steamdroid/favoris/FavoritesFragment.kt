@@ -3,11 +3,15 @@ package com.example.steamdroid.favoris
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
@@ -18,19 +22,29 @@ import com.example.steamdroid.recycler.ProductAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
-class FavoritesActivity : Activity() {
+class FavoritesFragment : Fragment() {
     private val handler = Handler()
     private var isFinished = true
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private lateinit var navController: NavController
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.favoris, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.favoris)
+        navController = Navigation.findNavController(view)
         //LOADER
         isFinished = false
         //RECYCLER VIEW
         val binding = FavorisBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_favoris)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        //setContentView(binding.root)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_favoris)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
         //////////////////////////////////////////
         var count = 0;
@@ -42,7 +56,7 @@ class FavoritesActivity : Activity() {
             showWaitingDots()
             if (it != null) {
                 for (id in it) {
-                    GameDetailsRequest().getGame(id, lang,currency) { game ->
+                    GameDetailsRequest().getGame(id, lang, currency) { game ->
                         if (game?.gameName != null && game.editorName != null) {
                             products = products.plus(
                                 Product(
@@ -56,12 +70,13 @@ class FavoritesActivity : Activity() {
                         }
                         count++
                         if (count == it.size) {
-                            val linearMyLikes = findViewById<LinearLayout>(R.id.linear_layout_likes)
+                            val linearMyLikes =
+                                view.findViewById<LinearLayout>(R.id.linear_layout_likes)
                             linearMyLikes.visibility = View.GONE
                             recyclerView.visibility = View.VISIBLE
-                            val closeBtn: ImageView = findViewById(R.id.close_favoris)
+                            val closeBtn: ImageView = view.findViewById(R.id.close_favoris)
                             closeBtn.setOnClickListener {
-                                finish()
+                                navController.navigateUp()
                             }
                             val adapter = ProductAdapter(products)
                             recyclerView.adapter = adapter
@@ -71,9 +86,9 @@ class FavoritesActivity : Activity() {
             }
             isFinished = true
         }
-        val closeBtn: ImageView = findViewById(R.id.close_favoris)
+        val closeBtn: ImageView = view.findViewById(R.id.close_favoris)
         closeBtn.setOnClickListener {
-            finish()
+            navController.navigateUp()
         }
     }
 
@@ -92,16 +107,20 @@ class FavoritesActivity : Activity() {
     }
 
     fun showWaitingDots() {
-        val progressBar = findViewById<ProgressBar>(R.id.progressBarFavorites)
-        progressBar.visibility = View.VISIBLE
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarFavorites)
+        if (progressBar != null) {
+            progressBar.visibility = View.VISIBLE
+        }
         updateDots()
     }
 
 
     private fun updateDots() {
-        val progressBar = findViewById<ProgressBar>(R.id.progressBarFavorites)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarFavorites)
         if (isFinished) {
-            progressBar.visibility = View.GONE
+            if (progressBar != null) {
+                progressBar.visibility = View.GONE
+            }
             return
         }
         handler.postDelayed({ updateDots() }, 1000)

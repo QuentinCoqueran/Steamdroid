@@ -14,9 +14,9 @@ class BestsellersApiSteam {
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
 
-    private val service: SteamApi = retrofit.create(SteamApi::class.java)
 
     fun getResponse(callback: (BestSellersResponse?) -> Unit) {
+        val service: SteamApi = retrofit.create(SteamApi::class.java)
         val call = service.getResponse()
         call.enqueue(object : Callback<BestSellersResponse> {
             override fun onResponse(

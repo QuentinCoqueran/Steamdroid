@@ -1,6 +1,6 @@
 package com.example.steamdroid.search
 import com.example.steamdroid.SteamApi
-import com.example.steamdroid.home.HomeActivity.Companion.inProgress
+import com.example.steamdroid.home.HomeFragment.Companion.inProgress
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Call

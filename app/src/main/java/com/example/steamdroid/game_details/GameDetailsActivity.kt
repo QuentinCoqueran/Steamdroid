@@ -4,11 +4,16 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,30 +22,38 @@ import com.example.steamdroid.R
 import com.example.steamdroid.recycler.GameReviewAdpater
 import java.util.Locale
 
-class GameDetailsActivity : Activity() {
-    @SuppressLint("WrongViewCast", "MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
+class GameDetailsFragment : Fragment() {
+    private lateinit var navController: NavController
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.game_details, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.game_details)
+        navController = Navigation.findNavController(view)
 
         // Buttons
-        val backButton = findViewById<ImageView>(R.id.back)
-        val likeButton = findViewById<ImageView>(R.id.like)
-        val wishlistButton = findViewById<ImageView>(R.id.whishlist)
-        val descriptionButton = findViewById<Button>(R.id.description)
-        val reviewButton = findViewById<Button>(R.id.review)
+        val backButton = view.findViewById<ImageView>(R.id.back)
+        val likeButton = view.findViewById<ImageView>(R.id.like)
+        val wishlistButton = view.findViewById<ImageView>(R.id.whishlist)
+        val descriptionButton = view.findViewById<Button>(R.id.description)
+        val reviewButton = view.findViewById<Button>(R.id.review)
 
         // Images
-        val backgroundImage = findViewById<ImageView>(R.id.game_background)
-        val gameIcon = findViewById<ImageView>(R.id.gameIcon)
-        val backGroundImgTitle = findViewById<LinearLayout>(R.id.backGroundImgTitle)
+        val backgroundImage = view.findViewById<ImageView>(R.id.game_background)
+        val gameIcon = view.findViewById<ImageView>(R.id.gameIcon)
+        val backGroundImgTitle = view.findViewById<LinearLayout>(R.id.backGroundImgTitle)
 
         // Text
-        val gameName = findViewById<TextView>(R.id.gameName)
-        val editorName = findViewById<TextView>(R.id.editorName)
-        val gameDescription = findViewById<TextView>(R.id.gameDescription)
+        val gameName = view.findViewById<TextView>(R.id.gameName)
+        val editorName = view.findViewById<TextView>(R.id.editorName)
+        val gameDescription = view.findViewById<TextView>(R.id.gameDescription)
 
-        val recyclerReview = findViewById<RecyclerView>(R.id.recycler_review)
+        val recyclerReview = view.findViewById<RecyclerView>(R.id.recycler_review)
 
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
@@ -73,18 +86,18 @@ class GameDetailsActivity : Activity() {
             }
         }
         backButton.setOnClickListener {
-            finish()
+            navController.navigateUp()
         }
         GameDetailsRequest().getGameReviews(730, lang, 1) { reviews ->
             if (reviews != null) {
                 val adapter = GameReviewAdpater(reviews)
                 recyclerReview.adapter = adapter
-                recyclerReview.layoutManager = LinearLayoutManager(this)
+                recyclerReview.layoutManager = LinearLayoutManager(context)
                 recyclerReview.setHasFixedSize(true)
                 recyclerReview.adapter = GameReviewAdpater(reviews)
             }
         }
-        GameDetailsRequest().getGame(730, lang, currency ) { game ->
+        GameDetailsRequest().getGame(730, lang, currency) { game ->
             if (game != null) {
                 if (game.gameName != null) {
                     Glide.with(this).load(game.backGroundImg).into(backgroundImage)
@@ -94,9 +107,11 @@ class GameDetailsActivity : Activity() {
                         .into(object : CustomTarget<Drawable>() {
                             override fun onResourceReady(
                                 resource: Drawable,
-                                transition: com.bumptech.glide.request.transition.Transition<in Drawable>?) {
+                                transition: com.bumptech.glide.request.transition.Transition<in Drawable>?
+                            ) {
                                 backGroundImgTitle.background = resource
                             }
+
                             override fun onLoadCleared(placeholder: Drawable?) {
                                 TODO("Not yet implemented")
                             }
