@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -75,6 +76,7 @@ class GameDetailsActivity : Activity() {
         backButton.setOnClickListener {
             finish()
         }
+
         GameDetailsRequest().getGameReviews(730, lang, 1) { reviews ->
             if (reviews != null) {
                 val adapter = GameReviewAdpater(reviews)
@@ -98,7 +100,6 @@ class GameDetailsActivity : Activity() {
                                 backGroundImgTitle.background = resource
                             }
                             override fun onLoadCleared(placeholder: Drawable?) {
-                                TODO("Not yet implemented")
                             }
                         })
                     game.editorName = game.editorName?.sortedBy { it }
@@ -111,5 +112,6 @@ class GameDetailsActivity : Activity() {
                 }
             }
         }
+        gameDescription.movementMethod = ScrollingMovementMethod()
     }
 }

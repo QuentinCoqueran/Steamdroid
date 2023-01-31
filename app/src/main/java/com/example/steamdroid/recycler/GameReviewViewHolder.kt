@@ -23,12 +23,12 @@ class GameReviewViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
     @SuppressLint("SetTextI18n")
     fun updateView(review: GameReview) {
-        GameDetailsRequest().getReviewerName(review.author, "json") { userName ->
+        GameDetailsRequest().getReviewerName(review.author) { userName ->
             if (userName != null)
                 author.text = userName
-            else
-                println("USER NAME IS NULL")
         }
+        author.text = review.author
+        content.text = review.content
         if (!review.vote) {
             star1.setImageResource(R.drawable.whishlist)
             star2.setImageResource(R.drawable.whishlist)
@@ -36,7 +36,5 @@ class GameReviewViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             star4.setImageResource(R.drawable.whishlist)
             star5.setImageResource(R.drawable.whishlist)
         }
-        content.text = review.content
-
     }
 }

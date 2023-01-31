@@ -51,7 +51,6 @@ class GameDetailsRequest {
             override fun onResponse(call: Call<List<GameReview>>, response: Response<List<GameReview>>) {
                 if (response.isSuccessful) {
                     val reviews: List<GameReview>? = response.body()
-                    println("REVIEWS: $reviews")
                     if (reviews != null) {
                         callback(reviews)
                     }
@@ -66,10 +65,10 @@ class GameDetailsRequest {
         })
     }
 
-    fun getReviewerName(steamids: String, format: String, callback: (String?) -> Unit) {
+    fun getReviewerName(steamids: String, callback: (String?) -> Unit) {
         val gsonReview: Gson = GsonBuilder()
             .setLenient()
-            .registerTypeAdapter(List::class.java, ReviewerNameTypeAdapter())
+            .registerTypeAdapter(String::class.java, ReviewerNameTypeAdapter())
             .create()
         val retrofitReview = Retrofit.Builder()
             .baseUrl("https://api.steampowered.com")
@@ -77,13 +76,11 @@ class GameDetailsRequest {
             .build()
         val api = retrofitReview.create(SteamApi::class.java)
         val key = "03B490F87625680CB895CD79AB9F59F2"
-        val call = api.getReviewerName(key,"json", steamids)
-        println("CALL: $steamids")
+        val call = api.getReviewerName(key, "json", steamids)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val userName: String? = response.body()
-                    println("USERNAME: $userName")
                     if (userName != null) {
                         callback(userName)
                     }
