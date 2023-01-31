@@ -1,4 +1,4 @@
-package com.example.steamdroid
+package com.example.steamdroid.model
 
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
@@ -9,10 +9,10 @@ data class Game (
     var gameName: String? = null,
     var gameDescription: String? = null,
     var editorName: List<String>? = null,
-    var backGroundImg: String? = null, // header_img
-    var backGroundImgTitle: String? = null, // background
-    var icone: String? = null, //
-    var price: String? = null //price_overview
+    var backGroundImg: String? = null,
+    var backGroundImgTitle: String? = null,
+    var icone: String? = null,
+    var price: String? = null
 )
 
 class GameTypeAdapter : TypeAdapter<Game>() {

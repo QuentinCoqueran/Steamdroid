@@ -8,7 +8,7 @@ import java.lang.reflect.Type
 data class GameReview (
     val author: String,
     val vote: Boolean,
-    val review: String
+    val content: String
 )
 
 class GameReviewTypeAdapter : JsonDeserializer<List<GameReview>> {
@@ -31,5 +31,20 @@ class GameReviewTypeAdapter : JsonDeserializer<List<GameReview>> {
             reviews.add(gameReview)
         }
         return reviews
+    }
+}
+
+class ReviewerNameTypeAdapter : JsonDeserializer<String> {
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): String {
+        val jsonapp = json?.asJsonObject
+        val response = jsonapp?.get("response")?.asJsonObject
+        val players = response?.get("players")?.asJsonArray
+        val user = players?.get(0)?.asJsonObject
+        val userName = user?.get("personaname")?.asString
+        return userName?: ""
     }
 }
