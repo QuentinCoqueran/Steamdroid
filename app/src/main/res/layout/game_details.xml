@@ -48,7 +48,7 @@
         android:orientation="vertical">
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="280dp"
             android:id="@+id/game_background"
             android:scaleType="fitXY">
         </ImageView>
