@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.*
 import com.example.steamdroid.databinding.HomeBinding
+import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.example.steamdroid.search.SearchGame
@@ -29,7 +30,6 @@ class HomeActivity : Activity() {
         super.onCreate(savedInstanceState)
         isConnected()
         setContentView(R.layout.home)
-
 
         if (!isLoaded){
             inProgress = true
@@ -96,8 +96,4 @@ class HomeActivity : Activity() {
             startActivity(Intent(this, SignInActivity::class.java))
         }
     }
-
-
-
-
 }
