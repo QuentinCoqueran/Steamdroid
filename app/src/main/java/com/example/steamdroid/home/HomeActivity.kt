@@ -55,7 +55,7 @@ class HomeActivity : Activity() {
         apiClient.getResponse() { bestSellersResponse ->
             val products: List<Product> = listOf();
             for (i in bestSellersResponse!!.response.ranks) {
-                GameDetailsRequest().getGame(i.appid) { game ->
+                GameDetailsRequest().getGame(i.appid, lang, currency) { game ->
                     if (game != null) {
                         products.plus(
                             Product(
