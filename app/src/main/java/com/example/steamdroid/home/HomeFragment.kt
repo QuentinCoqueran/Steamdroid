@@ -33,6 +33,7 @@ class HomeFragment : Fragment() {
 
     companion object {
         var searchGameList = mutableListOf<SearchGame>()
+        var productGameList = mutableListOf<Product>()
         var isLoaded = false
         var inProgress = false
     }
@@ -77,30 +78,38 @@ class HomeFragment : Fragment() {
         val currency = if (currentLocale == "fr") "fr" else "us"
         var count = 0
         var products: List<Product> = listOf()
-        apiClient.getResponse() { bestSellersResponse ->
-            showWaitingDots()
-            for (i in bestSellersResponse!!.response.ranks) {
-                GameDetailsRequest().getGame(i.appid, lang, currency) { game ->
-                    if (game?.gameName != null && game.editorName != null) {
-                        products = products.plus(
-                            Product(
-                                game.gameName.orEmpty(),
-                                game.price.orEmpty(),
-                                game.backGroundImg.orEmpty(),
-                                game.editorName.orEmpty(),
-                                game.backGroundImgTitle.orEmpty()
+        if (productGameList.isEmpty()) {
+            apiClient.getResponse() { bestSellersResponse ->
+                showWaitingDots()
+                for (i in bestSellersResponse!!.response.ranks) {
+                    GameDetailsRequest().getGame(i.appid, lang, currency) { game ->
+                        if (game?.gameName != null && game.editorName != null) {
+                            products = products.plus(
+                                Product(
+                                    game.gameName.orEmpty(),
+                                    game.price.orEmpty(),
+                                    game.backGroundImg.orEmpty(),
+                                    game.editorName.orEmpty(),
+                                    game.backGroundImgTitle.orEmpty()
+                                )
                             )
-                        )
-                    }
-                    count++
-                    if (count == bestSellersResponse.response.ranks.size) {
-                        isFinished = true
-                        val adapter = ProductAdapter(products)
-                        recyclerView.adapter = adapter
+                        }
+                        count++
+                        if (count == bestSellersResponse.response.ranks.size) {
+                            isFinished = true
+                            productGameList = products.toMutableList()
+                            val adapter = ProductAdapter(products)
+                            recyclerView.adapter = adapter
+                        }
                     }
                 }
             }
+        } else {
+            isFinished = true
+            val adapter = ProductAdapter(productGameList)
+            recyclerView.adapter = adapter
         }
+
 
         val searchInput = view.findViewById<View>(R.id.search_input)
         searchInput.setOnClickListener {

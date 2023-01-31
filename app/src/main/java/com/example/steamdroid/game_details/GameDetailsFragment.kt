@@ -1,7 +1,5 @@
 package com.example.steamdroid.game_details
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater

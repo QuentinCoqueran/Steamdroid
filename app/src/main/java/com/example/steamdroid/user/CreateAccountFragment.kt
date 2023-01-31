@@ -1,4 +1,4 @@
-package com.example.steamdroid
+package com.example.steamdroid.user
 
 import android.app.Activity
 import android.os.Bundle
@@ -11,6 +11,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.steamdroid.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

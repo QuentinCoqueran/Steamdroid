@@ -1,4 +1,4 @@
-package com.example.steamdroid
+package com.example.steamdroid.user
 
 import android.app.Activity
 import android.os.Bundle
@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.steamdroid.R
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -57,13 +58,16 @@ class SignInFragment : Fragment() {
             navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
         }
         //GAME DETAILS
-        forgotPasswordRedirect.setOnClickListener {
+/*        forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_gameDetailsFragment)
-        }
+        }*/
         //HOME
 /*        forgotPasswordRedirect.setOnClickListener {
-            navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
+            navController.navigate(R.id.action_signInFragment_to_homeFragment)
         }*/
+        forgotPasswordRedirect.setOnClickListener {
+            navController.navigate(R.id.action_signInFragment_to_initializationPasswordFragment)
+        }
 
     }
 
