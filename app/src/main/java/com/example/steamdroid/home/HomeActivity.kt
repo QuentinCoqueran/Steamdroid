@@ -3,13 +3,18 @@ package com.example.steamdroid.home
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.steamdroid.*
+import com.example.steamdroid.BestsellersApiSteam
+import com.example.steamdroid.GameDetailsRequest
+import com.example.steamdroid.R
+import com.example.steamdroid.SignInActivity
 import com.example.steamdroid.databinding.HomeBinding
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.example.steamdroid.search.SearchGame
+import com.example.steamdroid.search.SearchGameActivity
 import com.example.steamdroid.search.SearchGameRequest
 import com.google.firebase.auth.FirebaseAuth
 
@@ -42,6 +47,7 @@ class HomeActivity : Activity() {
 
         println("HOME ACTIVITY");
 
+
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val apiClient = BestsellersApiSteam()
         apiClient.getResponse() { bestSellersResponse ->
@@ -71,6 +77,13 @@ class HomeActivity : Activity() {
         val binding = HomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val searchInput = findViewById<View>(R.id.search_input)
+        searchInput.setOnClickListener {
+            println("search input clicked")
+            val intent = Intent(this, SearchGameActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 
@@ -81,4 +94,8 @@ class HomeActivity : Activity() {
             startActivity(Intent(this, SignInActivity::class.java))
         }
     }
+
+
+
+
 }
