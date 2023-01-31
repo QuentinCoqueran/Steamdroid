@@ -17,14 +17,13 @@ class ProductViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private val productPrice = v.findViewById<TextView>(R.id.product_price)
     private val productBackgroundImage = v.findViewById<ImageView>(R.id.product_bg_img)
 
-
     @SuppressLint("SetTextI18n")
     fun updateView(product: Product) {
         productName.text = product.gameName
-        productBrand.text = product.gameEditor.toString()
-        productPrice.text = product.gamePrice.toString() + " €"
+        productBrand.text = product.gameEditor?.get(0).orEmpty()
+        productPrice.text = product.gamePrice.toString()
         Glide.with(productImg.context).load(product.gameImage).into(productImg)
-        Glide.with(productBackgroundImage.context).load(product.backgroundImage).into(productBackgroundImage)
+        Glide.with(productBackgroundImage.context).load(product.backgroundImage)
+            .into(productBackgroundImage)
     }
-
 }

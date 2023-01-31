@@ -14,14 +14,16 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.steamdroid.GameDetailsRequest
+
 import com.example.steamdroid.R
+import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.home.HomeActivity
 import com.example.steamdroid.home.HomeActivity.Companion.inProgress
 import com.example.steamdroid.home.HomeActivity.Companion.isLoaded
 import com.example.steamdroid.home.HomeActivity.Companion.searchGameList
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
+import java.util.*
 
 class SearchGameActivity : Activity() {
 
@@ -178,10 +180,13 @@ class SearchGameActivity : Activity() {
         val productList = mutableListOf<Product>()
         var cpt = 0
         println("getProduct")
+        val currentLocale = Locale.getDefault().language
+        val lang = if (currentLocale == "fr") "french" else "english"
+        val currency = if (currentLocale == "fr") "fr" else "us"
 
         for (i in list) {
             handler.postDelayed({
-                GameDetailsRequest().getGame(i.appId!!) { gameDetails ->
+                GameDetailsRequest().getGame(i.appId!!,lang ,currency) { gameDetails ->
                     if (gameDetails != null) {
 
                         println("gameDetails : ${gameDetails.gameName}")

@@ -11,7 +11,7 @@ data class Game (
     var editorName: List<String>? = null,
     var backGroundImg: String? = null, // header_img
     var backGroundImgTitle: String? = null, // background
-    /*var icone: String? = null, // A definir*/
+    var icone: String? = null, //
     var price: String? = null //price_overview
 )
 
@@ -35,7 +35,14 @@ class GameTypeAdapter : TypeAdapter<Game>() {
                                             game.gameName = input.nextString()
                                         }
                                         "detailed_description" -> {
-                                            game.gameDescription = input.nextString().take(100)
+                                            val description = input.nextString().take(1200)
+                                            game.gameDescription = description.replace("<br />", "")
+                                            game.gameDescription = game.gameDescription?.replace("<br>", "\n")
+                                            game.gameDescription = game.gameDescription?.replace(Regex("<img.*/>") , "")
+                                            game.gameDescription = game.gameDescription?.replace("&quot;", "")
+                                            if(game.gameDescription?.startsWith("\n") == true){
+                                                game.gameDescription = game.gameDescription?.substring(1)
+                                            }
                                         }
                                         "developers" -> {
                                             if (input.peek() == JsonToken.BEGIN_ARRAY) {
@@ -50,6 +57,27 @@ class GameTypeAdapter : TypeAdapter<Game>() {
                                         }
                                         "header_image" -> {
                                             game.backGroundImg = input.nextString()
+                                        }
+                                        "screenshots" -> {
+                                            if (input.peek() == JsonToken.BEGIN_ARRAY) {
+                                                input.beginArray()
+                                                while (input.peek() != JsonToken.END_ARRAY) {
+                                                    if (input.peek() == JsonToken.BEGIN_OBJECT) {
+                                                        input.beginObject()
+                                                        while (input.peek() != JsonToken.END_OBJECT) {
+                                                            if (input.peek() == JsonToken.NAME && input.nextName() == "path_full") {
+                                                                game.icone = input.nextString()
+                                                            }else {
+                                                                input.skipValue()
+                                                            }
+                                                        }
+                                                        input.endObject()
+                                                    }else {
+                                                        input.skipValue()
+                                                    }
+                                                }
+                                                input.endArray()
+                                            }
                                         }
                                         "price_overview" -> {
                                             if (input.peek() == JsonToken.BEGIN_OBJECT) {

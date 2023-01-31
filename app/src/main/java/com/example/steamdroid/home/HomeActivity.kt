@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.steamdroid.BestsellersApiSteam
-import com.example.steamdroid.GameDetailsRequest
-import com.example.steamdroid.R
-import com.example.steamdroid.SignInActivity
+import com.example.steamdroid.*
 import com.example.steamdroid.databinding.HomeBinding
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
@@ -17,6 +14,8 @@ import com.example.steamdroid.search.SearchGame
 import com.example.steamdroid.search.SearchGameActivity
 import com.example.steamdroid.search.SearchGameRequest
 import com.google.firebase.auth.FirebaseAuth
+import java.util.*
+
 
 class HomeActivity : Activity() {
 
@@ -50,10 +49,13 @@ class HomeActivity : Activity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val apiClient = BestsellersApiSteam()
+        val currentLocale = Locale.getDefault().language
+        val lang = if (currentLocale == "fr") "french" else "english"
+        val currency = if (currentLocale == "fr") "fr" else "us"
         apiClient.getResponse() { bestSellersResponse ->
-            val products: List<Product> = listOf();
+            val products : List<Product> = listOf()
             for (i in bestSellersResponse!!.response.ranks) {
-                GameDetailsRequest().getGame(i.appid) { game ->
+                GameDetailsRequest().getGame(i.appid, lang, currency) { game ->
                     if (game != null) {
                         products.plus(
                             Product(

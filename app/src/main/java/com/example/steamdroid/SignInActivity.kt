@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.example.steamdroid.game_details.GameDetailsActivity
 
 class SignInActivity : Activity() {
 
@@ -46,7 +47,7 @@ class SignInActivity : Activity() {
             startActivity(Intent(this, CreateAccountActivity::class.java))
         }
         forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, InitializationPasswordActivity::class.java))
+            startActivity(Intent(this, GameDetailsActivity::class.java))
         }
 /*        forgotPasswordRedirect.setOnClickListener {
             startActivity(Intent(this, HomeActivity::class.java))
