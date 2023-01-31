@@ -88,6 +88,7 @@ class GameDetailsActivity : Activity() {
             if (game != null) {
                 if (game.gameName != null) {
                     Glide.with(this).load(game.backGroundImg).into(backgroundImage)
+                    Glide.with(this).load(game.icone).into(gameIcon)
                     Glide.with(this)
                         .load(game.backGroundImgTitle)
                         .into(object : CustomTarget<Drawable>() {
