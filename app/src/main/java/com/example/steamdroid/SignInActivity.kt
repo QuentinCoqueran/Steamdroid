@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.steamdroid.home.HomeActivity
+import com.example.steamdroid.search.SearchGameActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -59,7 +60,6 @@ class SignInActivity : Activity() {
             startActivity(Intent(this, HomeActivity::class.java))
         }
 
-        //startActivity(Intent(this, SearchGameActivity::class.java)) // TODO: remove this line (test purpose)
     }
 
     public override fun onStart() {
