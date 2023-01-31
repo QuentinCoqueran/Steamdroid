@@ -9,10 +9,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.example.steamdroid.R
+import com.example.steamdroid.recycler.GameReviewAdpater
 import java.util.Locale
 
 class GameDetailsActivity : Activity() {
@@ -73,13 +75,15 @@ class GameDetailsActivity : Activity() {
         backButton.setOnClickListener {
             finish()
         }
-        println("START")
         GameDetailsRequest().getGameReviews(730, lang, 1) { reviews ->
             if (reviews != null) {
-                println("DONE")
+                val adapter = GameReviewAdpater(reviews)
+                recyclerReview.adapter = adapter
+                recyclerReview.layoutManager = LinearLayoutManager(this)
+                recyclerReview.setHasFixedSize(true)
+                recyclerReview.adapter = GameReviewAdpater(reviews)
             }
         }
-        println("END")
         GameDetailsRequest().getGame(730, lang, currency ) { game ->
             if (game != null) {
                 if (game.gameName != null) {

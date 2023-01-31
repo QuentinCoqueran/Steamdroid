@@ -23,8 +23,4 @@ class ProductAdapter(private var products : List<Product>) : RecyclerView.Adapte
         fun updateProducts(newProducts: List<Product>) {
             products = products.plus(newProducts)
         }
-
-
-
 }
-

@@ -2,8 +2,6 @@ package com.example.steamdroid
 
 import com.example.steamdroid.home.BestSellersResponse
 import com.example.steamdroid.model.GameReview
-import com.example.steamdroid.home.BestSellersResponse
-import com.example.steamdroid.model.GameReview
 import com.example.steamdroid.search.SearchGame
 import retrofit2.Call
 import retrofit2.http.GET
