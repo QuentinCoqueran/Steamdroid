@@ -6,6 +6,7 @@ import com.google.gson.JsonElement
 import java.lang.reflect.Type
 
 data class GameReview (
+
     val author: String,
     val vote: Boolean,
     val review: String
@@ -33,5 +34,3 @@ class GameReviewTypeAdapter : JsonDeserializer<List<GameReview>> {
         return reviews
     }
 }
-
-
