@@ -14,16 +14,15 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import com.example.steamdroid.R
-import com.example.steamdroid.game_details.GameDetailsRequest
-import com.example.steamdroid.home.HomeFragment
-import com.example.steamdroid.home.HomeFragment.Companion.inProgress
-import com.example.steamdroid.home.HomeFragment.Companion.isLoaded
-import com.example.steamdroid.home.HomeFragment.Companion.searchGameList
+import com.example.steamdroid.home.HomeActivity
+import com.example.steamdroid.home.HomeActivity.Companion.inProgress
+import com.example.steamdroid.home.HomeActivity.Companion.isLoaded
+import com.example.steamdroid.home.HomeActivity.Companion.searchGameList
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
-import java.util.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SearchGameFragment : Fragment() {
 
@@ -58,17 +57,17 @@ class SearchGameFragment : Fragment() {
         }
 
         println("start search")
-
+        /*
         if (!isLoaded && !inProgress) {
-            SearchGameRequest().searchGame { list ->
-                if (list != null) {
-                    println("list GET")
-                    //products = list
-                    searchGameList = list
-
-                }
+            inProgress = true
+            val searchGameApi = SteamApiHelperImpl(RetrofitBuilder.searchGameService)
+            GlobalScope.launch {
+                val result = searchGameApi.searchGame()
+                searchGameList = result
+                inProgress = false
+                isLoaded = true
             }
-        }
+        }*/
 
         val searchInput = view.findViewById<EditText>(R.id.search_input)
 
@@ -118,7 +117,7 @@ class SearchGameFragment : Fragment() {
 
                     actualList = list
 
-                    getProduct(sendList) { products ->
+                    /*getProduct(sendList) { products ->
                         multiplier++
 
                         println("products GET")
@@ -132,7 +131,7 @@ class SearchGameFragment : Fragment() {
                         recyclerView.layoutManager = LinearLayoutManager(context)
                         recyclerView.setHasFixedSize(true)
 
-                    }
+                    }*/
 
                 }
 
@@ -164,7 +163,7 @@ class SearchGameFragment : Fragment() {
 
                     val list = actualList.subList(0, max).toMutableList()
                     actualList.subList(0, max).clear()
-                    getProduct(list) { products ->
+                    /*getProduct(list) { products ->
                         multiplier++
                         println("products GET")
                         isFinished = true
@@ -173,7 +172,7 @@ class SearchGameFragment : Fragment() {
 
                         adapter.updateProducts(products!!)
                         adapter.notifyItemRangeInserted(adapter.itemCount, products.size)
-                    }
+                    }*/
 
                 }
             }
@@ -185,53 +184,39 @@ class SearchGameFragment : Fragment() {
         val productList = mutableListOf<Product>()
         var cpt = 0
         println("getProduct")
-        val currentLocale = Locale.getDefault().language
-        val lang = if (currentLocale == "fr") "french" else "english"
-        val currency = if (currentLocale == "fr") "fr" else "us"
 
         for (i in list) {
-            handler.postDelayed({
-                GameDetailsRequest().getGame(i.appId!!, lang, currency) { gameDetails ->
-                    if (gameDetails != null) {
+                val gameDetailsService = SteamApiHelperImpl(RetrofitBuilder.gameDetailsService)
+                GlobalScope.launch {
+                    val result = gameDetailsService.gameDetails(i.appId!!)
 
-                        println("gameDetails : ${gameDetails.gameName}")
-                        //println("gameDetails : ${gameDetails.price}")
-                        //println("gameDetails : ${gameDetails.backGroundImg}")
-                        //println("gameDetails : ${gameDetails.editorName}")
-                        //println("gameDetails : ${gameDetails.backGroundImgTitle}")
+                    println("gameDetails : ${result.gameName}")
+                    //println("gameDetails : ${gameDetails.price}")
+                    //println("gameDetails : ${gameDetails.backGroundImg}")
+                    //println("gameDetails : ${gameDetails.editorName}")
+                    //println("gameDetails : ${gameDetails.backGroundImgTitle}")
 
-                        if (gameDetails.backGroundImg!!.isEmpty()) {
-                            gameDetails.backGroundImg =
-                                "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius"
-                        }
-
-                        productList.add(
-                            Product(
-                                gameDetails.gameName.orEmpty(),
-                                gameDetails.price.orEmpty(),
-                                gameDetails.backGroundImg.orEmpty(),
-                                gameDetails.editorName.orEmpty(),
-                                gameDetails.backGroundImgTitle.orEmpty()
-                            )
-                        )
-                    } else {
-                        println("NULL")
-                        productList.add(
-                            Product(
-                                i.appName.orEmpty(),
-                                "0",
-                                "https://static.vecteezy.com/system/resources/previews/002/326/623/original/black-golden-royal-luxury-background-landing-page-free-vector.jpg",
-                                listOf("Probably got kicked of API ..."),
-                                "https://media.istockphoto.com/id/1352152504/fr/vectoriel/fond-g%C3%A9om%C3%A9trique-abstrait-noir-fonc%C3%A9-d%C3%A9coup%C3%A9-arri%C3%A8re-plan-futuriste-moderne-peut-%C3%AAtre.jpg?s=612x612&w=0&k=20&c=41U5gfwOM5zcOLRNjfWGMoKzDAGGto-8dD54CFBQC4s="
-                            )
-                        )
+                    if (result.backGroundImg!!.isEmpty()){
+                        result.backGroundImg = "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius"
                     }
+
+                    productList.add(
+                        Product(
+                            result.gameName.orEmpty(),
+                            result.price.orEmpty(),
+                            result.backGroundImg.orEmpty(),
+                            result.editorName.orEmpty(),
+                            result.backGroundImgTitle.orEmpty()
+                        )
+                    )
                     cpt++
                     if (cpt == list.size) {
                         callback(productList)
                     }
+
+                    inProgress = false
+                    isLoaded = true
                 }
-            }, 1000)
 
         }
     }
