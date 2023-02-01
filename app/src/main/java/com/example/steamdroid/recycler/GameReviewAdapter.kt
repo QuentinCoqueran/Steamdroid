@@ -12,16 +12,12 @@ class GameReviewAdpater(private var reviews : List<GameReview>) : RecyclerView.A
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameReviewViewHolder {
         return GameReviewViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.list_item, parent, false)
+                .inflate(R.layout.game_review, parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: GameReviewViewHolder, position: Int) {
-        //holder.updateView(reviews[position])
-    }
-
-    fun updatereviews(newreviews: List<GameReview>) {
-        reviews = reviews.plus(newreviews)
+        holder.updateView(reviews[position])
     }
 }
 

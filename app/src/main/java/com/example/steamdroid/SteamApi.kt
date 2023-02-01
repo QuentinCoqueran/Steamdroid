@@ -1,6 +1,7 @@
 package com.example.steamdroid
 
 import com.example.steamdroid.home.BestSellersResponse
+import com.example.steamdroid.model.Game
 import com.example.steamdroid.model.GameReview
 import com.example.steamdroid.search.SearchGame
 import retrofit2.Call
@@ -23,6 +24,13 @@ interface SteamApi {
         @Query("l") lang: String,
         @Query("json") json: Number
     ): Call<List<GameReview>>
+
+    @GET("/ISteamUser/GetPlayerSummaries/v2")
+    fun getReviewerName(
+        @Query("key") key: String,
+        @Query("format") format: String,
+        @Query("steamids") steamids: String
+    ): Call<String>
 
     @GET("/actions/SearchApps/{search}")
     fun searchGame(@Path("search") search: String): Call<List<SearchGame>>

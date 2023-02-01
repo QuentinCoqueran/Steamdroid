@@ -49,9 +49,6 @@ class SignInActivity : Activity() {
         forgotPasswordRedirect.setOnClickListener {
             startActivity(Intent(this, InitializationPasswordActivity::class.java))
         }
-/*        forgotPasswordRedirect.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
-        }*/
     }
 
     private fun isConnected() {
