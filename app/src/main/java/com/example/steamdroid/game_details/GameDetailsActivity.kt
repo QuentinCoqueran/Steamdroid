@@ -1,15 +1,17 @@
 package com.example.steamdroid.game_details
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,38 +21,30 @@ import com.example.steamdroid.recycler.GameReviewAdpater
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
 
-class GameDetailsFragment : Fragment() {
-    private lateinit var navController: NavController
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.game_details, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+class GameDetailsActivity : Activity() {
+    @SuppressLint("WrongViewCast", "MissingInflatedId")
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        navController = Navigation.findNavController(view)
+        setContentView(R.layout.game_details)
 
         // Buttons
-        val backButton = view.findViewById<ImageView>(R.id.back)
-        val likeButton = view.findViewById<ImageView>(R.id.like)
-        val wishlistButton = view.findViewById<ImageView>(R.id.whishlist)
-        val descriptionButton = view.findViewById<Button>(R.id.description)
-        val reviewButton = view.findViewById<Button>(R.id.review)
+        val backButton = findViewById<ImageView>(R.id.back)
+        val likeButton = findViewById<ImageView>(R.id.like)
+        val wishlistButton = findViewById<ImageView>(R.id.whishlist)
+        val descriptionButton = findViewById<Button>(R.id.description)
+        val reviewButton = findViewById<Button>(R.id.review)
 
         // Images
-        val backgroundImage = view.findViewById<ImageView>(R.id.game_background)
-        val gameIcon = view.findViewById<ImageView>(R.id.gameIcon)
-        val backGroundImgTitle = view.findViewById<LinearLayout>(R.id.backGroundImgTitle)
+        val backgroundImage = findViewById<ImageView>(R.id.game_background)
+        val gameIcon = findViewById<ImageView>(R.id.gameIcon)
+        val backGroundImgTitle = findViewById<LinearLayout>(R.id.backGroundImgTitle)
 
         // Text
-        val gameName = view.findViewById<TextView>(R.id.gameName)
-        val editorName = view.findViewById<TextView>(R.id.editorName)
-        val gameDescription = view.findViewById<TextView>(R.id.gameDescription)
+        val gameName = findViewById<TextView>(R.id.gameName)
+        val editorName = findViewById<TextView>(R.id.editorName)
+        val gameDescription = findViewById<TextView>(R.id.gameDescription)
 
-        val recyclerReview = view.findViewById<RecyclerView>(R.id.recycler_review)
+        val recyclerReview = findViewById<RecyclerView>(R.id.recycler_review)
 
         // Language
         val currentLocale = Locale.getDefault().language
@@ -87,18 +81,19 @@ class GameDetailsFragment : Fragment() {
             }
         }
         backButton.setOnClickListener {
-            navController.navigateUp()
+            finish()
         }
+
         GameDetailsRequest().getGameReviews(730, lang, 1) { reviews ->
             if (reviews != null) {
                 val adapter = GameReviewAdpater(reviews)
                 recyclerReview.adapter = adapter
-                recyclerReview.layoutManager = LinearLayoutManager(context)
+                recyclerReview.layoutManager = LinearLayoutManager(this)
                 recyclerReview.setHasFixedSize(true)
                 recyclerReview.adapter = GameReviewAdpater(reviews)
             }
         }
-        GameDetailsRequest().getGame(730, lang, currency) { game ->
+        GameDetailsRequest().getGame(730, lang, currency ) { game ->
             if (game != null) {
                 if (game.gameName != null) {
                     Glide.with(this).load(game.backGroundImg).into(backgroundImage)
@@ -108,11 +103,9 @@ class GameDetailsFragment : Fragment() {
                         .into(object : CustomTarget<Drawable>() {
                             override fun onResourceReady(
                                 resource: Drawable,
-                                transition: com.bumptech.glide.request.transition.Transition<in Drawable>?
-                            ) {
+                                transition: com.bumptech.glide.request.transition.Transition<in Drawable>?) {
                                 backGroundImgTitle.background = resource
                             }
-
                             override fun onLoadCleared(placeholder: Drawable?) {
                             }
                         })
@@ -128,50 +121,38 @@ class GameDetailsFragment : Fragment() {
         }
         gameDescription.movementMethod = ScrollingMovementMethod()
 
-        val successTextFavorites =
-            if (currentLocale == "fr") "Ajouté aux favoris" else "Added to favorites"
-        val errorTextFavorites =
-            if (currentLocale == "fr") "Ce jeu est deja dans vos favoris" else "This game is already in your favorites"
-        val successTextWishlist =
-            if (currentLocale == "fr") "Ajouté à votre liste de souhaits" else "Added to your wishlist"
-        val errorTextWishlist =
-            if (currentLocale == "fr") "Ce jeu est deja dans votre liste de souhaits" else "This game is already in your wishlist"
+        val successTextFavorites = if(currentLocale == "fr") "Ajouté aux favoris" else "Added to favorites"
+        val errorTextFavorites = if(currentLocale == "fr") "Ce jeu est deja dans vos favoris" else "This game is already in your favorites"
+        val successTextWishlist = if(currentLocale == "fr") "Ajouté à votre liste de souhaits" else "Added to your wishlist"
+        val errorTextWishlist = if(currentLocale == "fr") "Ce jeu est deja dans votre liste de souhaits" else "This game is already in your wishlist"
 
         likeButton.setOnClickListener {
             val collection = db.collection("favorites")
             collection.whereEqualTo("id", 10).get()
                 .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        val docRef = collection.document()
-                        docRef.set(mapOf("id" to 10))
-                            .addOnSuccessListener {
-                                Toast.makeText(
-                                    context,
-                                    successTextFavorites,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                    } else {
-                        Toast.makeText(context, errorTextFavorites, Toast.LENGTH_SHORT).show()
-                    }
+                if (documents.isEmpty) {
+                    val docRef = collection.document()
+                    docRef.set(mapOf("id" to 10))
+                        .addOnSuccessListener { Toast.makeText(this, successTextFavorites, Toast.LENGTH_SHORT).show() }
+                } else {
+                    Toast.makeText(this, errorTextFavorites, Toast.LENGTH_SHORT).show()
                 }
+            }
         }
         wishlistButton.setOnClickListener {
             val collection = db.collection("wishlist")
             collection.whereEqualTo("id", 10).get()
                 .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        val docRef = collection.document()
-                        docRef.set(mapOf("id" to 10))
-                            .addOnSuccessListener {
-                                Toast.makeText(context, successTextWishlist, Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                    } else {
-                        Toast.makeText(context, errorTextWishlist, Toast.LENGTH_SHORT).show()
-                    }
+                if (documents.isEmpty) {
+                    val docRef = collection.document()
+                    docRef.set(mapOf("id" to 10))
+                        .addOnSuccessListener {
+                            Toast.makeText(this, successTextWishlist, Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(this, errorTextWishlist, Toast.LENGTH_SHORT).show()
                 }
-
+            }
         }
     }
 }

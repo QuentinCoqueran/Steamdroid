@@ -58,7 +58,7 @@ class SignInFragment : Fragment() {
             navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
         }
         //GAME DETAILS
-/*        forgotPasswordRedirect.setOnClickListener {
+ /*       forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_gameDetailsFragment)
         }*/
         //HOME
