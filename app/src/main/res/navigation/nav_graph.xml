@@ -48,6 +48,12 @@
         <action
             android:id="@+id/action_homeFragment_to_gameDetailsFragment"
             app:destination="@id/gameDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchGameFragment"
+            app:destination="@id/searchGameFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchGameFragment2"
+            app:destination="@id/searchGameFragment" />
     </fragment>
     <fragment
         android:id="@+id/initializationPasswordFragment"
@@ -79,6 +85,20 @@
         android:label="GameDetailsFragment" >
         <action
             android:id="@+id/action_gameDetailsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_gameDetailsFragment_to_searchGameFragment"
+            app:destination="@id/searchGameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchGameFragment"
+        android:name="com.example.steamdroid.search.SearchGameFragment"
+        android:label="SearchGameFragment" >
+        <action
+            android:id="@+id/action_searchGameFragment_to_gameDetailsFragment"
+            app:destination="@id/gameDetailsFragment" />
+        <action
+            android:id="@+id/action_searchGameFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

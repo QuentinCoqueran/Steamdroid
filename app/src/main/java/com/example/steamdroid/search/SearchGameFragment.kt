@@ -1,17 +1,17 @@
 package com.example.steamdroid.search
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.view.KeyEvent
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -25,30 +25,36 @@ import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import java.util.*
 
-class SearchGameActivity : Activity() {
+class SearchGameFragment : Fragment() {
 
     private val handler = Handler()
     private var isFinished = true
+    private lateinit var navController: NavController
 
-    @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.search_game)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.search_game, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
 
         println("SEARCH ACTIVITY")
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         showWaitingDots()
 
         var actualList = mutableListOf<SearchGame>()
 
         var multiplier = 1
-        val cross = findViewById<ImageView>(R.id.white_cross)
+        val cross = view.findViewById<ImageView>(R.id.white_cross)
 
         cross.setOnClickListener {
-            finish()
-            val intent = Intent(this, HomeFragment::class.java)
-            startActivity(intent)
+            navController.navigateUp();
         }
 
         println("start search")
@@ -64,10 +70,10 @@ class SearchGameActivity : Activity() {
             }
         }
 
-        val searchInput = findViewById<EditText>(R.id.search_input)
+        val searchInput = view.findViewById<EditText>(R.id.search_input)
 
         if (searchInput.requestFocus()) {
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         }
 
         searchInput.setOnKeyListener { _, keyCode, event ->
@@ -98,12 +104,10 @@ class SearchGameActivity : Activity() {
 
                     var max = 5
 
-                    if (list.size in 1..4)
-                    {
+                    if (list.size in 1..4) {
                         max = list.size
-                    }else if (list.size == 0)
-                    {
-                        Toast.makeText(this, "No game found", Toast.LENGTH_SHORT).show()
+                    } else if (list.size == 0) {
+                        Toast.makeText(context, "No game found", Toast.LENGTH_SHORT).show()
                         isFinished = true
                         return@setOnKeyListener false
                     }
@@ -125,7 +129,7 @@ class SearchGameActivity : Activity() {
 
                         val adapter = ProductAdapter(products!!)
                         recyclerView.adapter = adapter
-                        recyclerView.layoutManager = LinearLayoutManager(this)
+                        recyclerView.layoutManager = LinearLayoutManager(context)
                         recyclerView.setHasFixedSize(true)
 
                     }
@@ -149,11 +153,12 @@ class SearchGameActivity : Activity() {
 
                     var max = 5
 
-                    if (actualList.size in 1..4 ) {
+                    if (actualList.size in 1..4) {
                         max = actualList.size
-                    }else if (actualList.size == 0) {
+                    } else if (actualList.size == 0) {
                         isFinished = true
-                        Toast.makeText(this@SearchGameActivity, "No more games", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "No more games", Toast.LENGTH_SHORT)
+                            .show()
                         return
                     }
 
@@ -186,7 +191,7 @@ class SearchGameActivity : Activity() {
 
         for (i in list) {
             handler.postDelayed({
-                GameDetailsRequest().getGame(i.appId!!,lang ,currency) { gameDetails ->
+                GameDetailsRequest().getGame(i.appId!!, lang, currency) { gameDetails ->
                     if (gameDetails != null) {
 
                         println("gameDetails : ${gameDetails.gameName}")
@@ -195,8 +200,9 @@ class SearchGameActivity : Activity() {
                         //println("gameDetails : ${gameDetails.editorName}")
                         //println("gameDetails : ${gameDetails.backGroundImgTitle}")
 
-                        if (gameDetails.backGroundImg!!.isEmpty()){
-                            gameDetails.backGroundImg = "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius"
+                        if (gameDetails.backGroundImg!!.isEmpty()) {
+                            gameDetails.backGroundImg =
+                                "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius"
                         }
 
                         productList.add(
@@ -231,20 +237,23 @@ class SearchGameActivity : Activity() {
     }
 
     fun showWaitingDots() {
-        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        progressBar.visibility = View.VISIBLE
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+        if (progressBar != null) {
+            progressBar.visibility = View.VISIBLE
+        }
         updateDots()
     }
 
     private fun updateDots() {
-        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
         if (isFinished && isLoaded && !inProgress) {
-            progressBar.visibility = View.GONE
+            if (progressBar != null) {
+                progressBar.visibility = View.GONE
+            }
             return
         }
         handler.postDelayed({ updateDots() }, 1000)
     }
-
 
 
 }

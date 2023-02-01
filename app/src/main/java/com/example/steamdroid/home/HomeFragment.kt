@@ -1,6 +1,5 @@
 package com.example.steamdroid.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -17,11 +16,9 @@ import com.example.steamdroid.*
 import com.example.steamdroid.databinding.HomeBinding
 import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.R
-import com.example.steamdroid.favoris.FavoritesFragment
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.example.steamdroid.search.SearchGame
-import com.example.steamdroid.search.SearchGameActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
@@ -114,8 +111,7 @@ class HomeFragment : Fragment() {
         val searchInput = view.findViewById<View>(R.id.search_input)
         searchInput.setOnClickListener {
             println("search input clicked")
-            //val intent = Intent(this, SearchGameActivity::class.java)
-            //startActivity(intent)
+            navController.navigate(R.id.action_homeFragment_to_searchGameFragment)
         }
     }
 

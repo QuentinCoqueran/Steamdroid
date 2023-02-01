@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".search.SearchGameActivity"
+            android:name=".search.SearchGameFragment"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
