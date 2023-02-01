@@ -31,6 +31,16 @@
     <string name="bestsellers"><u>The Bestsellers</u></string>
     <string name="game_details">Game details</string>
     <string name="search_label">Search</string>
+    <string name="my_wishlist">My WishList</string>
     <string name="description">DESCRIPTION</string>
     <string name="review">REVIEW</string>
+    <string name="my_favourites">My Likes</string>
+    <string name="you_dont_have_any_likes_yet">You don t have any liked games yet.</string>
+    <string name="you_dont_have_any_likes_yet_v2">Click on the heart to add.</string>
+    <string name="you_dont_have_any_wishlist_yet">
+        You haven\'t liked a game yet
+    </string>
+    <string name="you_dont_have_any_wishlist_yet_v2">
+        Click on the star to add.
+    </string>
 </resources>

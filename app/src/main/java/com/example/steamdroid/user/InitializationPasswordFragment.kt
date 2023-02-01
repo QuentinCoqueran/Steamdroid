@@ -1,24 +1,35 @@
-package com.example.steamdroid
+package com.example.steamdroid.user
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.example.steamdroid.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 
-class InitializationPasswordActivity : Activity() {
+class InitializationPasswordFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var navController: NavController
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.initialization_password, container, false)
+    }
 
-    @SuppressLint("MissingInflatedId")
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.initialization_password)
-        val logInRedirect = findViewById<Button>(R.id.log_in_redirect)
-        val sendEmail = findViewById<Button>(R.id.reset_action_button)
-        val emailInput = findViewById<TextInputEditText>(R.id.email_input_reset)
+        navController = Navigation.findNavController(view)
+        val logInRedirect = view.findViewById<Button>(R.id.log_in_redirect)
+        val sendEmail = view.findViewById<Button>(R.id.reset_action_button)
+        val emailInput = view.findViewById<TextInputEditText>(R.id.email_input_reset)
 
         sendEmail.setOnClickListener {
             val email = emailInput.text.toString()
@@ -37,7 +48,7 @@ class InitializationPasswordActivity : Activity() {
             }
         }
         logInRedirect.setOnClickListener {
-            startActivity(Intent(this, SignInActivity::class.java))
+            navController.navigate(R.id.action_initializationPasswordFragment_to_signInFragment)
         }
         auth = FirebaseAuth.getInstance()
     }
@@ -53,7 +64,7 @@ class InitializationPasswordActivity : Activity() {
                 } else {
                     auth.sendPasswordResetEmail(email).addOnCompleteListener { task2 ->
                         if (task2.isSuccessful) {
-                            startActivity(Intent(this, SignInActivity::class.java))
+                            navController.navigate(R.id.action_initializationPasswordFragment_to_signInFragment)
                         }
                     }
                 }

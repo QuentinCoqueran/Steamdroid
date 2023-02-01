@@ -32,7 +32,22 @@
     <string name="c_est_vraiment_un_super_jeu">Vraiment un super jeu !</string>
     <string name="bestsellers"><u>Les meilleures ventes</u></string>
     <string name="search_label">Recherche</string>
+    <string name="my_wishlist">Ma liste de souhaits</string>
     <string name="description">DESCRIPTION</string>
     <string name="review">AVIS</string>
+    <string name="my_favourites">Mes Likes</string>
+    <string name="you_dont_have_any_likes_yet">
+        Vous n avez pas encore de jeux aimés.
+    </string>
+    <string name="you_dont_have_any_likes_yet_v2">
+        Cliquez sur le coeur pour en ajouter.
+    </string>
+    <string name="you_dont_have_any_wishlist_yet">
+        Vous n\'avez pas encore aimés de jeux.
+    </string>
+    <string name="you_dont_have_any_wishlist_yet_v2">
+        Cliquez sur le l\'étoile pour en ajouter.
+    </string>
+
 
 </resources>
