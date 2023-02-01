@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class GameDetailsRequest {
 
     fun getGame(gameId: Number, lang: String, currency: String, callback: (Game?) -> Unit) {
+
         val gson: Gson = GsonBuilder()
             .registerTypeAdapter(Game::class.java, GameTypeAdapter())
             .create()
@@ -20,8 +21,10 @@ class GameDetailsRequest {
             .baseUrl("https://store.steampowered.com")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
+
         val api = retrofit.create(SteamApi::class.java)
         val call = api.getGame(gameId, lang, currency)
+
         call.enqueue(object : Callback<Game> {
             override fun onResponse(call: Call<Game>, response: Response<Game>) {
                 if (response.isSuccessful) {
