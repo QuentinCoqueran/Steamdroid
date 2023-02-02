@@ -55,12 +55,11 @@ class GameDetailsFragment : Fragment() {
         val editorName = view.findViewById<TextView>(R.id.editorName)
         val gameDescription = view.findViewById<TextView>(R.id.gameDescription)
 
-        val recyclerReview = view.findViewById<RecyclerView>(R.id.recycler_review)
-
         // Language
-        val currentLocale = Locale.getDefault().language
-        val lang = if (currentLocale == "fr") "french" else "english"
-        val currency = if (currentLocale == "fr") "fr" else "us"
+        val lang = getString(R.string.lang)
+        val currency = getString(R.string.currency)
+
+        val recyclerReview = view.findViewById<RecyclerView>(R.id.recycler_review)
 
         val db = FirebaseFirestore.getInstance()
         val collectionFav = db.collection("favorites")
@@ -138,7 +137,7 @@ class GameDetailsFragment : Fragment() {
                 if (game.gameName != null) {
                     Glide.with(this@GameDetailsFragment).load(game.backGroundImg)
                         .into(backgroundImage)
-                    Glide.with(this@GameDetailsFragment).load(game.icone).into(gameIcon)
+                    Glide.with(this@GameDetailsFragment).load("https://steamcdn-a.akamaihd.net/steam/apps/$gameId/library_600x900.jpg").into(gameIcon)
                     Glide.with(this@GameDetailsFragment)
                         .load(game.backGroundImgTitle)
                         .into(object : CustomTarget<Drawable>() {

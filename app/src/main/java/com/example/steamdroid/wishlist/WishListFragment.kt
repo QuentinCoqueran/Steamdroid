@@ -48,9 +48,11 @@ class WishListFragment : Fragment() {
         //////////////////////////////////////////
         var count = 0
         var products: List<Product> = listOf()
-        val currentLocale = Locale.getDefault().language
-        val lang = if (currentLocale == "fr") "french" else "english"
-        val currency = if (currentLocale == "fr") "fr" else "us"
+
+        // Language
+        val lang = getString(R.string.lang)
+        val currency = getString(R.string.currency)
+
         val auth = FirebaseAuth.getInstance()
         var wishListId = listOf<Number>()
         val db = FirebaseFirestore.getInstance()

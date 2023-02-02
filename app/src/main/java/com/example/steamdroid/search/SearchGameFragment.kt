@@ -43,9 +43,9 @@ class SearchGameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
-        val currentLocale = Locale.getDefault().language
-        val lang = if (currentLocale == "fr") "french" else "english"
-        val currency = if (currentLocale == "fr") "fr" else "us"
+        // Language
+        val lang = getString(R.string.lang)
+        val currency = getString(R.string.currency)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_home)
         showWaitingDots()
