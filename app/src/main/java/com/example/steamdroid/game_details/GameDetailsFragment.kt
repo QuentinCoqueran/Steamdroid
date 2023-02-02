@@ -33,7 +33,6 @@ class GameDetailsFragment : Fragment() {
         val gameid = arguments?.getString("gameid")
         println("GAMMMMME IDDDDD: $gameid")
         return inflater.inflate(R.layout.game_details, container, false)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

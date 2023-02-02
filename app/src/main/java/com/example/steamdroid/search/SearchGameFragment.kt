@@ -148,6 +148,7 @@ class SearchGameFragment : Fragment() {
                                 if (result.backGroundImg!!.isEmpty()){
                                     result.backGroundImg = "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius"
                                 }
+                                println(i.appId)
 
                                 products.add(
                                     Product(
@@ -364,6 +365,4 @@ class SearchGameFragment : Fragment() {
         }
         handler.postDelayed({ updateDots() }, 1000)
     }
-
-
 }
