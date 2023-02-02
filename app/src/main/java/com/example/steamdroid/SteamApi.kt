@@ -37,5 +37,5 @@ interface SteamApi {
     fun searchGame(): Deferred<MutableList<SearchGame>>
 
     @GET("/ISteamChartsService/GetMostPlayedGames/v1/?")
-    fun getResponse(): Call<BestSellersResponse>
+    fun getBestsellers(): Call<BestSellersResponse>
 }
