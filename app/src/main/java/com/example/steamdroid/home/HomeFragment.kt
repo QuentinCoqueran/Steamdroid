@@ -151,7 +151,7 @@ class HomeFragment : Fragment() {
 
                                     products = products.plus(
                                         Product(
-                                            id,
+                                            i.appid,
                                             game.gameName.orEmpty(),
                                             game.price.orEmpty(),
                                             game.backGroundImg.orEmpty(),
@@ -172,7 +172,7 @@ class HomeFragment : Fragment() {
 
                                 products = products.plus(
                                     Product(
-                                        id,
+                                        i.appid,
                                         "No name",
                                         "0",
                                         "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius",
