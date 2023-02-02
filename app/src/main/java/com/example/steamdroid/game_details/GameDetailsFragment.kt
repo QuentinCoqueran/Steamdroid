@@ -30,15 +30,13 @@ class GameDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val gameid = arguments?.getString("gameid")
-        println("GAMMMMME IDDDDD: $gameid")
         return inflater.inflate(R.layout.game_details, container, false)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         navController = Navigation.findNavController(view)
+        val gameId = arguments?.getString("gameId")?.toInt()
 
         // Buttons
         val backButton = view.findViewById<ImageView>(R.id.back)
@@ -68,7 +66,7 @@ class GameDetailsFragment : Fragment() {
         val collectionFav = db.collection("favorites")
         val collectionWish = db.collection("wishlist")
         collectionFav
-            .whereEqualTo("id", 730)
+            .whereEqualTo("id", gameId)
             .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
             .get()
             .addOnSuccessListener { documents ->
@@ -79,7 +77,7 @@ class GameDetailsFragment : Fragment() {
                 }
             }
         collectionWish
-            .whereEqualTo("id", 730)
+            .whereEqualTo("id", gameId)
             .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
             .get()
             .addOnSuccessListener { documents ->
@@ -119,20 +117,22 @@ class GameDetailsFragment : Fragment() {
         backButton.setOnClickListener {
             navController.navigateUp()
         }
-        GameDetailsRequest().getGameReviews(730, lang, 1) { reviews ->
-            if (reviews != null) {
-                val adapter = GameReviewAdpater(reviews)
-                recyclerReview.adapter = adapter
-                recyclerReview.layoutManager = LinearLayoutManager(context)
-                recyclerReview.setHasFixedSize(true)
-                recyclerReview.adapter = GameReviewAdpater(reviews)
+        if (gameId != null) {
+            GameDetailsRequest().getGameReviews(gameId, lang, 1) { reviews ->
+                if (reviews != null) {
+                    val adapter = GameReviewAdpater(reviews)
+                    recyclerReview.adapter = adapter
+                    recyclerReview.layoutManager = LinearLayoutManager(context)
+                    recyclerReview.setHasFixedSize(true)
+                    recyclerReview.adapter = GameReviewAdpater(reviews)
+                }
             }
         }
 
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 val game = withContext(Dispatchers.Default) {
-                    RetrofitBuilder.gameDetailsService.getGame(730, lang, currency).await()
+                    RetrofitBuilder.gameDetailsService.getGame(gameId!!, lang, currency).await()
                 }
 
                 if (game.gameName != null) {
@@ -174,7 +174,7 @@ class GameDetailsFragment : Fragment() {
         likeButton.setOnClickListener {
             val collection = db.collection("favorites")
             collection
-                .whereEqualTo("id", 730)
+                .whereEqualTo("id", gameId)
                 .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
                 .get()
                 .addOnSuccessListener { documents ->
@@ -182,7 +182,7 @@ class GameDetailsFragment : Fragment() {
                         val docRef = collection.document()
                         docRef.set(
                             mapOf(
-                                "id" to 730,
+                                "id" to gameId,
                                 "email" to auth.currentUser?.email,
                             )
                         )
@@ -210,7 +210,7 @@ class GameDetailsFragment : Fragment() {
         wishlistButton.setOnClickListener {
             val collection = db.collection("wishlist")
             collection
-                .whereEqualTo("id", 730)
+                .whereEqualTo("id", gameId)
                 .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
                 .get()
                 .addOnSuccessListener { documents ->
@@ -218,7 +218,7 @@ class GameDetailsFragment : Fragment() {
                         val docRef = collection.document()
                         docRef.set(
                             mapOf(
-                                "id" to 730,
+                                "id" to gameId,
                                 "email" to auth.currentUser?.email,
                             )
                         )

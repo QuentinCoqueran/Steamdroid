@@ -362,6 +362,4 @@ class SearchGameFragment : Fragment() {
         }
         handler.postDelayed({ updateDots() }, 1000)
     }
-
-
 }
