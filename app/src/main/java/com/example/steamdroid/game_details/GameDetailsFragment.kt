@@ -21,7 +21,6 @@ import com.example.steamdroid.RetrofitBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
-import java.util.Locale
 
 class GameDetailsFragment : Fragment() {
     private lateinit var navController: NavController

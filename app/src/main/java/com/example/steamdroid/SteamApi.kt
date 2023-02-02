@@ -4,7 +4,6 @@ import com.example.steamdroid.model.BestSellersResponse
 import com.example.steamdroid.model.Game
 import com.example.steamdroid.model.GameReview
 import com.example.steamdroid.search.SearchGame
-//import com.example.steamdroid.search.WrappedResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Path
