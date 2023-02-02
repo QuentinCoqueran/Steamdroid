@@ -1,9 +1,7 @@
 package com.example.steamdroid.game_details
 
-import RetrofitBuilder
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.provider.Settings.Global
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -91,6 +89,7 @@ class GameDetailsFragment : Fragment() {
                 gameDescription.visibility = View.GONE
                 reviewButton.setBackgroundResource(R.drawable.button_border_rounded_game_review)
                 recyclerReview.visibility = View.VISIBLE
+
             } else {
                 descriptionButton.setBackgroundResource(R.drawable.button_border_rounded_game_description)
                 gameDescription.visibility = View.VISIBLE
