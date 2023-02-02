@@ -1,5 +1,6 @@
 package com.example.steamdroid.home
 
+import RetrofitBuilder
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -20,6 +21,10 @@ import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.example.steamdroid.search.SearchGame
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -51,6 +56,24 @@ class HomeFragment : Fragment() {
         //LOADER
         isFinished = false
 
+        if (!isLoaded){
+            inProgress = true
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    searchGameList = withContext(Dispatchers.Default) {
+                        RetrofitBuilder.searchGameService.searchGame().await()
+                    }
+                    println("RESPONSE SUCESS !")
+                    println("searchGameList: $searchGameList")
+
+                    isLoaded = true
+                    inProgress = false
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
         //RECYCLER VIEW
         val binding = HomeBinding.inflate(layoutInflater)
 
@@ -79,25 +102,37 @@ class HomeFragment : Fragment() {
             apiClient.getResponse() { bestSellersResponse ->
                 showWaitingDots()
                 for (i in bestSellersResponse!!.response.ranks) {
-                    GameDetailsRequest().getGame(i.appid, lang, currency) { game ->
-                        if (game?.gameName != null && game.editorName != null) {
-                            products = products.plus(
-                                Product(
-                                    game.gameName.orEmpty(),
-                                    game.price.orEmpty(),
-                                    game.backGroundImg.orEmpty(),
-                                    game.editorName.orEmpty(),
-                                    game.backGroundImgTitle.orEmpty()
+
+                    GlobalScope.launch(Dispatchers.Main){
+
+                        try {
+                            val game = withContext(Dispatchers.Default){
+                                RetrofitBuilder.gameDetailsService.getGame(i.appid, lang, currency).await()
+                            }
+
+                            if (game.gameName != null && game.editorName != null) {
+                                products = products.plus(
+                                    Product(
+                                        game.gameName.orEmpty(),
+                                        game.price.orEmpty(),
+                                        game.backGroundImg.orEmpty(),
+                                        game.editorName.orEmpty(),
+                                        game.backGroundImgTitle.orEmpty()
+                                    )
                                 )
-                            )
+                            }
+                            count++
+                            if (count == bestSellersResponse.response.ranks.size) {
+                                isFinished = true
+                                productGameList = products.toMutableList()
+                                val adapter = ProductAdapter(products)
+                                recyclerView.adapter = adapter
+                            }
+
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                        count++
-                        if (count == bestSellersResponse.response.ranks.size) {
-                            isFinished = true
-                            productGameList = products.toMutableList()
-                            val adapter = ProductAdapter(products)
-                            recyclerView.adapter = adapter
-                        }
+
                     }
                 }
             }

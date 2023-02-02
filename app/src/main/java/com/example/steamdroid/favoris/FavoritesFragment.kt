@@ -1,5 +1,6 @@
 package com.example.steamdroid.favoris
 
+import RetrofitBuilder
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
@@ -20,6 +21,10 @@ import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class FavoritesFragment : Fragment() {
@@ -56,30 +61,41 @@ class FavoritesFragment : Fragment() {
             showWaitingDots()
             if (it != null) {
                 for (id in it) {
-                    GameDetailsRequest().getGame(id, lang, currency) { game ->
-                        if (game?.gameName != null && game.editorName != null) {
-                            products = products.plus(
-                                Product(
-                                    game.gameName.orEmpty(),
-                                    game.price.orEmpty(),
-                                    game.backGroundImg.orEmpty(),
-                                    game.editorName.orEmpty(),
-                                    game.backGroundImgTitle.orEmpty()
-                                )
-                            )
-                        }
-                        count++
-                        if (count == it.size) {
-                            val linearMyLikes =
-                                view.findViewById<LinearLayout>(R.id.linear_layout_likes)
-                            linearMyLikes.visibility = View.GONE
-                            recyclerView.visibility = View.VISIBLE
-                            val closeBtn: ImageView = view.findViewById(R.id.close_favoris)
-                            closeBtn.setOnClickListener {
-                                navController.navigateUp()
+
+                    GlobalScope.launch(Dispatchers.Main) {
+                        try {
+
+                            val game = withContext(Dispatchers.Default){
+                                RetrofitBuilder.gameDetailsService.getGame(id, lang, currency).await()
                             }
-                            val adapter = ProductAdapter(products)
-                            recyclerView.adapter = adapter
+
+                            if (game.gameName != null && game.editorName != null) {
+                                products = products.plus(
+                                    Product(
+                                        game.gameName.orEmpty(),
+                                        game.price.orEmpty(),
+                                        game.backGroundImg.orEmpty(),
+                                        game.editorName.orEmpty(),
+                                        game.backGroundImgTitle.orEmpty()
+                                    )
+                                )
+                            }
+                            count++
+                            if (count == it.size) {
+                                val linearMyLikes =
+                                    view.findViewById<LinearLayout>(R.id.linear_layout_likes)
+                                linearMyLikes.visibility = View.GONE
+                                recyclerView.visibility = View.VISIBLE
+                                val closeBtn: ImageView = view.findViewById(R.id.close_favoris)
+                                closeBtn.setOnClickListener {
+                                    navController.navigateUp()
+                                }
+                                val adapter = ProductAdapter(products)
+                                recyclerView.adapter = adapter
+                            }
+
+                        }catch (e: Exception){
+                            e.printStackTrace()
                         }
                     }
                 }

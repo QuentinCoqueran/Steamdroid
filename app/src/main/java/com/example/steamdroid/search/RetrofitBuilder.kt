@@ -1,5 +1,3 @@
-import com.example.steamdroid.Game
-import com.example.steamdroid.GameTypeAdapter
 import com.example.steamdroid.SteamApi
 import com.example.steamdroid.model.Game
 import com.example.steamdroid.model.GameTypeAdapter
@@ -30,6 +28,7 @@ object RetrofitBuilder {
                 GsonBuilder()
                     .registerTypeAdapter(Game::class.java, GameTypeAdapter())
                     .create()))
+            .addCallAdapterFactory(CoroutineCallAdapterFactory()) // Add this line
             .build()
     }
 

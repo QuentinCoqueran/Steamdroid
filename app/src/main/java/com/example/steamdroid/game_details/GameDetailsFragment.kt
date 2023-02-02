@@ -1,7 +1,9 @@
 package com.example.steamdroid.game_details
 
+import RetrofitBuilder
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.provider.Settings.Global
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +19,10 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.example.steamdroid.R
 import com.example.steamdroid.recycler.GameReviewAdpater
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class GameDetailsFragment : Fragment() {
@@ -98,12 +104,17 @@ class GameDetailsFragment : Fragment() {
                 recyclerReview.adapter = GameReviewAdpater(reviews)
             }
         }
-        GameDetailsRequest().getGame(730, lang, currency) { game ->
-            if (game != null) {
+
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val game = withContext(Dispatchers.Default){
+                    RetrofitBuilder.gameDetailsService.getGame(730, lang, currency).await()
+                }
+
                 if (game.gameName != null) {
-                    Glide.with(this).load(game.backGroundImg).into(backgroundImage)
-                    Glide.with(this).load(game.icone).into(gameIcon)
-                    Glide.with(this)
+                    Glide.with(this@GameDetailsFragment).load(game.backGroundImg).into(backgroundImage)
+                    Glide.with(this@GameDetailsFragment).load(game.icone).into(gameIcon)
+                    Glide.with(this@GameDetailsFragment)
                         .load(game.backGroundImgTitle)
                         .into(object : CustomTarget<Drawable>() {
                             override fun onResourceReady(
@@ -124,8 +135,13 @@ class GameDetailsFragment : Fragment() {
                     gameDescription.text = game.gameDescription
                     gameDescription.setTextColor(resources.getColor(R.color.white))
                 }
+
+            }catch (e: Exception){
+                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
             }
         }
+
+
         gameDescription.movementMethod = ScrollingMovementMethod()
 
         val successTextFavorites =

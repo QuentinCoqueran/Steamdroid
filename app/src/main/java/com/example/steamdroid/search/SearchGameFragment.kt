@@ -1,7 +1,7 @@
 package com.example.steamdroid.search
 
-import android.annotation.SuppressLint
-import android.content.Intent
+import RetrofitBuilder
+import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -9,20 +9,23 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.WorkerThread
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
-import com.example.steamdroid.home.HomeActivity
-import com.example.steamdroid.home.HomeActivity.Companion.inProgress
-import com.example.steamdroid.home.HomeActivity.Companion.isLoaded
-import com.example.steamdroid.home.HomeActivity.Companion.searchGameList
+import com.example.steamdroid.home.HomeFragment.Companion.inProgress
+import com.example.steamdroid.home.HomeFragment.Companion.isLoaded
+import com.example.steamdroid.home.HomeFragment.Companion.searchGameList
+import com.example.steamdroid.main.MainActivity
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.util.*
+
 
 class SearchGameFragment : Fragment() {
 
@@ -43,6 +46,10 @@ class SearchGameFragment : Fragment() {
         navController = Navigation.findNavController(view)
 
         println("SEARCH ACTIVITY")
+
+        val currentLocale = Locale.getDefault().language
+        val lang = if (currentLocale == "fr") "french" else "english"
+        val currency = if (currentLocale == "fr") "fr" else "us"
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         showWaitingDots()
@@ -117,21 +124,73 @@ class SearchGameFragment : Fragment() {
 
                     actualList = list
 
-                    /*getProduct(sendList) { products ->
-                        multiplier++
+                    // ===========================================
 
-                        println("products GET")
+                    val products = mutableListOf<Product>()
+                    var cpt = 0
+                    println("getProduct")
+                    GlobalScope.launch(Dispatchers.Default) {
+                        for (i in sendList) {
 
-                        isFinished = true
+                            try {
+                                val result = withContext(Dispatchers.Default) {
+                                    println("wait for await !")
+                                    delay(2000)
+                                    RetrofitBuilder.gameDetailsService.getGame(i.appId!!, lang, currency).await()
+                                }
+                                println("wait for await  ?")
+                                println("gameDetails : ${result.gameName}")
+                                //println("gameDetails : ${gameDetails.price}")
+                                //println("gameDetails : ${gameDetails.backGroundImg}")
+                                //println("gameDetails : ${gameDetails.editorName}")
+                                //println("gameDetails : ${gameDetails.backGroundImgTitle}")
 
-                        recyclerView.adapter = null
+                                if (result.backGroundImg!!.isEmpty()){
+                                    result.backGroundImg = "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius"
+                                }
 
-                        val adapter = ProductAdapter(products!!)
-                        recyclerView.adapter = adapter
-                        recyclerView.layoutManager = LinearLayoutManager(context)
-                        recyclerView.setHasFixedSize(true)
+                                products.add(
+                                    Product(
+                                        result.gameName.orEmpty(),
+                                        result.price.orEmpty(),
+                                        result.backGroundImg.orEmpty(),
+                                        result.editorName.orEmpty(),
+                                        result.backGroundImgTitle.orEmpty()
+                                    )
+                                )
 
-                    }*/
+                                inProgress = false
+                                isLoaded = true
+                                cpt++
+
+
+                            }catch (e: Exception){
+                                println("error : ${e.message}")
+
+                                products.add(
+                                    Product(
+                                        i.appName.orEmpty(),
+                                        "0",
+                                        "https://static.vecteezy.com/system/resources/previews/002/326/623/original/black-golden-royal-luxury-background-landing-page-free-vector.jpg",
+                                        listOf("Probably got kicked of API ..."),
+                                        "https://media.istockphoto.com/id/1352152504/fr/vectoriel/fond-g%C3%A9om%C3%A9trique-abstrait-noir-fonc%C3%A9-d%C3%A9coup%C3%A9-arri%C3%A8re-plan-futuriste-moderne-peut-%C3%AAtre.jpg?s=612x612&w=0&k=20&c=41U5gfwOM5zcOLRNjfWGMoKzDAGGto-8dD54CFBQC4s="
+                                    )
+                                )
+
+                                cpt++
+
+                            }
+
+                            if (cpt == sendList.size) {
+                                println("end of loop")
+                                setRecycler(products)
+                            }
+
+                        }
+
+                    }
+
+
 
                 }
 
@@ -146,6 +205,10 @@ class SearchGameFragment : Fragment() {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     println("end of list")
+
+                    if (!isFinished){
+                        return
+                    }
 
                     isFinished = false
                     showWaitingDots()
@@ -163,16 +226,73 @@ class SearchGameFragment : Fragment() {
 
                     val list = actualList.subList(0, max).toMutableList()
                     actualList.subList(0, max).clear()
-                    /*getProduct(list) { products ->
-                        multiplier++
-                        println("products GET")
-                        isFinished = true
+                    val newList = mutableListOf<Product>()
 
-                        val adapter = recyclerView.adapter as ProductAdapter
+                    var cpt = 0
 
-                        adapter.updateProducts(products!!)
-                        adapter.notifyItemRangeInserted(adapter.itemCount, products.size)
-                    }*/
+                    GlobalScope.launch(Dispatchers.Default) {
+                        for (i in list) {
+
+                            try {
+                                val result = withContext(Dispatchers.Default) {
+                                    println("wait for await !")
+                                    delay(2000)
+                                    RetrofitBuilder.gameDetailsService.getGame(i.appId!!, lang, currency).await()
+                                }
+                                println("wait for await  ?")
+                                println("gameDetails : ${result.gameName}")
+                                //println("gameDetails : ${gameDetails.price}")
+                                //println("gameDetails : ${gameDetails.backGroundImg}")
+                                //println("gameDetails : ${gameDetails.editorName}")
+                                //println("gameDetails : ${gameDetails.backGroundImgTitle}")
+
+                                if (result.backGroundImg!!.isEmpty()){
+                                    result.backGroundImg = "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius"
+                                }
+
+                                newList.add(
+                                    Product(
+                                        result.gameName.orEmpty(),
+                                        result.price.orEmpty(),
+                                        result.backGroundImg.orEmpty(),
+                                        result.editorName.orEmpty(),
+                                        result.backGroundImgTitle.orEmpty()
+                                    )
+                                )
+
+                                inProgress = false
+                                isLoaded = true
+                                cpt++
+
+
+                            }catch (e: Exception){
+                                println("error : ${e.message}")
+
+                                newList.add(
+                                    Product(
+                                        i.appName.orEmpty(),
+                                        "0",
+                                        "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius",
+                                        listOf("Probably got kick of API"),
+                                        "Unknown"
+                                    )
+                                )
+
+                                cpt++
+
+                            }
+
+                            if (cpt == list.size) {
+                                multiplier++
+                                println("products GET")
+                                isFinished = true
+                                println("end of loop")
+                                updateRecycler(newList)
+                            }
+
+                        }
+
+                    }
 
                 }
             }
@@ -180,44 +300,45 @@ class SearchGameFragment : Fragment() {
 
     }
 
-    fun getProduct(list: MutableList<SearchGame>, callback: (MutableList<Product>?) -> Unit) {
-        val productList = mutableListOf<Product>()
-        var cpt = 0
-        println("getProduct")
+    @WorkerThread
+    fun setRecycler(list: MutableList<Product>) {
+        ContextCompat.getMainExecutor(this.requireContext()).execute {
+            // This is where your UI code goes.
+            println("FINISH !")
+            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view)
 
-        for (i in list) {
-                val gameDetailsService = SteamApiHelperImpl(RetrofitBuilder.gameDetailsService)
-                GlobalScope.launch {
-                    val result = gameDetailsService.gameDetails(i.appId!!)
+            println("products GET")
 
-                    println("gameDetails : ${result.gameName}")
-                    //println("gameDetails : ${gameDetails.price}")
-                    //println("gameDetails : ${gameDetails.backGroundImg}")
-                    //println("gameDetails : ${gameDetails.editorName}")
-                    //println("gameDetails : ${gameDetails.backGroundImgTitle}")
+            isFinished = true
 
-                    if (result.backGroundImg!!.isEmpty()){
-                        result.backGroundImg = "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius"
-                    }
+            println(" 1 products size : ${list.size}")
 
-                    productList.add(
-                        Product(
-                            result.gameName.orEmpty(),
-                            result.price.orEmpty(),
-                            result.backGroundImg.orEmpty(),
-                            result.editorName.orEmpty(),
-                            result.backGroundImgTitle.orEmpty()
-                        )
-                    )
-                    cpt++
-                    if (cpt == list.size) {
-                        callback(productList)
-                    }
+            recyclerView.adapter = ProductAdapter(list as List<Product>)
+            println("adapter set")
+            recyclerView.layoutManager = LinearLayoutManager(this@SearchGameFragment.context)
+            println("layout set")
+            recyclerView.setHasFixedSize(true)
+            println("has fixed size")
+        }
+    }
 
-                    inProgress = false
-                    isLoaded = true
-                }
+    @WorkerThread
+    fun updateRecycler(list: MutableList<Product>) {
+        ContextCompat.getMainExecutor(this.requireContext()).execute {
+            // This is where your UI code goes.
+            println("FINISH !")
+            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view)
 
+            println("products GET")
+
+            isFinished = true
+
+            val adapter = recyclerView.adapter as ProductAdapter
+
+            println("newList : $list")
+
+            adapter.updateProducts(list)
+            adapter.notifyItemRangeInserted(adapter.itemCount, list.size)
         }
     }
 
