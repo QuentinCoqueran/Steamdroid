@@ -2,6 +2,7 @@ package com.example.steamdroid.recycler
 
 import android.annotation.SuppressLint
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,7 @@ import com.example.steamdroid.model.Product
 
 class ProductViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
+    val game_details_button = v.findViewById<Button>(R.id.game_details_button)
     private val productImg = v.findViewById<ImageView>(R.id.product_img)
     private val productName = v.findViewById<TextView>(R.id.product_name)
     private val productBrand = v.findViewById<TextView>(R.id.product_brand)

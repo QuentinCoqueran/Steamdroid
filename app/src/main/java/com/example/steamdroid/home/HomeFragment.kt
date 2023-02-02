@@ -20,6 +20,7 @@ import com.example.steamdroid.*
 import com.example.steamdroid.databinding.HomeBinding
 import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.R
+import com.example.steamdroid.favoris.FavoritesFragment
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.example.steamdroid.search.SearchGame
@@ -192,7 +193,7 @@ class HomeFragment : Fragment() {
             }
         } else {
             isFinished = true
-            val adapter = ProductAdapter(productGameList)
+            val adapter = ProductAdapter(productGameList, this)
             recyclerView.adapter = adapter
         }
 

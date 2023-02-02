@@ -73,25 +73,26 @@ class FavoritesFragment : Fragment() {
                             if (game.gameName != null && game.editorName != null) {
                                 products = products.plus(
                                     Product(
-                                        game.gameName.orEmpty(),
-                                        game.price.orEmpty(),
-                                        game.backGroundImg.orEmpty(),
-                                        game.editorName.orEmpty(),
-                                        game.backGroundImgTitle.orEmpty()
-                                    )
+                                        id,
+                                    game.gameName.orEmpty(),
+                                    game.price.orEmpty(),
+                                    game.backGroundImg.orEmpty(),
+                                    game.editorName.orEmpty(),
+                                    game.backGroundImgTitle.orEmpty()
                                 )
+                            )
+                        }
+                        count++
+                        if (count == it.size) {
+                            val linearMyLikes =
+                                view.findViewById<LinearLayout>(R.id.linear_layout_likes)
+                            linearMyLikes.visibility = View.GONE
+                            recyclerView.visibility = View.VISIBLE
+                            val closeBtn: ImageView = view.findViewById(R.id.close_favoris)
+                            closeBtn.setOnClickListener {
+                                navController.navigateUp()
                             }
-                            count++
-                            if (count == it.size) {
-                                val linearMyLikes =
-                                    view.findViewById<LinearLayout>(R.id.linear_layout_likes)
-                                linearMyLikes.visibility = View.GONE
-                                recyclerView.visibility = View.VISIBLE
-                                val closeBtn: ImageView = view.findViewById(R.id.close_favoris)
-                                closeBtn.setOnClickListener {
-                                    navController.navigateUp()
-                                }
-                                val adapter = ProductAdapter(products)
+                            val adapter = ProductAdapter(products, this)
                                 recyclerView.adapter = adapter
                             }
 

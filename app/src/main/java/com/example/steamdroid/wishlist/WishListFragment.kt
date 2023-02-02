@@ -58,7 +58,7 @@ class WishListFragment : Fragment() {
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
         val currency = if (currentLocale == "fr") "fr" else "us"
-        getWishList() { it ->
+        getWishList {
             showWaitingDots()
             if (it != null) {
                 for (id in it) {
@@ -72,21 +72,22 @@ class WishListFragment : Fragment() {
                             if (game.gameName != null && game.editorName != null) {
                                 products = products.plus(
                                     Product(
-                                        game.gameName.orEmpty(),
-                                        game.price.orEmpty(),
-                                        game.backGroundImg.orEmpty(),
-                                        game.editorName.orEmpty(),
-                                        game.backGroundImgTitle.orEmpty()
-                                    )
+                                        id,
+                                    game.gameName.orEmpty(),
+                                    game.price.orEmpty(),
+                                    game.backGroundImg.orEmpty(),
+                                    game.editorName.orEmpty(),
+                                    game.backGroundImgTitle.orEmpty()
                                 )
-                            }
-                            count++
-                            if (count == it.size) {
-                                val linearMyLikes =
-                                    view.findViewById<LinearLayout>(R.id.linear_layout_wishlist)
-                                linearMyLikes.visibility = View.GONE
-                                recyclerView.visibility = View.VISIBLE
-                                val adapter = ProductAdapter(products)
+                            )
+                        }
+                        count++
+                        if (count == it.size) {
+                            val linearMyLikes =
+                                view.findViewById<LinearLayout>(R.id.linear_layout_wishlist)
+                            linearMyLikes.visibility = View.GONE
+                            recyclerView.visibility = View.VISIBLE
+                            val adapter = ProductAdapter(products, this)
                                 recyclerView.adapter = adapter
                                 val closeBtn: ImageView = view.findViewById(R.id.close_wishlist_btn)
                                 closeBtn.setOnClickListener {

@@ -32,7 +32,6 @@ class GameDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.game_details, container, false)
     }
 
@@ -83,7 +82,6 @@ class GameDetailsFragment : Fragment() {
                     wishlistButton.setImageResource(R.drawable.whishlist_full)
                 }
             }
-
         descriptionButton.setOnClickListener {
             if (gameDescription.visibility == View.VISIBLE) {
                 descriptionButton.setBackgroundResource(R.drawable.btn_border_rounded_transparent_game_description)

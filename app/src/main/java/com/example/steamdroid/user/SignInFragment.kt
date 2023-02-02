@@ -77,7 +77,6 @@ class SignInFragment : Fragment() {
             auth.signOut();
             navController.navigate(R.id.action_signInFragment_to_homeFragment)
         }
-
     }
 
     public override fun onStart() {
