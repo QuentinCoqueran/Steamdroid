@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main.xml"
+    app:startDestination="@id/signInFragment">
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.steamdroid.user.SignInFragment"
+        android:label="SignInFragment" >
+        <action
+            android:id="@+id/action_signInFragment_to_createAccountFragment"
+            app:destination="@id/createAccountFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_initializationPasswordFragment"
+            app:destination="@id/initializationPasswordFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_gameDetailsFragment"
+            app:destination="@id/gameDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createAccountFragment"
+        android:name="com.example.steamdroid.user.CreateAccountFragment"
+        android:label="CreateAccountFragment" >
+        <action
+            android:id="@+id/action_createAccountFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_createAccountFragment_to_signInFragment2"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.steamdroid.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_wishListFragment"
+            app:destination="@id/wishListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_gameDetailsFragment"
+            app:destination="@id/gameDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchGameFragment"
+            app:destination="@id/searchGameFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchGameFragment2"
+            app:destination="@id/searchGameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/initializationPasswordFragment"
+        android:name="com.example.steamdroid.user.InitializationPasswordFragment"
+        android:label="InitializationPasswordFragment" >
+        <action
+            android:id="@+id/action_initializationPasswordFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/wishListFragment"
+        android:name="com.example.steamdroid.wishlist.WishListFragment"
+        android:label="WishListFragment" >
+        <action
+            android:id="@+id/action_wishListFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_wishListFragment_to_gameDetailsFragment"
+            app:destination="@id/gameDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.steamdroid.favoris.FavoritesFragment"
+        android:label="FavoritesFragment" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_gameDetailsFragment"
+            app:destination="@id/gameDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameDetailsFragment"
+        android:name="com.example.steamdroid.game_details.GameDetailsFragment"
+        android:label="GameDetailsFragment" >
+        <action
+            android:id="@+id/action_gameDetailsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_gameDetailsFragment_to_searchGameFragment"
+            app:destination="@id/searchGameFragment" />
+        <argument
+            android:name="gameId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchGameFragment"
+        android:name="com.example.steamdroid.search.SearchGameFragment"
+        android:label="SearchGameFragment" >
+        <action
+            android:id="@+id/action_searchGameFragment_to_gameDetailsFragment"
+            app:destination="@id/gameDetailsFragment" />
+        <action
+            android:id="@+id/action_searchGameFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+
+        <action
+            android:id="@+id/action_searchGameFragment_to_gameDetailsFragment2"
+            app:destination="@id/gameDetailsFragment" />
+    </fragment>
+</navigation>

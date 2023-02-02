@@ -32,5 +32,34 @@
     <string name="c_est_vraiment_un_super_jeu">Vraiment un super jeu !</string>
     <string name="bestsellers"><u>Les meilleures ventes</u></string>
     <string name="search_label">Recherche</string>
-
+    <string name="my_wishlist">Ma liste de souhaits</string>
+    <string name="description">DESCRIPTION</string>
+    <string name="review">AVIS</string>
+    <string name="my_favourites">Mes Likes</string>
+    <string name="you_dont_have_any_likes_yet">
+        Vous n avez pas encore de jeux aimés.
+    </string>
+    <string name="you_dont_have_any_likes_yet_v2">
+        Cliquez sur le coeur pour en ajouter.
+    </string>
+    <string name="you_dont_have_any_wishlist_yet">
+        Vous n\'avez pas encore aimés de jeux.
+    </string>
+    <string name="you_dont_have_any_wishlist_yet_v2">
+        Cliquez sur le l\'étoile pour en ajouter.
+    </string>
+    <string name="like_button_success">Ajouté aux favoris</string>
+    <string name="like_button_delete">Retiré des favoris</string>
+    <string name="wishlist_button_success">Ajouté aux favoris</string>
+    <string name="wishlist_button_delete">Retiré de la wishlist</string>
+    <string name="close_search">ferme_recherche</string>
+    <string name="close_fav">close_fav</string>
+    <string name="empty_likes">empty_likes</string>
+    <string name="back_game_details">back_game_details</string>
+    <string name="back_ground">back_ground</string>
+    <string name="lang">french</string>
+    <string name="currency">fr</string>
+    <string name="error_server">Une erreur est survenue, veuillez réessayer</string>
+    <string name="error_empty_signin">Veuillez remplir tous les champs</string>
+    <string name="error_empty_auth">Erreur d\'authentification</string>
 </resources>
