@@ -18,14 +18,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
 import com.example.steamdroid.databinding.FavorisBinding
 import com.example.steamdroid.game_details.GameDetailsRequest
+import com.example.steamdroid.home.HomeFragment
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.util.*
 
 class FavoritesFragment : Fragment() {
@@ -43,10 +41,14 @@ class FavoritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        HomeFragment.needSuspend = true
+
         navController = Navigation.findNavController(view)
         //LOADER
         isFinished = false
         //RECYCLER VIEW
+
         val binding = FavorisBinding.inflate(layoutInflater)
         //setContentView(binding.root)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_favoris)
@@ -67,6 +69,7 @@ class FavoritesFragment : Fragment() {
                         try {
 
                             val game = withContext(Dispatchers.Default){
+                                delay(500)
                                 RetrofitBuilder.gameDetailsService.getGame(id, lang, currency).await()
                             }
 

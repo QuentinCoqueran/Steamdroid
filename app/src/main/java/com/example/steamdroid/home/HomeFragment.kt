@@ -40,6 +40,7 @@ class HomeFragment : Fragment() {
         var localList = mutableListOf<Rank>()
         var isLoaded = false
         var inProgress = false
+        var needSuspend = false
     }
 
     override fun onCreateView(
@@ -261,8 +262,9 @@ class HomeFragment : Fragment() {
                                 println("count: $cpt / ${list.size}")
                                 if (cpt == list.size) {
                                     isFinished = true
-                                    productGameList.addAll(newList.toMutableList())
                                     updateRecycler(newList)
+
+                                    productGameList.addAll(newList)
                                 }
 
                             } catch (e: Exception) {
@@ -283,8 +285,8 @@ class HomeFragment : Fragment() {
                                 println("count: $cpt / ${list.size}")
                                 if (cpt == list.size) {
                                     isFinished = true
-                                    productGameList.addAll(newList.toMutableList())
                                     updateRecycler(newList)
+                                    productGameList.addAll(newList)
                                 }
                             }
 
@@ -334,7 +336,11 @@ class HomeFragment : Fragment() {
 
     @WorkerThread
     fun setRecycler(list: MutableList<Product>) {
+
         ContextCompat.getMainExecutor(this.requireContext()).execute {
+
+
+
             // This is where your UI code goes.
             println("FINISH !")
             val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view)
@@ -351,28 +357,45 @@ class HomeFragment : Fragment() {
             println("layout set")
             recyclerView.setHasFixedSize(true)
             println("has fixed size")
+
+
         }
     }
 
     @WorkerThread
     fun updateRecycler(list: MutableList<Product>) {
         ContextCompat.getMainExecutor(this.requireContext()).execute {
-            // This is where your UI code goes.
-            println("FINISH !")
-            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view)
 
-            println("products GET")
 
-            isFinished = true
 
-            val adapter = recyclerView.adapter as ProductAdapter
+            GlobalScope.launch(Dispatchers.Main) {
+                val recyclerView = withContext(Dispatchers.Default){
+                    while (needSuspend)
+                        delay(500)
+                     this@HomeFragment.requireView().findViewById<RecyclerView>(R.id.recycler_view)
 
-            list.forEach(){
-                println("GET name: ${it.gameName}")
+                }
+
+                // This is where your UI code goes.
+                println("FINISH !")
+
+                println("products GET")
+
+                isFinished = true
+
+                val adapter = recyclerView.adapter as ProductAdapter
+
+                list.forEach() {
+                    println("GET name: ${it.gameName}")
+                }
+
+                //adapter.updateProducts(list)
+                println("OMG !!!!!")
+                adapter.notifyItemRangeInserted(adapter.itemCount, list.size)
+
             }
 
-            adapter.updateProducts(list)
-            adapter.notifyItemRangeInserted(adapter.itemCount, list.size)
+
         }
     }
 }
