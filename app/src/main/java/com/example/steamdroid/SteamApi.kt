@@ -4,11 +4,12 @@ import com.example.steamdroid.home.BestSellersResponse
 import com.example.steamdroid.model.Game
 import com.example.steamdroid.model.GameReview
 import com.example.steamdroid.search.SearchGame
+//import com.example.steamdroid.search.WrappedResponse
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-
 
 interface SteamApi {
     @GET("/api/appdetails")
@@ -16,9 +17,9 @@ interface SteamApi {
         @Query("appids") gameId: Number,
         @Query("l") lang: String,
         @Query("cc") currency: String
-    ): Call<Game>
+    ): Deferred<Game>
 
-    @GET("/appreviews/{gameId}")
+    @GET("/appreviews/{gameId}?json=1")
     fun getGameReviews(
         @Path("gameId") gameId: Number,
         @Query("l") lang: String,
@@ -32,12 +33,9 @@ interface SteamApi {
         @Query("steamids") steamids: String
     ): Call<String>
 
-    @GET("/actions/SearchApps/{search}")
-    fun searchGame(@Path("search") search: String): Call<List<SearchGame>>
+    @GET("/IStoreService/GetAppList/v1/?access_token=bb0a74dd61eb8c96a4391bd12402a3c8")
+    fun searchGame(): Deferred<MutableList<SearchGame>>
 
     @GET("/ISteamChartsService/GetMostPlayedGames/v1/?")
     fun getResponse(): Call<BestSellersResponse>
-
-    @GET("/IStoreService/GetAppList/v1/?access_token=bb0a74dd61eb8c96a4391bd12402a3c8")
-    fun searchGame(): Call<MutableList<SearchGame>>
 }

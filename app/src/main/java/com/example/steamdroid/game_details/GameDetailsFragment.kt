@@ -18,6 +18,10 @@ import com.example.steamdroid.R
 import com.example.steamdroid.recycler.GameReviewAdpater
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class GameDetailsFragment : Fragment() {
@@ -26,8 +30,10 @@ class GameDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        val gameid = arguments?.getString("gameid")
+        println("GAMMMMME IDDDDD: $gameid")
         return inflater.inflate(R.layout.game_details, container, false)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,13 +83,13 @@ class GameDetailsFragment : Fragment() {
                     wishlistButton.setImageResource(R.drawable.whishlist_full)
                 }
             }
-
         descriptionButton.setOnClickListener {
             if (gameDescription.visibility == View.VISIBLE) {
                 descriptionButton.setBackgroundResource(R.drawable.btn_border_rounded_transparent_game_description)
                 gameDescription.visibility = View.GONE
                 reviewButton.setBackgroundResource(R.drawable.button_border_rounded_game_review)
                 recyclerReview.visibility = View.VISIBLE
+
             } else {
                 descriptionButton.setBackgroundResource(R.drawable.button_border_rounded_game_description)
                 gameDescription.visibility = View.VISIBLE
@@ -116,12 +122,17 @@ class GameDetailsFragment : Fragment() {
                 recyclerReview.adapter = GameReviewAdpater(reviews)
             }
         }
-        GameDetailsRequest().getGame(730, lang, currency) { game ->
-            if (game != null) {
+
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val game = withContext(Dispatchers.Default){
+                    RetrofitBuilder.gameDetailsService.getGame(730, lang, currency).await()
+                }
+
                 if (game.gameName != null) {
-                    Glide.with(this).load(game.backGroundImg).into(backgroundImage)
-                    Glide.with(this).load(game.icone).into(gameIcon)
-                    Glide.with(this)
+                    Glide.with(this@GameDetailsFragment).load(game.backGroundImg).into(backgroundImage)
+                    Glide.with(this@GameDetailsFragment).load(game.icone).into(gameIcon)
+                    Glide.with(this@GameDetailsFragment)
                         .load(game.backGroundImgTitle)
                         .into(object : CustomTarget<Drawable>() {
                             override fun onResourceReady(
@@ -142,8 +153,13 @@ class GameDetailsFragment : Fragment() {
                     gameDescription.text = game.gameDescription
                     gameDescription.setTextColor(resources.getColor(R.color.white))
                 }
+
+            }catch (e: Exception){
+                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
             }
         }
+
+
         gameDescription.movementMethod = ScrollingMovementMethod()
 
         //CURRENT USER
@@ -185,34 +201,34 @@ class GameDetailsFragment : Fragment() {
             val collection = db.collection("wishlist")
             collection.whereEqualTo("id", 730).get()
                 .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        val docRef = collection.document()
-                        docRef.set(
-                            mapOf(
-                                "id" to 730,
-                                "email" to auth.currentUser?.email,
-                            )
+                if (documents.isEmpty) {
+                    val docRef = collection.document()
+                    docRef.set(
+                        mapOf(
+                            "id" to 730,
+                            "email" to auth.currentUser?.email,
                         )
-                            .addOnSuccessListener {
-                                wishlistButton.setImageResource(R.drawable.whishlist_full)
-                                Toast.makeText(
-                                    context,
-                                    getString(R.string.wishlist_button_success),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                    } else {
-                        documents.forEach {
-                            collection.document(it.id).delete()
+                    )
+                        .addOnSuccessListener {
+                            wishlistButton.setImageResource(R.drawable.whishlist_full)
+                            Toast.makeText(
+                                context,
+                                getString(R.string.wishlist_button_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                        wishlistButton.setImageResource(R.drawable.whishlist)
-                        Toast.makeText(
-                            context,
-                            getString(R.string.wishlist_button_delete),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                } else {
+                    documents.forEach {
+                        collection.document(it.id).delete()
                     }
+                    wishlistButton.setImageResource(R.drawable.whishlist)
+                    Toast.makeText(
+                        context,
+                        getString(R.string.wishlist_button_delete),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+            }
         }
     }
 }

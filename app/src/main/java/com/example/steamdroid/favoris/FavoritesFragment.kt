@@ -1,5 +1,6 @@
 package com.example.steamdroid.favoris
 
+import RetrofitBuilder
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
@@ -21,6 +22,10 @@ import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class FavoritesFragment : Fragment() {
@@ -57,10 +62,18 @@ class FavoritesFragment : Fragment() {
             showWaitingDots()
             if (it != null) {
                 for (id in it) {
-                    GameDetailsRequest().getGame(id, lang, currency) { game ->
-                        if (game?.gameName != null && game.editorName != null) {
-                            products = products.plus(
-                                Product(
+
+                    GlobalScope.launch(Dispatchers.Main) {
+                        try {
+
+                            val game = withContext(Dispatchers.Default){
+                                RetrofitBuilder.gameDetailsService.getGame(id, lang, currency).await()
+                            }
+
+                            if (game.gameName != null && game.editorName != null) {
+                                products = products.plus(
+                                    Product(
+                                        id,
                                     game.gameName.orEmpty(),
                                     game.price.orEmpty(),
                                     game.backGroundImg.orEmpty(),
@@ -79,8 +92,12 @@ class FavoritesFragment : Fragment() {
                             closeBtn.setOnClickListener {
                                 navController.navigateUp()
                             }
-                            val adapter = ProductAdapter(products)
-                            recyclerView.adapter = adapter
+                            val adapter = ProductAdapter(products, this@FavoritesFragment)
+                                recyclerView.adapter = adapter
+                            }
+
+                        }catch (e: Exception){
+                            e.printStackTrace()
                         }
                     }
                 }

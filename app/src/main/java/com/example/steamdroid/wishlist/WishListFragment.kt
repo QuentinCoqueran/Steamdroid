@@ -1,5 +1,6 @@
 package com.example.steamdroid.wishlist
 
+import RetrofitBuilder
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -21,6 +22,10 @@ import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -53,14 +58,21 @@ class WishListFragment : Fragment() {
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
         val currency = if (currentLocale == "fr") "fr" else "us"
-        getWishList() { it ->
+        getWishList {
             showWaitingDots()
             if (it != null) {
                 for (id in it) {
-                    GameDetailsRequest().getGame(id, lang, currency) { game ->
-                        if (game?.gameName != null && game.editorName != null) {
-                            products = products.plus(
-                                Product(
+
+                    GlobalScope.launch(Dispatchers.Main){
+                        try {
+                            val game = withContext(Dispatchers.Default){
+                                RetrofitBuilder.gameDetailsService.getGame(id, lang, currency).await()
+                            }
+
+                            if (game.gameName != null && game.editorName != null) {
+                                products = products.plus(
+                                    Product(
+                                        id,
                                     game.gameName.orEmpty(),
                                     game.price.orEmpty(),
                                     game.backGroundImg.orEmpty(),
@@ -75,12 +87,16 @@ class WishListFragment : Fragment() {
                                 view.findViewById<LinearLayout>(R.id.linear_layout_wishlist)
                             linearMyLikes.visibility = View.GONE
                             recyclerView.visibility = View.VISIBLE
-                            val adapter = ProductAdapter(products)
-                            recyclerView.adapter = adapter
-                            var closeBtn: ImageView = view.findViewById(R.id.close_wishlist_btn)
-                            closeBtn.setOnClickListener {
-                                navController.navigateUp()
+                            val adapter = ProductAdapter(products, this@WishListFragment)
+                                recyclerView.adapter = adapter
+                                val closeBtn: ImageView = view.findViewById(R.id.close_wishlist_btn)
+                                closeBtn.setOnClickListener {
+                                    navController.navigateUp()
+                                }
                             }
+
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
                 }

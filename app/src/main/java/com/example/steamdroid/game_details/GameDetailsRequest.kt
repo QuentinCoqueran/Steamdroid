@@ -12,34 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class GameDetailsRequest {
 
-    fun getGame(gameId: Number, lang: String, currency: String, callback: (Game?) -> Unit) {
-
-        val gson: Gson = GsonBuilder()
-            .registerTypeAdapter(Game::class.java, GameTypeAdapter())
-            .create()
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://store.steampowered.com")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-
-        val api = retrofit.create(SteamApi::class.java)
-        val call = api.getGame(gameId, lang, currency)
-
-        call.enqueue(object : Callback<Game> {
-            override fun onResponse(call: Call<Game>, response: Response<Game>) {
-                if (response.isSuccessful) {
-                    val game: Game? = response.body()
-                    callback(game)
-                } else {
-                    callback(null)
-                }
-            }
-            override fun onFailure(call: Call<Game>, t: Throwable) {
-                callback(null)
-            }
-        })
-    }
-
     fun getGameReviews(gameId: Number, lang: String, json: Number, callback: (List<GameReview>?) -> Unit) {
         val gsonReview: Gson = GsonBuilder()
             .registerTypeAdapter(List::class.java, GameReviewTypeAdapter())
