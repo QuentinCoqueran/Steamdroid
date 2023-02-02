@@ -91,32 +91,24 @@ class SignInFragment : Fragment() {
 
     fun signIn(email: String, password: String, redirect: Boolean = true) {
         auth = Firebase.auth
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(context as Activity) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithEmail:success")
-                    val user = auth.currentUser
-                    updateUI(user)
-                    //redirect to home
-                    if (redirect) {
-                        navController.navigate(R.id.action_signInFragment_to_homeFragment)
+        (context as Activity?)?.let {
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(it) { task ->
+                    if (task.isSuccessful) {
+                        //redirect to home
+                        if (redirect) {
+                            navController.navigate(R.id.action_signInFragment_to_homeFragment)
+                        }
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.exception)
+                        Toast.makeText(
+                            context, "Authentication failed.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        context, "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    updateUI(null)
                 }
-            }
-    }
-
-
-    private fun updateUI(user: FirebaseUser?) {
-
+        }
     }
 
     private fun reload() {
