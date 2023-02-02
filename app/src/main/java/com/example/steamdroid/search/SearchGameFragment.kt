@@ -129,7 +129,7 @@ class SearchGameFragment : Fragment() {
                     val products = mutableListOf<Product>()
                     var cpt = 0
                     println("getProduct")
-                    GlobalScope.launch(Dispatchers.Default) {
+                    GlobalScope.launch(Dispatchers.Main) {
                         for (i in sendList) {
 
                             try {
@@ -230,13 +230,13 @@ class SearchGameFragment : Fragment() {
 
                     var cpt = 0
 
-                    GlobalScope.launch(Dispatchers.Default) {
+                    GlobalScope.launch(Dispatchers.Main) {
                         for (i in list) {
 
                             try {
                                 val result = withContext(Dispatchers.Default) {
                                     println("wait for await !")
-                                    delay(2000)
+                                    delay(1500)
                                     RetrofitBuilder.gameDetailsService.getGame(i.appId!!, lang, currency).await()
                                 }
                                 println("wait for await  ?")
