@@ -25,7 +25,6 @@ import kotlinx.coroutines.*
 import retrofit2.await
 import java.util.*
 
-
 class HomeFragment : Fragment() {
     private val handler = Handler()
     private var isFinished = true
@@ -46,7 +45,7 @@ class HomeFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.home, container, false)
     }
-
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
@@ -67,9 +66,8 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
         //RECYCLER
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_home)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
         //////////////////////////////////////////
@@ -113,8 +111,6 @@ class HomeFragment : Fragment() {
                     if (!doCancel) {
                         GlobalScope.launch(Dispatchers.Main) {
                             for (i in sendList) {
-
-
                                 try {
                                     val game = withContext(Dispatchers.Default) {
                                         delay(500)
@@ -265,8 +261,6 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-
-
         val searchInput = view.findViewById<View>(R.id.search_input)
         searchInput.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_searchGameFragment)
@@ -289,7 +283,6 @@ class HomeFragment : Fragment() {
         updateDots()
     }
 
-
     private fun updateDots() {
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarHome)
         if (isFinished) {
@@ -305,14 +298,19 @@ class HomeFragment : Fragment() {
     fun setRecycler(list: MutableList<Product>) {
         ContextCompat.getMainExecutor(this.requireContext()).execute {
             // This is where your UI code goes.
-            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view)
+            val recyclerView = this@HomeFragment.view?.findViewById<RecyclerView>(R.id.recycler_view_home)
             isFinished = true
-            recyclerView.adapter = ProductAdapter(list as List<Product>, this)
-            recyclerView.layoutManager = LinearLayoutManager(this@HomeFragment.context)
-            recyclerView.setHasFixedSize(true)
+            if (recyclerView != null) {
+                recyclerView.adapter = ProductAdapter(list as List<Product>, this)
+            }
+            if (recyclerView != null) {
+                recyclerView.layoutManager = LinearLayoutManager(this@HomeFragment.context)
+            }
+            recyclerView?.setHasFixedSize(true)
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     @WorkerThread
     fun updateRecycler(list: MutableList<Product>) {
         ContextCompat.getMainExecutor(this.requireContext()).execute {
@@ -320,7 +318,7 @@ class HomeFragment : Fragment() {
                 val recyclerView = withContext(Dispatchers.Default) {
                     while (needSuspend)
                         delay(500)
-                    this@HomeFragment.requireView().findViewById<RecyclerView>(R.id.recycler_view)
+                    this@HomeFragment.requireView().findViewById<RecyclerView>(R.id.recycler_view_home)
 
                 }
                 // This is where your UI code goes.

@@ -52,6 +52,9 @@
     <string name="like_button_delete">Retiré des favoris</string>
     <string name="wishlist_button_success">Ajouté aux favoris</string>
     <string name="wishlist_button_delete">Retiré de la wishlist</string>
-
-
+    <string name="close_search">ferme_recherche</string>
+    <string name="close_fav">close_fav</string>
+    <string name="empty_likes">empty_likes</string>
+    <string name="back_game_details">back_game_details</string>
+    <string name="back_ground">back_ground</string>
 </resources>

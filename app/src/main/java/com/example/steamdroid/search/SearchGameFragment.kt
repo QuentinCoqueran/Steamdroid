@@ -1,7 +1,6 @@
 package com.example.steamdroid.search
 
 import RetrofitBuilder
-import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -20,7 +19,6 @@ import com.example.steamdroid.R
 import com.example.steamdroid.home.HomeFragment.Companion.inProgress
 import com.example.steamdroid.home.HomeFragment.Companion.isLoaded
 import com.example.steamdroid.home.HomeFragment.Companion.searchGameList
-import com.example.steamdroid.main.MainActivity
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import kotlinx.coroutines.*
@@ -51,7 +49,7 @@ class SearchGameFragment : Fragment() {
         val lang = if (currentLocale == "fr") "french" else "english"
         val currency = if (currentLocale == "fr") "fr" else "us"
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_home)
         showWaitingDots()
 
         var actualList = mutableListOf<SearchGame>()
@@ -309,7 +307,7 @@ class SearchGameFragment : Fragment() {
         ContextCompat.getMainExecutor(this.requireContext()).execute {
             // This is where your UI code goes.
             println("FINISH !")
-            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view)
+            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view_home)
 
             println("products GET")
 
@@ -331,7 +329,7 @@ class SearchGameFragment : Fragment() {
         ContextCompat.getMainExecutor(this.requireContext()).execute {
             // This is where your UI code goes.
             println("FINISH !")
-            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view)
+            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view_home)
 
             println("products GET")
 

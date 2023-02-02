@@ -15,7 +15,6 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
-import com.example.steamdroid.databinding.WishlistBinding
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -37,25 +36,24 @@ class WishListFragment : Fragment() {
         return inflater.inflate(R.layout.wishlist, container, false)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         navController = Navigation.findNavController(view)
         //LOADER
         isFinished = false
         //RECYCLER VIEW
-        val binding = WishlistBinding.inflate(layoutInflater)
-        //setContentView(binding.root)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_wishlist)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
         //////////////////////////////////////////
-        var count = 0;
-        var products: List<Product> = listOf();
+        var count = 0
+        var products: List<Product> = listOf()
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
         val currency = if (currentLocale == "fr") "fr" else "us"
         val auth = FirebaseAuth.getInstance()
-        var wishListId = listOf<Number>();
+        var wishListId = listOf<Number>()
         val db = FirebaseFirestore.getInstance()
         val docRef = db.collection("wishlist").whereEqualTo("email", auth.currentUser?.email)
         GlobalScope.launch(Dispatchers.Main) {
@@ -76,6 +74,7 @@ class WishListFragment : Fragment() {
                 GlobalScope.launch(Dispatchers.Main) {
                     try {
                         val game = withContext(Dispatchers.Default) {
+                            delay(500)
                             RetrofitBuilder.gameDetailsService.getGame(id, lang, currency)
                                 .await()
                         }
@@ -122,7 +121,7 @@ class WishListFragment : Fragment() {
         }
     }
 
-    fun showWaitingDots() {
+    private fun showWaitingDots() {
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarWishlist)
         if (progressBar != null) {
             progressBar.visibility = View.VISIBLE
