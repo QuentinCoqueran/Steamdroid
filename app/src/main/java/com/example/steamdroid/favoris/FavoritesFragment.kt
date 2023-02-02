@@ -92,7 +92,7 @@ class FavoritesFragment : Fragment() {
                             closeBtn.setOnClickListener {
                                 navController.navigateUp()
                             }
-                            val adapter = ProductAdapter(products, this)
+                            val adapter = ProductAdapter(products, this@FavoritesFragment)
                                 recyclerView.adapter = adapter
                             }
 

@@ -150,6 +150,7 @@ class HomeFragment : Fragment() {
 
                                     products = products.plus(
                                         Product(
+                                            id,
                                             game.gameName.orEmpty(),
                                             game.price.orEmpty(),
                                             game.backGroundImg.orEmpty(),
@@ -170,6 +171,7 @@ class HomeFragment : Fragment() {
 
                                 products = products.plus(
                                     Product(
+                                        id,
                                         "No name",
                                         "0",
                                         "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius",
@@ -246,6 +248,7 @@ class HomeFragment : Fragment() {
 
                                     newList.add(
                                         Product(
+                                            i.appid,
                                             game.gameName.orEmpty(),
                                             game.price.orEmpty(),
                                             game.backGroundImg.orEmpty(),
@@ -267,6 +270,7 @@ class HomeFragment : Fragment() {
 
                                 newList.plus(
                                     Product(
+                                        i.appid,
                                         "No name",
                                         "0",
                                         "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius",
@@ -341,7 +345,7 @@ class HomeFragment : Fragment() {
 
             println(" 1 products size : ${list.size}")
 
-            recyclerView.adapter = ProductAdapter(list as List<Product>)
+            recyclerView.adapter = ProductAdapter(list as List<Product>, this)
             println("adapter set")
             recyclerView.layoutManager = LinearLayoutManager(this@HomeFragment.context)
             println("layout set")

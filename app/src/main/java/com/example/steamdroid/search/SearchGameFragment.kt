@@ -151,6 +151,7 @@ class SearchGameFragment : Fragment() {
 
                                 products.add(
                                     Product(
+                                        i.appId,
                                         result.gameName.orEmpty(),
                                         result.price.orEmpty(),
                                         result.backGroundImg.orEmpty(),
@@ -169,6 +170,7 @@ class SearchGameFragment : Fragment() {
 
                                 products.add(
                                     Product(
+                                        i.appId,
                                         i.appName.orEmpty(),
                                         "0",
                                         "https://static.vecteezy.com/system/resources/previews/002/326/623/original/black-golden-royal-luxury-background-landing-page-free-vector.jpg",
@@ -252,6 +254,7 @@ class SearchGameFragment : Fragment() {
 
                                 newList.add(
                                     Product(
+                                        i.appId,
                                         result.gameName.orEmpty(),
                                         result.price.orEmpty(),
                                         result.backGroundImg.orEmpty(),
@@ -270,6 +273,7 @@ class SearchGameFragment : Fragment() {
 
                                 newList.add(
                                     Product(
+                                        i.appId,
                                         i.appName.orEmpty(),
                                         "0",
                                         "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius",
@@ -313,7 +317,7 @@ class SearchGameFragment : Fragment() {
 
             println(" 1 products size : ${list.size}")
 
-            recyclerView.adapter = ProductAdapter(list as List<Product>)
+            recyclerView.adapter = ProductAdapter(list as List<Product>,this@SearchGameFragment)
             println("adapter set")
             recyclerView.layoutManager = LinearLayoutManager(this@SearchGameFragment.context)
             println("layout set")

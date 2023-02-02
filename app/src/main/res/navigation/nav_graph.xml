@@ -95,6 +95,9 @@
         <action
             android:id="@+id/action_gameDetailsFragment_to_searchGameFragment"
             app:destination="@id/searchGameFragment" />
+        <argument
+            android:name="gameId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/searchGameFragment"
@@ -106,8 +109,9 @@
         <action
             android:id="@+id/action_searchGameFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
-        <argument
-            android:name="gameId"
-            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_searchGameFragment_to_gameDetailsFragment2"
+            app:destination="@id/gameDetailsFragment" />
     </fragment>
 </navigation>

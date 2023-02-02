@@ -32,7 +32,10 @@ class GameDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val gameid = arguments?.getString("gameid")
+        println("GAMMMMME IDDDDD: $gameid")
         return inflater.inflate(R.layout.game_details, container, false)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -199,34 +202,34 @@ class GameDetailsFragment : Fragment() {
             val collection = db.collection("wishlist")
             collection.whereEqualTo("id", 730).get()
                 .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        val docRef = collection.document()
-                        docRef.set(
-                            mapOf(
-                                "id" to 730,
-                                "email" to auth.currentUser?.email,
-                            )
+                if (documents.isEmpty) {
+                    val docRef = collection.document()
+                    docRef.set(
+                        mapOf(
+                            "id" to 730,
+                            "email" to auth.currentUser?.email,
                         )
-                            .addOnSuccessListener {
-                                wishlistButton.setImageResource(R.drawable.whishlist_full)
-                                Toast.makeText(
-                                    context,
-                                    getString(R.string.wishlist_button_success),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                    } else {
-                        documents.forEach {
-                            collection.document(it.id).delete()
+                    )
+                        .addOnSuccessListener {
+                            wishlistButton.setImageResource(R.drawable.whishlist_full)
+                            Toast.makeText(
+                                context,
+                                getString(R.string.wishlist_button_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                        wishlistButton.setImageResource(R.drawable.whishlist)
-                        Toast.makeText(
-                            context,
-                            getString(R.string.wishlist_button_delete),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                } else {
+                    documents.forEach {
+                        collection.document(it.id).delete()
                     }
+                    wishlistButton.setImageResource(R.drawable.whishlist)
+                    Toast.makeText(
+                        context,
+                        getString(R.string.wishlist_button_delete),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+            }
         }
     }
 }

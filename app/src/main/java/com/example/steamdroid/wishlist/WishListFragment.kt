@@ -87,7 +87,7 @@ class WishListFragment : Fragment() {
                                 view.findViewById<LinearLayout>(R.id.linear_layout_wishlist)
                             linearMyLikes.visibility = View.GONE
                             recyclerView.visibility = View.VISIBLE
-                            val adapter = ProductAdapter(products, this)
+                            val adapter = ProductAdapter(products, this@WishListFragment)
                                 recyclerView.adapter = adapter
                                 val closeBtn: ImageView = view.findViewById(R.id.close_wishlist_btn)
                                 closeBtn.setOnClickListener {

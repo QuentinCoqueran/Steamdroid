@@ -12,6 +12,7 @@ import com.example.steamdroid.R
 import com.example.steamdroid.favoris.FavoritesFragment
 import com.example.steamdroid.home.HomeFragment
 import com.example.steamdroid.model.Product
+import com.example.steamdroid.search.SearchGameFragment
 import com.example.steamdroid.wishlist.WishListFragment
 
 class ProductAdapter(private var products: List<Product>, private val parentFragment: Fragment) :
@@ -29,6 +30,7 @@ class ProductAdapter(private var products: List<Product>, private val parentFrag
         holder.updateView(products[position])
         holder.game_details_button.setOnClickListener {
             val args = Bundle()
+            println(products[position].gameId.toString())
             args.putString("gameId", products[position].gameId.toString())
             when (parentFragment) {
                 is FavoritesFragment -> {
@@ -37,15 +39,13 @@ class ProductAdapter(private var products: List<Product>, private val parentFrag
                 is WishListFragment -> {
                     parentFragment.findNavController().navigate(R.id.action_wishListFragment_to_gameDetailsFragment, args)
                 }
-                // A décommenter quand SearchGameFragment sera créé
-                /*is SearchGameFragment -> {
-                    parentFragment.findNavController().navigate(R.id.action_gameDetailsFragment_to_gameDetailsRequest, args)
-                }*/
+                is SearchGameFragment -> {
+                    parentFragment.findNavController().navigate(R.id.action_searchGameFragment_to_gameDetailsFragment, args)
+                }
                 is HomeFragment -> {
                     parentFragment.findNavController().navigate(R.id.action_homeFragment_to_gameDetailsFragment, args)
                 }
             }
-
         }
     }
 
