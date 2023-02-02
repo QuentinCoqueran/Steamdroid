@@ -52,4 +52,6 @@
     <string name="empty_likes">empty_likes</string>
     <string name="back_game_details">back_game_details</string>
     <string name="back_ground">back_ground</string>
+    <string name="lang">english</string>
+    <string name="currency">us</string>
 </resources>

@@ -24,8 +24,11 @@ class ProductViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         productName.text = product.gameName
         productBrand.text = product.gameEditor?.joinToString(separator = ", ")
         productPrice.text = product.gamePrice.toString()
-        Glide.with(productImg.context).load(product.gameImage).into(productImg)
-        Glide.with(productBackgroundImage.context).load(product.backgroundImage)
+        Glide.with(productImg.context)
+            .load("https://steamcdn-a.akamaihd.net/steam/apps/${product.gameId}/library_600x900.jpg")
+            .into(productImg)
+        Glide.with(productBackgroundImage.context)
+            .load(product.backgroundImage)
             .into(productBackgroundImage)
     }
 }

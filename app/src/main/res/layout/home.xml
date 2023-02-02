@@ -115,7 +115,7 @@
                 android:text="@string/to_know_more"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 

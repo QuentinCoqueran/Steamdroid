@@ -95,9 +95,10 @@ class HomeFragment : Fragment() {
             navController.navigate(R.id.action_homeFragment_to_gameDetailsFragment, args)
         }
 
-        val currentLocale = Locale.getDefault().language
-        val lang = if (currentLocale == "fr") "french" else "english"
-        val currency = if (currentLocale == "fr") "fr" else "us"
+        // Language
+        val lang = getString(R.string.lang)
+        val currency = getString(R.string.currency)
+
         var count = 0
         var products: List<Product> = listOf()
 
