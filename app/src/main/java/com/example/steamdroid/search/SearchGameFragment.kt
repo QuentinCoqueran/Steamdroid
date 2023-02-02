@@ -135,7 +135,7 @@ class SearchGameFragment : Fragment() {
                             try {
                                 val result = withContext(Dispatchers.Default) {
                                     println("wait for await !")
-                                    delay(2000)
+                                    delay(500)
                                     RetrofitBuilder.gameDetailsService.getGame(i.appId!!, lang, currency).await()
                                 }
                                 println("wait for await  ?")
@@ -236,7 +236,7 @@ class SearchGameFragment : Fragment() {
                             try {
                                 val result = withContext(Dispatchers.Default) {
                                     println("wait for await !")
-                                    delay(1500)
+                                    delay(500)
                                     RetrofitBuilder.gameDetailsService.getGame(i.appId!!, lang, currency).await()
                                 }
                                 println("wait for await  ?")

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.annotation.WorkerThread
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -35,6 +36,7 @@ class HomeFragment : Fragment() {
     companion object {
         var searchGameList = mutableListOf<SearchGame>()
         var productGameList = mutableListOf<Product>()
+        var localList = mutableListOf<Rank>()
         var isLoaded = false
         var inProgress = false
     }
@@ -97,62 +99,94 @@ class HomeFragment : Fragment() {
         val currency = if (currentLocale == "fr") "fr" else "us"
         var count = 0
         var products: List<Product> = listOf()
+
+
+
         if (productGameList.isEmpty()) {
             apiClient.getResponse() { bestSellersResponse ->
                 showWaitingDots()
-                GlobalScope.launch(Dispatchers.Main){
-                    for (i in bestSellersResponse!!.response.ranks) {
+
+                localList = bestSellersResponse!!.response.ranks as MutableList<Rank>
+
+                var max = 5
+
+                var doCancel = false
+
+                if (localList.size in 1..4) {
+                    max = localList.size
+                } else if (localList.size == 0) {
+                    isFinished = true
+                    Toast.makeText(context, "No more games", Toast.LENGTH_SHORT)
+                        .show()
+                    doCancel = true
+                }
+
+                val sendList = localList.subList(0, max).toMutableList()
+
+                localList.subList(0, max).clear()
 
 
-                        try {
-                            val game = withContext(Dispatchers.Default){
-                                delay(2000)
-                                RetrofitBuilder.gameDetailsService.getGame(i.appid, lang, currency).await()
-                            }
 
-                            if (game.gameName != null && game.editorName != null) {
 
-                                println("gameName: ${game.gameName}")
+                if(!doCancel) {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        for (i in sendList) {
+
+
+                            try {
+                                val game = withContext(Dispatchers.Default) {
+                                    delay(500)
+                                    RetrofitBuilder.gameDetailsService.getGame(
+                                        i.appid,
+                                        lang,
+                                        currency
+                                    ).await()
+                                }
+
+                                if (game.gameName != null && game.editorName != null) {
+
+                                    println("gameName: ${game.gameName}")
+
+                                    products = products.plus(
+                                        Product(
+                                            game.gameName.orEmpty(),
+                                            game.price.orEmpty(),
+                                            game.backGroundImg.orEmpty(),
+                                            game.editorName.orEmpty(),
+                                            game.backGroundImgTitle.orEmpty()
+                                        )
+                                    )
+                                }
+                                count++
+                                if (count == sendList.size) {
+                                    isFinished = true
+                                    productGameList = products.toMutableList()
+                                    setRecycler(productGameList)
+                                }
+
+                            } catch (e: Exception) {
+                                println("error : ${e.message}")
 
                                 products = products.plus(
                                     Product(
-                                        game.gameName.orEmpty(),
-                                        game.price.orEmpty(),
-                                        game.backGroundImg.orEmpty(),
-                                        game.editorName.orEmpty(),
-                                        game.backGroundImgTitle.orEmpty()
+                                        "No name",
+                                        "0",
+                                        "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius",
+                                        listOf("Probably got kick of API"),
+                                        "Unknown"
                                     )
                                 )
+
+                                count++
+
+                                if (count == sendList.size) {
+                                    isFinished = true
+                                    productGameList = products.toMutableList()
+                                    setRecycler(productGameList)
+                                }
                             }
-                            count++
-                            if (count == bestSellersResponse.response.ranks.size) {
-                                isFinished = true
-                                productGameList = products.toMutableList()
-                                setRecycler(productGameList)
-                            }
 
-                        } catch (e: Exception) {
-                            println("error : ${e.message}")
-
-                            products = products.plus(
-                                Product(
-                                    "No name",
-                                    "0",
-                                    "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius",
-                                    listOf("Probably got kick of API"),
-                                    "Unknown"
-                                )
-                            )
-
-                            count++
-
-                            if (count == bestSellersResponse.response.ranks.size) {
-                                isFinished = true
-                                productGameList = products.toMutableList()
-                                setRecycler(productGameList)
-                            }
                         }
-
                     }
                 }
             }
@@ -161,6 +195,101 @@ class HomeFragment : Fragment() {
             val adapter = ProductAdapter(productGameList)
             recyclerView.adapter = adapter
         }
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    println("end of list")
+
+                    if (!isFinished){
+                        return
+                    }
+
+                    isFinished = false
+                    showWaitingDots()
+
+                    var max = 5
+
+                    if (localList.size in 1..4) {
+                        max = localList.size
+                    } else if (localList.size == 0) {
+                        isFinished = true
+                        Toast.makeText(context, "No more games", Toast.LENGTH_SHORT)
+                            .show()
+                        return
+                    }
+
+                    val list = localList.subList(0, max).toMutableList()
+                    localList.subList(0, max).clear()
+                    val newList = mutableListOf<Product>()
+
+                    var cpt = 0
+
+                    GlobalScope.launch(Dispatchers.Main) {
+                        for (i in list) {
+
+                            try {
+                                val game = withContext(Dispatchers.Default) {
+                                    delay(500)
+                                    RetrofitBuilder.gameDetailsService.getGame(
+                                        i.appid,
+                                        lang,
+                                        currency
+                                    ).await()
+                                }
+
+                                if (game.gameName != null && game.editorName != null) {
+
+                                    println("gameName: ${game.gameName}")
+
+                                    newList.add(
+                                        Product(
+                                            game.gameName.orEmpty(),
+                                            game.price.orEmpty(),
+                                            game.backGroundImg.orEmpty(),
+                                            game.editorName.orEmpty(),
+                                            game.backGroundImgTitle.orEmpty()
+                                        )
+                                    )
+                                }
+                                cpt++
+                                println("count: $cpt / ${list.size}")
+                                if (cpt == list.size) {
+                                    isFinished = true
+                                    productGameList.addAll(newList.toMutableList())
+                                    updateRecycler(newList)
+                                }
+
+                            } catch (e: Exception) {
+                                println("error : ${e.message}")
+
+                                newList.plus(
+                                    Product(
+                                        "No name",
+                                        "0",
+                                        "https://play-lh.googleusercontent.com/YUBDky2apqeojcw6eexQEpitWuRPOK7kPe_UbqQNv-A4Pi_fXm-YQ8vTCwPKtxIPgius",
+                                        listOf("Probably got kick of API"),
+                                        "Unknown"
+                                    )
+                                )
+
+                                cpt++
+                                println("count: $cpt / ${list.size}")
+                                if (cpt == list.size) {
+                                    isFinished = true
+                                    productGameList.addAll(newList.toMutableList())
+                                    updateRecycler(newList)
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+        })
 
 
         val searchInput = view.findViewById<View>(R.id.search_input)
@@ -217,6 +346,28 @@ class HomeFragment : Fragment() {
             println("layout set")
             recyclerView.setHasFixedSize(true)
             println("has fixed size")
+        }
+    }
+
+    @WorkerThread
+    fun updateRecycler(list: MutableList<Product>) {
+        ContextCompat.getMainExecutor(this.requireContext()).execute {
+            // This is where your UI code goes.
+            println("FINISH !")
+            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view)
+
+            println("products GET")
+
+            isFinished = true
+
+            val adapter = recyclerView.adapter as ProductAdapter
+
+            list.forEach(){
+                println("GET name: ${it.gameName}")
+            }
+
+            adapter.updateProducts(list)
+            adapter.notifyItemRangeInserted(adapter.itemCount, list.size)
         }
     }
 }

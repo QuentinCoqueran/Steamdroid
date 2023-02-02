@@ -10,7 +10,6 @@ class ProductAdapter(private var products : List<Product>) : RecyclerView.Adapte
     override fun getItemCount(): Int = products.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        println("TEST onCreateViewHolder")
         return ProductViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_item, parent, false)

@@ -19,7 +19,6 @@ class ProductViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
     @SuppressLint("SetTextI18n")
     fun updateView(product: Product) {
-        println("TEST ProductViewHolder")
         productName.text = product.gameName
         productBrand.text = product.gameEditor?.joinToString(separator = ", ")
         productPrice.text = product.gamePrice.toString()
