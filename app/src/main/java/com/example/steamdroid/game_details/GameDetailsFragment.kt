@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.example.steamdroid.R
 import com.example.steamdroid.recycler.GameReviewAdpater
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
 
@@ -145,53 +146,73 @@ class GameDetailsFragment : Fragment() {
         }
         gameDescription.movementMethod = ScrollingMovementMethod()
 
+        //CURRENT USER
+        val auth = FirebaseAuth.getInstance()
         likeButton.setOnClickListener {
             val collection = db.collection("favorites")
             collection.whereEqualTo("id", 730).get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    val docRef = collection.document()
-                    docRef.set(mapOf("id" to 730))
-                        .addOnSuccessListener {
-                            likeButton.setImageResource(R.drawable.like_full)
-                            Toast.makeText(
-                                context,
-                                getString(R.string.like_button_success),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        val docRef = collection.document()
+                        docRef.set(
+                            mapOf(
+                                "id" to 730,
+                                "email" to auth.currentUser?.email,
+                            )
+                        )
+                            .addOnSuccessListener {
+                                likeButton.setImageResource(R.drawable.like_full)
+                                Toast.makeText(
+                                    context,
+                                    getString(R.string.like_button_success),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                    } else {
+                        documents.forEach {
+                            collection.document(it.id).delete()
                         }
-                } else {
-                    documents.forEach {
-                        collection.document(it.id).delete()
+                        likeButton.setImageResource(R.drawable.like)
+                        Toast.makeText(
+                            context,
+                            getString(R.string.like_button_delete),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                    likeButton.setImageResource(R.drawable.like)
-                    Toast.makeText(context, getString(R.string.like_button_delete), Toast.LENGTH_SHORT).show()
                 }
-            }
         }
         wishlistButton.setOnClickListener {
             val collection = db.collection("wishlist")
             collection.whereEqualTo("id", 730).get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    val docRef = collection.document()
-                    docRef.set(mapOf("id" to 730))
-                        .addOnSuccessListener {
-                            wishlistButton.setImageResource(R.drawable.whishlist_full)
-                            Toast.makeText(
-                                context,
-                                getString(R.string.wishlist_button_success),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        val docRef = collection.document()
+                        docRef.set(
+                            mapOf(
+                                "id" to 730,
+                                "email" to auth.currentUser?.email,
+                            )
+                        )
+                            .addOnSuccessListener {
+                                wishlistButton.setImageResource(R.drawable.whishlist_full)
+                                Toast.makeText(
+                                    context,
+                                    getString(R.string.wishlist_button_success),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                    } else {
+                        documents.forEach {
+                            collection.document(it.id).delete()
                         }
-                } else {
-                    documents.forEach {
-                        collection.document(it.id).delete()
+                        wishlistButton.setImageResource(R.drawable.whishlist)
+                        Toast.makeText(
+                            context,
+                            getString(R.string.wishlist_button_delete),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                    wishlistButton.setImageResource(R.drawable.whishlist)
-                    Toast.makeText(context, getString(R.string.wishlist_button_delete), Toast.LENGTH_SHORT).show()
                 }
-            }
         }
     }
 }

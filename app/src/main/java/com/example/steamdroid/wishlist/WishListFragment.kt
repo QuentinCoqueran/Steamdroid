@@ -19,6 +19,7 @@ import com.example.steamdroid.databinding.WishlistBinding
 import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
@@ -93,9 +94,10 @@ class WishListFragment : Fragment() {
     }
 
     private fun getWishList(callback: (List<Number>?) -> Unit) {
+        val auth = FirebaseAuth.getInstance()
         var wishListId = listOf<Number>();
         val db = FirebaseFirestore.getInstance()
-        val docRef = db.collection("wishlist")
+        val docRef = db.collection("wishlist").whereEqualTo("email", auth.currentUser?.email)
         docRef.get().addOnSuccessListener { documents ->
             if (!documents.isEmpty) {
                 for (document in documents) {
