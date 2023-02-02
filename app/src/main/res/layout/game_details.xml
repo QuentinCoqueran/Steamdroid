@@ -31,13 +31,11 @@
                 android:id="@+id/like"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/like_full"
                 android:layout_margin="10dp" />
             <ImageView
                 android:id="@+id/whishlist"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/whishlist_full"
                 android:layout_margin="10dp" />
         </LinearLayout>
     </LinearLayout>

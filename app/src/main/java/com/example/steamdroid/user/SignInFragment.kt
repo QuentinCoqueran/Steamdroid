@@ -58,17 +58,17 @@ class SignInFragment : Fragment() {
             navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
         }
         //GAME DETAILS
- /*       forgotPasswordRedirect.setOnClickListener {
+/*        forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_gameDetailsFragment)
         }*/
         //HOME
 /*        forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_homeFragment)
         }*/
+        //FORGOT PASSWORD
         forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_initializationPasswordFragment)
         }
-
     }
 
     private fun isConnected() {

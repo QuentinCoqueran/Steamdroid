@@ -64,7 +64,7 @@
             tools:ignore="SmallSp" />
 
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/game_details_button"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:background="@drawable/button_border_rounded"
