@@ -48,6 +48,10 @@
     <string name="you_dont_have_any_wishlist_yet_v2">
         Cliquez sur le l\'étoile pour en ajouter.
     </string>
+    <string name="like_button_success">Ajouté aux favoris</string>
+    <string name="like_button_delete">Retiré des favoris</string>
+    <string name="wishlist_button_success">Ajouté aux favoris</string>
+    <string name="wishlist_button_delete">Retiré de la wishlist</string>
 
 
 </resources>

@@ -43,4 +43,8 @@
     <string name="you_dont_have_any_wishlist_yet_v2">
         Click on the star to add.
     </string>
+    <string name="like_button_success">Added to favorites</string>
+    <string name="like_button_delete">Removed from favorites</string>
+    <string name="wishlist_button_success">Added to your wishlist</string>
+    <string name="wishlist_button_delete">Removed from wishlist</string>
 </resources>
