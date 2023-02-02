@@ -2,11 +2,14 @@ package com.example.steamdroid.user
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -14,16 +17,15 @@ import androidx.navigation.Navigation
 import com.example.steamdroid.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 class CreateAccountFragment : Fragment() {
-
+    private val handler = Handler()
     private lateinit var auth: FirebaseAuth
     private lateinit var navController: NavController
-
+    private var isFinished = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,7 +65,6 @@ class CreateAccountFragment : Fragment() {
             }
         }
 
-        // Redirect to log in page
         logInRedirect.setOnClickListener {
             navController.navigate(R.id.action_createAccountFragment_to_signInFragment2)
         }
@@ -147,29 +148,20 @@ class CreateAccountFragment : Fragment() {
         auth = Firebase.auth
     }
 
-    override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            reload()
-        }
-    }
-
     private fun createAccount(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as Activity) { task ->
                 if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    updateUI(user)
-                    //redirect to home activity
                     SignInFragment().signIn(email, password, false)
-                    //startActivity(Intent(this, HomeActivity::class.java))
+                    isFinished = true
                     navController.navigate(R.id.action_createAccountFragment_to_homeFragment)
                 } else {
-                    println("createUserWithEmail:failure")
-                    println(task.exception)
-                    updateUI(null)
+                    Toast.makeText(
+                        context,
+                        getString(R.string.error_server),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    task.exception?.printStackTrace()
                 }
             }
     }
@@ -179,6 +171,8 @@ class CreateAccountFragment : Fragment() {
         passwordInput: TextInputEditText,
         usernameInput: TextInputEditText
     ) {
+        isFinished = false
+        showWaitingDots()
         val username = usernameInput.text.toString()
         val email = emailInput.text.toString()
         val password = passwordInput.text.toString()
@@ -192,16 +186,32 @@ class CreateAccountFragment : Fragment() {
             if (task.isSuccessful) {
                 createAccount(email, password)
             } else {
-                updateUI(null)
+                Toast.makeText(
+                    context,
+                    getString(R.string.error_server),
+                    Toast.LENGTH_SHORT
+                ).show()
+                task.exception?.printStackTrace()
             }
         }
     }
-}
 
-private fun updateUI(user: FirebaseUser?) {
+    private fun showWaitingDots() {
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarWishlist)
+        if (progressBar != null) {
+            progressBar.visibility = View.VISIBLE
+        }
+        updateDots()
+    }
 
-}
-
-private fun reload() {
-
+    private fun updateDots() {
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarWishlist)
+        if (isFinished) {
+            if (progressBar != null) {
+                progressBar.visibility = View.GONE
+            }
+            return
+        }
+        handler.postDelayed({ updateDots() }, 1000)
+    }
 }

@@ -68,6 +68,11 @@ class HomeFragment : Fragment() {
                     isLoaded = true
                     inProgress = false
                 } catch (e: Exception) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.error_server),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     e.printStackTrace()
                 }
             }
@@ -179,6 +184,11 @@ class HomeFragment : Fragment() {
                         }
                     }
                 } catch (e: Exception) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.error_server),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     e.printStackTrace()
                 }
             }

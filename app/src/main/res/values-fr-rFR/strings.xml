@@ -59,4 +59,7 @@
     <string name="back_ground">back_ground</string>
     <string name="lang">french</string>
     <string name="currency">fr</string>
+    <string name="error_server">Une erreur est survenue, veuillez réessayer</string>
+    <string name="error_empty_signin">Veuillez remplir tous les champs</string>
+    <string name="error_empty_auth">Erreur d\'authentification</string>
 </resources>

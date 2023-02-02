@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -71,8 +72,12 @@ class WishListFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-            // UNIFORMISER LES ERREURS
-                println(e)
+                Toast.makeText(
+                    context,
+                    getString(R.string.error_server),
+                    Toast.LENGTH_SHORT
+                ).show()
+                e.printStackTrace()
             }
             showWaitingDots()
             for (id in wishListId) {
@@ -110,6 +115,11 @@ class WishListFragment : Fragment() {
                             }
                         }
                     } catch (e: Exception) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.error_server),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         e.printStackTrace()
                     }
                 }
