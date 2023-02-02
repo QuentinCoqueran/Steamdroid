@@ -81,7 +81,6 @@ class HomeFragment : Fragment() {
             navController.navigate(R.id.action_homeFragment_to_favoritesFragment)
         }
 
-
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
         val currency = if (currentLocale == "fr") "fr" else "us"
@@ -199,10 +198,8 @@ class HomeFragment : Fragment() {
                     val newList = mutableListOf<Product>()
 
                     var cpt = 0
-
                     GlobalScope.launch(Dispatchers.Main) {
                         for (i in list) {
-
                             try {
                                 val game = withContext(Dispatchers.Default) {
                                     delay(500)
@@ -212,9 +209,7 @@ class HomeFragment : Fragment() {
                                         currency
                                     ).await()
                                 }
-
                                 if (game.gameName != null && game.editorName != null) {
-
                                     newList.add(
                                         Product(
                                             i.appid,
@@ -230,10 +225,8 @@ class HomeFragment : Fragment() {
                                 if (cpt == list.size) {
                                     isFinished = true
                                     updateRecycler(newList)
-
                                     productGameList.addAll(newList)
                                 }
-
                             } catch (e: Exception) {
                                 newList.plus(
                                     Product(
@@ -245,7 +238,6 @@ class HomeFragment : Fragment() {
                                         "Unknown"
                                     )
                                 )
-
                                 cpt++
                                 if (cpt == list.size) {
                                     isFinished = true
@@ -253,11 +245,8 @@ class HomeFragment : Fragment() {
                                     productGameList.addAll(newList)
                                 }
                             }
-
                         }
-
                     }
-
                 }
             }
         })
@@ -319,13 +308,11 @@ class HomeFragment : Fragment() {
                     while (needSuspend)
                         delay(500)
                     this@HomeFragment.requireView().findViewById<RecyclerView>(R.id.recycler_view_home)
-
                 }
                 // This is where your UI code goes.
                 isFinished = true
                 val adapter = recyclerView.adapter as ProductAdapter
                 adapter.notifyItemRangeInserted(adapter.itemCount, list.size)
-
             }
         }
     }

@@ -117,6 +117,7 @@ class GameDetailsFragment : Fragment() {
         backButton.setOnClickListener {
             navController.navigateUp()
         }
+
         if (gameId != null) {
             GameDetailsRequest().getGameReviews(gameId, lang, 1) { reviews ->
                 if (reviews != null) {
@@ -134,7 +135,6 @@ class GameDetailsFragment : Fragment() {
                 val game = withContext(Dispatchers.Default) {
                     RetrofitBuilder.gameDetailsService.getGame(gameId!!, lang, currency).await()
                 }
-
                 if (game.gameName != null) {
                     Glide.with(this@GameDetailsFragment).load(game.backGroundImg)
                         .into(backgroundImage)
@@ -160,16 +160,12 @@ class GameDetailsFragment : Fragment() {
                     gameDescription.text = game.gameDescription
                     gameDescription.setTextColor(resources.getColor(R.color.white))
                 }
-
             } catch (e: Exception) {
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
             }
         }
 
-
         gameDescription.movementMethod = ScrollingMovementMethod()
-
-        //CURRENT USER
         val auth = FirebaseAuth.getInstance()
         likeButton.setOnClickListener {
             val collection = db.collection("favorites")

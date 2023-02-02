@@ -28,7 +28,6 @@ class CreateAccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.create_account, container, false)
     }
 
@@ -64,7 +63,7 @@ class CreateAccountFragment : Fragment() {
             }
         }
 
-        //redirect to log in page
+        // Redirect to log in page
         logInRedirect.setOnClickListener {
             navController.navigate(R.id.action_createAccountFragment_to_signInFragment2)
         }
@@ -145,7 +144,6 @@ class CreateAccountFragment : Fragment() {
                 checkPass = false
             }
         }
-
         auth = Firebase.auth
     }
 
@@ -175,7 +173,6 @@ class CreateAccountFragment : Fragment() {
                 }
             }
     }
-
 
     private fun createAccountWithUsername(
         emailInput: TextInputEditText,
@@ -208,5 +205,3 @@ private fun updateUI(user: FirebaseUser?) {
 private fun reload() {
 
 }
-
-

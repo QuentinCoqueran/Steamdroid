@@ -23,7 +23,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
-
 class WishListFragment : Fragment() {
     private val handler = Handler()
     private var isFinished = true
@@ -67,6 +66,7 @@ class WishListFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
+            // UNIFORMISER LES ERREURS
                 println(e)
             }
             showWaitingDots()
@@ -78,7 +78,6 @@ class WishListFragment : Fragment() {
                             RetrofitBuilder.gameDetailsService.getGame(id, lang, currency)
                                 .await()
                         }
-
                         if (game.gameName != null && game.editorName != null) {
                             products = products.plus(
                                 Product(
@@ -105,11 +104,9 @@ class WishListFragment : Fragment() {
                                 navController.navigateUp()
                             }
                         }
-
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-
                 }
             }
             isFinished = true
@@ -129,7 +126,6 @@ class WishListFragment : Fragment() {
         updateDots()
     }
 
-
     private fun updateDots() {
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarWishlist)
         if (isFinished) {
@@ -140,7 +136,6 @@ class WishListFragment : Fragment() {
         }
         handler.postDelayed({ updateDots() }, 1000)
     }
-
 }
 
 

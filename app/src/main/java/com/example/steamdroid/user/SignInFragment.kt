@@ -22,16 +22,13 @@ import com.google.firebase.ktx.Firebase
 
 class SignInFragment : Fragment() {
 
-    // [START declare_auth]
     private lateinit var auth: FirebaseAuth
     private lateinit var navController: NavController
 
-    // [END declare_auth]
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.sign_in, container, false)
     }
 
@@ -57,6 +54,7 @@ class SignInFragment : Fragment() {
         createAccountRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
         }
+        // A SUPPRIMER
         //GAME DETAILS
 /*        forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_gameDetailsFragment)
@@ -65,7 +63,6 @@ class SignInFragment : Fragment() {
 /*        forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_homeFragment)
         }*/
-        //FORGOT PASSWORD
         forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_initializationPasswordFragment)
         }
@@ -81,13 +78,12 @@ class SignInFragment : Fragment() {
 
     public override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if user is signed in
         val currentUser = auth.currentUser
         if (currentUser != null) {
             reload();
         }
     }
-    // [END on_start_check_user]
 
     fun signIn(email: String, password: String, redirect: Boolean = true) {
         auth = Firebase.auth
@@ -100,7 +96,6 @@ class SignInFragment : Fragment() {
                             navController.navigate(R.id.action_signInFragment_to_homeFragment)
                         }
                     } else {
-                        // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.exception)
                         Toast.makeText(
                             context, "Authentication failed.",
