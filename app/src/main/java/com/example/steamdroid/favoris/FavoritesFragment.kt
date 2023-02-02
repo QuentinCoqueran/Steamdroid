@@ -1,7 +1,6 @@
 package com.example.steamdroid.favoris
 
 import RetrofitBuilder
-import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -17,13 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
 import com.example.steamdroid.databinding.FavorisBinding
-import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.home.HomeFragment
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class FavoritesFragment : Fragment() {
@@ -60,23 +59,36 @@ class FavoritesFragment : Fragment() {
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
         val currency = if (currentLocale == "fr") "fr" else "us"
-        getFavoritesListId() { it ->
+        val auth = FirebaseAuth.getInstance()
+        var favoritesListId = listOf<Number>();
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection("favorites").whereEqualTo("email", auth.currentUser?.email)
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val documents = withContext(Dispatchers.Default) {
+                    docRef.get().await()
+                }
+                if (!documents.isEmpty) {
+                    for (document in documents) {
+                        favoritesListId = favoritesListId.plus(document.get("id") as Number)
+                    }
+                }
+            } catch (e: Exception) {
+                println(e)
+            }
             showWaitingDots()
-            if (it != null) {
-                for (id in it) {
+            for (id in favoritesListId) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    try {
+                        val game = withContext(Dispatchers.Default) {
+                            RetrofitBuilder.gameDetailsService.getGame(id, lang, currency)
+                                .await()
+                        }
 
-                    GlobalScope.launch(Dispatchers.Main) {
-                        try {
-
-                            val game = withContext(Dispatchers.Default){
-                                delay(500)
-                                RetrofitBuilder.gameDetailsService.getGame(id, lang, currency).await()
-                            }
-
-                            if (game.gameName != null && game.editorName != null) {
-                                products = products.plus(
-                                    Product(
-                                        id,
+                        if (game.gameName != null && game.editorName != null) {
+                            products = products.plus(
+                                Product(
+                                    id,
                                     game.gameName.orEmpty(),
                                     game.price.orEmpty(),
                                     game.backGroundImg.orEmpty(),
@@ -86,46 +98,32 @@ class FavoritesFragment : Fragment() {
                             )
                         }
                         count++
-                        if (count == it.size) {
+                        if (count == favoritesListId.size) {
                             val linearMyLikes =
                                 view.findViewById<LinearLayout>(R.id.linear_layout_likes)
                             linearMyLikes.visibility = View.GONE
                             recyclerView.visibility = View.VISIBLE
-                            val closeBtn: ImageView = view.findViewById(R.id.close_favoris)
+                            val adapter = ProductAdapter(products, this@FavoritesFragment)
+                            recyclerView.adapter = adapter
+                            val closeBtn: ImageView =
+                                view.findViewById(R.id.close_favoris)
                             closeBtn.setOnClickListener {
                                 navController.navigateUp()
                             }
-                            val adapter = ProductAdapter(products, this@FavoritesFragment)
-                                recyclerView.adapter = adapter
-                            }
-
-                        }catch (e: Exception){
-                            e.printStackTrace()
                         }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
+
                 }
             }
             isFinished = true
         }
         val closeBtn: ImageView = view.findViewById(R.id.close_favoris)
-        closeBtn.setOnClickListener {
+        closeBtn.setOnClickListener()
+        {
             navController.navigateUp()
-        }
-    }
-
-    private fun getFavoritesListId(callback: (List<Number>?) -> Unit) {
-        //CURRENT USER
-        val auth = FirebaseAuth.getInstance()
-        var favoritesListId = listOf<Number>();
-        val db = FirebaseFirestore.getInstance()
-        val docRef = db.collection("favorites").whereEqualTo("email", auth.currentUser?.email)
-        docRef.get().addOnSuccessListener { documents ->
-            if (!documents.isEmpty) {
-                for (document in documents) {
-                    favoritesListId = favoritesListId.plus(document.get("id") as Number)
-                }
-                callback(favoritesListId)
-            }
         }
     }
 

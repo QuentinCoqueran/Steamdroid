@@ -67,7 +67,10 @@ class GameDetailsFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
         val collectionFav = db.collection("favorites")
         val collectionWish = db.collection("wishlist")
-        collectionFav.whereEqualTo("id", 730).get()
+        collectionFav
+            .whereEqualTo("id", 730)
+            .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
+            .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     likeButton.setImageResource(R.drawable.like)
@@ -75,7 +78,10 @@ class GameDetailsFragment : Fragment() {
                     likeButton.setImageResource(R.drawable.like_full)
                 }
             }
-        collectionWish.whereEqualTo("id", 730).get()
+        collectionWish
+            .whereEqualTo("id", 730)
+            .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
+            .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     wishlistButton.setImageResource(R.drawable.whishlist)
@@ -125,12 +131,13 @@ class GameDetailsFragment : Fragment() {
 
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                val game = withContext(Dispatchers.Default){
+                val game = withContext(Dispatchers.Default) {
                     RetrofitBuilder.gameDetailsService.getGame(730, lang, currency).await()
                 }
 
                 if (game.gameName != null) {
-                    Glide.with(this@GameDetailsFragment).load(game.backGroundImg).into(backgroundImage)
+                    Glide.with(this@GameDetailsFragment).load(game.backGroundImg)
+                        .into(backgroundImage)
                     Glide.with(this@GameDetailsFragment).load(game.icone).into(gameIcon)
                     Glide.with(this@GameDetailsFragment)
                         .load(game.backGroundImgTitle)
@@ -154,7 +161,7 @@ class GameDetailsFragment : Fragment() {
                     gameDescription.setTextColor(resources.getColor(R.color.white))
                 }
 
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
             }
         }
@@ -166,7 +173,10 @@ class GameDetailsFragment : Fragment() {
         val auth = FirebaseAuth.getInstance()
         likeButton.setOnClickListener {
             val collection = db.collection("favorites")
-            collection.whereEqualTo("id", 730).get()
+            collection
+                .whereEqualTo("id", 730)
+                .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
+                .get()
                 .addOnSuccessListener { documents ->
                     if (documents.isEmpty) {
                         val docRef = collection.document()
@@ -199,36 +209,39 @@ class GameDetailsFragment : Fragment() {
         }
         wishlistButton.setOnClickListener {
             val collection = db.collection("wishlist")
-            collection.whereEqualTo("id", 730).get()
+            collection
+                .whereEqualTo("id", 730)
+                .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
+                .get()
                 .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    val docRef = collection.document()
-                    docRef.set(
-                        mapOf(
-                            "id" to 730,
-                            "email" to auth.currentUser?.email,
+                    if (documents.isEmpty) {
+                        val docRef = collection.document()
+                        docRef.set(
+                            mapOf(
+                                "id" to 730,
+                                "email" to auth.currentUser?.email,
+                            )
                         )
-                    )
-                        .addOnSuccessListener {
-                            wishlistButton.setImageResource(R.drawable.whishlist_full)
-                            Toast.makeText(
-                                context,
-                                getString(R.string.wishlist_button_success),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            .addOnSuccessListener {
+                                wishlistButton.setImageResource(R.drawable.whishlist_full)
+                                Toast.makeText(
+                                    context,
+                                    getString(R.string.wishlist_button_success),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                    } else {
+                        documents.forEach {
+                            collection.document(it.id).delete()
                         }
-                } else {
-                    documents.forEach {
-                        collection.document(it.id).delete()
+                        wishlistButton.setImageResource(R.drawable.whishlist)
+                        Toast.makeText(
+                            context,
+                            getString(R.string.wishlist_button_delete),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                    wishlistButton.setImageResource(R.drawable.whishlist)
-                    Toast.makeText(
-                        context,
-                        getString(R.string.wishlist_button_delete),
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
-            }
         }
     }
 }

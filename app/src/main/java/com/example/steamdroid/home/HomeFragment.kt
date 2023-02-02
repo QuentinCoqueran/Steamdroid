@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
-        //isConnected()
+        isConnected()
         //LOADER
         isFinished = false
 
@@ -336,29 +336,19 @@ class HomeFragment : Fragment() {
 
     @WorkerThread
     fun setRecycler(list: MutableList<Product>) {
-
         ContextCompat.getMainExecutor(this.requireContext()).execute {
-
-
-
             // This is where your UI code goes.
             println("FINISH !")
             val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view)
-
             println("products GET")
-
             isFinished = true
-
             println(" 1 products size : ${list.size}")
-
             recyclerView.adapter = ProductAdapter(list as List<Product>, this)
             println("adapter set")
             recyclerView.layoutManager = LinearLayoutManager(this@HomeFragment.context)
             println("layout set")
             recyclerView.setHasFixedSize(true)
             println("has fixed size")
-
-
         }
     }
 
