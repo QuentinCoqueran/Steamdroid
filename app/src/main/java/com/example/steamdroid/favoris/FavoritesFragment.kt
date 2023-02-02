@@ -20,6 +20,7 @@ import com.example.steamdroid.databinding.FavorisBinding
 import com.example.steamdroid.game_details.GameDetailsRequest
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -109,9 +110,11 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun getFavoritesListId(callback: (List<Number>?) -> Unit) {
+        //CURRENT USER
+        val auth = FirebaseAuth.getInstance()
         var favoritesListId = listOf<Number>();
         val db = FirebaseFirestore.getInstance()
-        val docRef = db.collection("favorites")
+        val docRef = db.collection("favorites").whereEqualTo("email", auth.currentUser?.email)
         docRef.get().addOnSuccessListener { documents ->
             if (!documents.isEmpty) {
                 for (document in documents) {

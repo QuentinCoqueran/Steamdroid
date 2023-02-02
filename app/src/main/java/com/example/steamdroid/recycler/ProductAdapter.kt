@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
 import com.example.steamdroid.model.Product
 
-class ProductAdapter(private var products : List<Product>) : RecyclerView.Adapter<ProductViewHolder>() {
+class ProductAdapter(private var products: List<Product>) :
+    RecyclerView.Adapter<ProductViewHolder>() {
     override fun getItemCount(): Int = products.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
