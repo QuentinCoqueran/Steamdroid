@@ -68,7 +68,6 @@ class SignInFragment : Fragment() {
         forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_initializationPasswordFragment)
         }
-
     }
 
     private fun isConnected() {

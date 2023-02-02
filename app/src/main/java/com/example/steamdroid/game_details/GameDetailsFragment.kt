@@ -58,6 +58,24 @@ class GameDetailsFragment : Fragment() {
         val currency = if (currentLocale == "fr") "fr" else "us"
 
         val db = FirebaseFirestore.getInstance()
+        val collectionFav = db.collection("favorites")
+        val collectionWish = db.collection("wishlist")
+        collectionFav.whereEqualTo("id", 730).get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    likeButton.setImageResource(R.drawable.like)
+                } else {
+                    likeButton.setImageResource(R.drawable.like_full)
+                }
+            }
+        collectionWish.whereEqualTo("id", 730).get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    wishlistButton.setImageResource(R.drawable.whishlist)
+                } else {
+                    wishlistButton.setImageResource(R.drawable.whishlist_full)
+                }
+            }
 
         descriptionButton.setOnClickListener {
             if (gameDescription.visibility == View.VISIBLE) {
@@ -65,7 +83,6 @@ class GameDetailsFragment : Fragment() {
                 gameDescription.visibility = View.GONE
                 reviewButton.setBackgroundResource(R.drawable.button_border_rounded_game_review)
                 recyclerReview.visibility = View.VISIBLE
-
             } else {
                 descriptionButton.setBackgroundResource(R.drawable.button_border_rounded_game_description)
                 gameDescription.visibility = View.VISIBLE
@@ -128,50 +145,53 @@ class GameDetailsFragment : Fragment() {
         }
         gameDescription.movementMethod = ScrollingMovementMethod()
 
-        val successTextFavorites =
-            if (currentLocale == "fr") "Ajouté aux favoris" else "Added to favorites"
-        val errorTextFavorites =
-            if (currentLocale == "fr") "Ce jeu est deja dans vos favoris" else "This game is already in your favorites"
-        val successTextWishlist =
-            if (currentLocale == "fr") "Ajouté à votre liste de souhaits" else "Added to your wishlist"
-        val errorTextWishlist =
-            if (currentLocale == "fr") "Ce jeu est deja dans votre liste de souhaits" else "This game is already in your wishlist"
-
         likeButton.setOnClickListener {
             val collection = db.collection("favorites")
-            collection.whereEqualTo("id", 10).get()
-                .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        val docRef = collection.document()
-                        docRef.set(mapOf("id" to 10))
-                            .addOnSuccessListener {
-                                Toast.makeText(
-                                    context,
-                                    successTextFavorites,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                    } else {
-                        Toast.makeText(context, errorTextFavorites, Toast.LENGTH_SHORT).show()
+            collection.whereEqualTo("id", 730).get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    val docRef = collection.document()
+                    docRef.set(mapOf("id" to 730))
+                        .addOnSuccessListener {
+                            likeButton.setImageResource(R.drawable.like_full)
+                            Toast.makeText(
+                                context,
+                                getString(R.string.like_button_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                } else {
+                    documents.forEach {
+                        collection.document(it.id).delete()
                     }
+                    likeButton.setImageResource(R.drawable.like)
+                    Toast.makeText(context, getString(R.string.like_button_delete), Toast.LENGTH_SHORT).show()
                 }
+            }
         }
         wishlistButton.setOnClickListener {
             val collection = db.collection("wishlist")
-            collection.whereEqualTo("id", 10).get()
-                .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        val docRef = collection.document()
-                        docRef.set(mapOf("id" to 10))
-                            .addOnSuccessListener {
-                                Toast.makeText(context, successTextWishlist, Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                    } else {
-                        Toast.makeText(context, errorTextWishlist, Toast.LENGTH_SHORT).show()
+            collection.whereEqualTo("id", 730).get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    val docRef = collection.document()
+                    docRef.set(mapOf("id" to 730))
+                        .addOnSuccessListener {
+                            wishlistButton.setImageResource(R.drawable.whishlist_full)
+                            Toast.makeText(
+                                context,
+                                getString(R.string.wishlist_button_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                } else {
+                    documents.forEach {
+                        collection.document(it.id).delete()
                     }
+                    wishlistButton.setImageResource(R.drawable.whishlist)
+                    Toast.makeText(context, getString(R.string.wishlist_button_delete), Toast.LENGTH_SHORT).show()
                 }
-
+            }
         }
     }
 }
