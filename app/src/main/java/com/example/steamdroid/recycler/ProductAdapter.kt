@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
@@ -28,7 +26,7 @@ class ProductAdapter(private var products: List<Product>, private val parentFrag
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         holder.updateView(products[position])
-        holder.game_details_button.setOnClickListener {
+        holder.gameDetailsButton.setOnClickListener {
             val args = Bundle()
             println(products[position].gameId.toString())
             args.putString("gameId", products[position].gameId.toString())

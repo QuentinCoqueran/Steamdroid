@@ -31,7 +31,7 @@ class CreateAccountFragment : Fragment() {
         return inflater.inflate(R.layout.create_account, container, false)
     }
 
-    public override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         val emailInput = view.findViewById<TextInputEditText>(R.id.email_input)
@@ -105,7 +105,7 @@ class CreateAccountFragment : Fragment() {
             }
         }
         // check if validatePassword is same of passwordInput
-        validatePassword.doOnTextChanged() { _, _, _, _ ->
+        validatePassword.doOnTextChanged { _, _, _, _ ->
             validatePassword.setBackgroundResource(R.drawable.input_border_rounded)
             validatePassword.error = null
             checkPass = false
@@ -120,7 +120,7 @@ class CreateAccountFragment : Fragment() {
             }
         }
         // check if validatePassword is same of passwordInput
-        passwordInput.doOnTextChanged() { _, _, _, _ ->
+        passwordInput.doOnTextChanged { _, _, _, _ ->
             passwordInput.setBackgroundResource(R.drawable.input_border_rounded)
             passwordInput.error = null
             checkPass = false
@@ -147,7 +147,7 @@ class CreateAccountFragment : Fragment() {
         auth = Firebase.auth
     }
 
-    public override fun onStart() {
+    override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser

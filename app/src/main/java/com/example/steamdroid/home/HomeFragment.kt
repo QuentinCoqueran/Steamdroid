@@ -1,11 +1,12 @@
 package com.example.steamdroid.home
 
-import RetrofitBuilder
+import com.example.steamdroid.RetrofitBuilder
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -18,11 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
 import com.example.steamdroid.model.Product
+import com.example.steamdroid.model.Rank
 import com.example.steamdroid.recycler.ProductAdapter
 import com.example.steamdroid.search.SearchGame
+import com.example.steamdroid.search.SearchGameFragment
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.*
-import retrofit2.await
 import java.util.*
 
 class HomeFragment : Fragment() {
@@ -48,9 +50,13 @@ class HomeFragment : Fragment() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        SearchGameFragment.needSuspend = true
+        needSuspend = false
+
         navController = Navigation.findNavController(view)
         isConnected()
         //LOADER
+
         isFinished = false
         if (!isLoaded) {
             inProgress = true
@@ -76,9 +82,17 @@ class HomeFragment : Fragment() {
         btnWishList.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_wishListFragment)
         }
+
         val btnFavorite: ImageView = view.findViewById(R.id.image_view_like)
         btnFavorite.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_favoritesFragment)
+        }
+
+        val btnFindOutMore: Button = view.findViewById(R.id.find_out_more_button)
+        btnFindOutMore.setOnClickListener{
+            val args = Bundle()
+            args.putString("gameId", "1237970")
+            navController.navigate(R.id.action_homeFragment_to_gameDetailsFragment, args)
         }
 
         val currentLocale = Locale.getDefault().language
@@ -132,6 +146,7 @@ class HomeFragment : Fragment() {
                                             )
                                         )
                                     }
+
                                     count++
                                     if (count == sendList.size) {
                                         isFinished = true
@@ -151,6 +166,7 @@ class HomeFragment : Fragment() {
                                             "Unknown"
                                         )
                                     )
+
                                     count++
                                     if (count == sendList.size) {
                                         isFinished = true
@@ -221,6 +237,7 @@ class HomeFragment : Fragment() {
                                         )
                                     )
                                 }
+
                                 cpt++
                                 if (cpt == list.size) {
                                     isFinished = true
@@ -238,6 +255,7 @@ class HomeFragment : Fragment() {
                                         "Unknown"
                                     )
                                 )
+
                                 cpt++
                                 if (cpt == list.size) {
                                     isFinished = true
@@ -250,6 +268,7 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+
         val searchInput = view.findViewById<View>(R.id.search_input)
         searchInput.setOnClickListener {
             navController.navigate(R.id.action_homeFragment_to_searchGameFragment)
@@ -283,19 +302,27 @@ class HomeFragment : Fragment() {
         handler.postDelayed({ updateDots() }, 1000)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     @WorkerThread
     fun setRecycler(list: MutableList<Product>) {
         ContextCompat.getMainExecutor(this.requireContext()).execute {
             // This is where your UI code goes.
-            val recyclerView = this@HomeFragment.view?.findViewById<RecyclerView>(R.id.recycler_view_home)
-            isFinished = true
-            if (recyclerView != null) {
-                recyclerView.adapter = ProductAdapter(list as List<Product>, this)
+            GlobalScope.launch(Dispatchers.Main) {
+                val recyclerView = withContext(Dispatchers.Default) {
+                    while (needSuspend)
+                        delay(500)
+                    this@HomeFragment.view?.findViewById<RecyclerView>(R.id.recycler_view_home)
+                }
+
+                isFinished = true
+                if (recyclerView != null) {
+                    recyclerView.adapter = ProductAdapter(list as List<Product>, this@HomeFragment)
+                }
+                if (recyclerView != null) {
+                    recyclerView.layoutManager = LinearLayoutManager(this@HomeFragment.context)
+                }
+                recyclerView?.setHasFixedSize(true)
             }
-            if (recyclerView != null) {
-                recyclerView.layoutManager = LinearLayoutManager(this@HomeFragment.context)
-            }
-            recyclerView?.setHasFixedSize(true)
         }
     }
 

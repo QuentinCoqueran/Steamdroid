@@ -15,13 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.example.steamdroid.R
+import com.example.steamdroid.home.HomeFragment
 import com.example.steamdroid.recycler.GameReviewAdpater
+import com.example.steamdroid.RetrofitBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.util.Locale
 
 class GameDetailsFragment : Fragment() {
@@ -33,8 +32,10 @@ class GameDetailsFragment : Fragment() {
         return inflater.inflate(R.layout.game_details, container, false)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        HomeFragment.needSuspend = true
         navController = Navigation.findNavController(view)
         val gameId = arguments?.getString("gameId")?.toInt()
 
@@ -65,6 +66,7 @@ class GameDetailsFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
         val collectionFav = db.collection("favorites")
         val collectionWish = db.collection("wishlist")
+
         collectionFav
             .whereEqualTo("id", gameId)
             .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
@@ -76,6 +78,7 @@ class GameDetailsFragment : Fragment() {
                     likeButton.setImageResource(R.drawable.like_full)
                 }
             }
+
         collectionWish
             .whereEqualTo("id", gameId)
             .whereEqualTo("email", FirebaseAuth.getInstance().currentUser?.email)
@@ -87,6 +90,7 @@ class GameDetailsFragment : Fragment() {
                     wishlistButton.setImageResource(R.drawable.whishlist_full)
                 }
             }
+
         descriptionButton.setOnClickListener {
             if (gameDescription.visibility == View.VISIBLE) {
                 descriptionButton.setBackgroundResource(R.drawable.btn_border_rounded_transparent_game_description)
@@ -101,6 +105,7 @@ class GameDetailsFragment : Fragment() {
                 recyclerReview.visibility = View.GONE
             }
         }
+
         reviewButton.setOnClickListener {
             if (recyclerReview.visibility == View.VISIBLE) {
                 descriptionButton.setBackgroundResource(R.drawable.button_border_rounded_game_description)
@@ -114,18 +119,25 @@ class GameDetailsFragment : Fragment() {
                 gameDescription.visibility = View.GONE
             }
         }
+
         backButton.setOnClickListener {
             navController.navigateUp()
         }
 
         if (gameId != null) {
-            GameDetailsRequest().getGameReviews(gameId, lang, 1) { reviews ->
-                if (reviews != null) {
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    val reviews = withContext(Dispatchers.Default) {
+                        RetrofitBuilder.gameReviewsService.getGameReviews(gameId, lang, 1).await()
+                    }
+
                     val adapter = GameReviewAdpater(reviews)
                     recyclerReview.adapter = adapter
                     recyclerReview.layoutManager = LinearLayoutManager(context)
                     recyclerReview.setHasFixedSize(true)
                     recyclerReview.adapter = GameReviewAdpater(reviews)
+                } catch (e: Exception){
+                    println(e)
                 }
             }
         }
@@ -166,7 +178,9 @@ class GameDetailsFragment : Fragment() {
         }
 
         gameDescription.movementMethod = ScrollingMovementMethod()
+
         val auth = FirebaseAuth.getInstance()
+
         likeButton.setOnClickListener {
             val collection = db.collection("favorites")
             collection
@@ -203,6 +217,7 @@ class GameDetailsFragment : Fragment() {
                     }
                 }
         }
+
         wishlistButton.setOnClickListener {
             val collection = db.collection("wishlist")
             collection

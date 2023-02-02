@@ -1,6 +1,5 @@
 package com.example.steamdroid.search
 
-
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -13,7 +12,6 @@ data class SearchGame(
 
 class SearchGameTypeAdapter : JsonDeserializer<List<SearchGame>> {
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): List<SearchGame> {
-        println("TEST deserialize")
         val searchGameList = ArrayList<SearchGame>()
         val jsonObject = json?.asJsonObject
         val apps = jsonObject?.get("response")?.asJsonObject?.get("apps")?.asJsonArray

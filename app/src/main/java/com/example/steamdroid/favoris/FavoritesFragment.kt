@@ -1,6 +1,6 @@
 package com.example.steamdroid.favoris
 
-import RetrofitBuilder
+import com.example.steamdroid.RetrofitBuilder
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -40,7 +40,6 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         HomeFragment.needSuspend = true
-
         navController = Navigation.findNavController(view)
         //LOADER
         isFinished = false
@@ -93,6 +92,7 @@ class FavoritesFragment : Fragment() {
                                 )
                             )
                         }
+
                         count++
                         if (count == favoritesListId.size) {
                             val linearMyLikes =
@@ -107,11 +107,9 @@ class FavoritesFragment : Fragment() {
                                 navController.navigateUp()
                             }
                         }
-
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-
                 }
             }
             isFinished = true
@@ -130,7 +128,6 @@ class FavoritesFragment : Fragment() {
         }
         updateDots()
     }
-
 
     private fun updateDots() {
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarFavorites)

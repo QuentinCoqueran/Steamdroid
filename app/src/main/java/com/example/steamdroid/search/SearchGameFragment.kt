@@ -1,6 +1,5 @@
 package com.example.steamdroid.search
 
-import RetrofitBuilder
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -16,6 +15,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
+import com.example.steamdroid.RetrofitBuilder
 import com.example.steamdroid.home.HomeFragment.Companion.inProgress
 import com.example.steamdroid.home.HomeFragment.Companion.isLoaded
 import com.example.steamdroid.home.HomeFragment.Companion.searchGameList
@@ -24,8 +24,11 @@ import com.example.steamdroid.recycler.ProductAdapter
 import kotlinx.coroutines.*
 import java.util.*
 
-
 class SearchGameFragment : Fragment() {
+
+    companion object {
+        var needSuspend = false
+    }
 
     private val handler = Handler()
     private var isFinished = true
@@ -39,9 +42,12 @@ class SearchGameFragment : Fragment() {
         return inflater.inflate(R.layout.search_game, container, false)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+
+        needSuspend = false
 
         val currentLocale = Locale.getDefault().language
         val lang = if (currentLocale == "fr") "french" else "english"
@@ -55,20 +61,9 @@ class SearchGameFragment : Fragment() {
         val cross = view.findViewById<ImageView>(R.id.white_cross)
 
         cross.setOnClickListener {
-            navController.navigateUp();
+            navController.navigateUp()
         }
 
-        /* A SUPPRIMER
-        if (!isLoaded && !inProgress) {
-            inProgress = true
-            val searchGameApi = SteamApiHelperImpl(RetrofitBuilder.searchGameService)
-            GlobalScope.launch {
-                val result = searchGameApi.searchGame()
-                searchGameList = result
-                inProgress = false
-                isLoaded = true
-            }
-        }*/
         val searchInput = view.findViewById<EditText>(R.id.search_input)
         if (searchInput.requestFocus()) {
             activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
@@ -126,6 +121,10 @@ class SearchGameFragment : Fragment() {
                                 inProgress = false
                                 isLoaded = true
                                 cpt++
+                                if (cpt == sendList.size) {
+                                    println("end of loop")
+                                    setRecycler(products)
+                                }
                             }catch (e: Exception){
                                 products.add(
                                     Product(
@@ -138,11 +137,12 @@ class SearchGameFragment : Fragment() {
                                     )
                                 )
                                 cpt++
+                                if (cpt == sendList.size) {
+                                    println("end of loop")
+                                    setRecycler(products)
+                                }
                             }
-                            if (cpt == sendList.size) {
-                                println("end of loop")
-                                setRecycler(products)
-                            }
+
                         }
                     }
                 }
@@ -197,6 +197,11 @@ class SearchGameFragment : Fragment() {
                                 inProgress = false
                                 isLoaded = true
                                 cpt++
+                                if (cpt == list.size) {
+                                    multiplier++
+                                    isFinished = true
+                                    updateRecycler(newList)
+                                }
                             }catch (e: Exception){
                                 newList.add(
                                     Product(
@@ -209,12 +214,13 @@ class SearchGameFragment : Fragment() {
                                     )
                                 )
                                 cpt++
+                                if (cpt == list.size) {
+                                    multiplier++
+                                    isFinished = true
+                                    updateRecycler(newList)
+                                }
                             }
-                            if (cpt == list.size) {
-                                multiplier++
-                                isFinished = true
-                                updateRecycler(newList)
-                            }
+
                         }
                     }
                 }
@@ -222,26 +228,42 @@ class SearchGameFragment : Fragment() {
         })
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     @WorkerThread
     fun setRecycler(list: MutableList<Product>) {
         ContextCompat.getMainExecutor(this.requireContext()).execute {
-            // This is where your UI code goes.
-            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view_home)
-            isFinished = true
-            recyclerView.adapter = ProductAdapter(list as List<Product>,this@SearchGameFragment)
-            recyclerView.layoutManager = LinearLayoutManager(this@SearchGameFragment.context)
-            recyclerView.setHasFixedSize(true)
+            GlobalScope.launch(Dispatchers.Main) {
+                val recyclerView = withContext(Dispatchers.Default) {
+                    while (needSuspend)
+                        delay(500)
+                    this@SearchGameFragment.requireView().findViewById<RecyclerView>(R.id.recycler_view_home)
+                }
+
+                isFinished = true
+                recyclerView.adapter = ProductAdapter(list as List<Product>,this@SearchGameFragment)
+                recyclerView.layoutManager = LinearLayoutManager(this@SearchGameFragment.context)
+                recyclerView.setHasFixedSize(true)
+            }
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     @WorkerThread
     fun updateRecycler(list: MutableList<Product>) {
         ContextCompat.getMainExecutor(this.requireContext()).execute {
-            val recyclerView = this.requireView().findViewById<RecyclerView>(R.id.recycler_view_home)
-            isFinished = true
-            val adapter = recyclerView.adapter as ProductAdapter
-            adapter.updateProducts(list)
-            adapter.notifyItemRangeInserted(adapter.itemCount, list.size)
+            GlobalScope.launch(Dispatchers.Main) {
+                val recyclerView = withContext(Dispatchers.Default) {
+                    while (needSuspend)
+                        delay(500)
+                    this@SearchGameFragment.requireView()
+                        .findViewById<RecyclerView>(R.id.recycler_view_home)
+                }
+
+                isFinished = true
+                val adapter = recyclerView.adapter as ProductAdapter
+                adapter.updateProducts(list)
+                adapter.notifyItemRangeInserted(adapter.itemCount, list.size)
+            }
         }
     }
 

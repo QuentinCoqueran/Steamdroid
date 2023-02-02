@@ -1,6 +1,6 @@
 package com.example.steamdroid.wishlist
 
-import RetrofitBuilder
+import com.example.steamdroid.RetrofitBuilder
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -15,6 +15,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
+import com.example.steamdroid.home.HomeFragment
 import com.example.steamdroid.model.Product
 import com.example.steamdroid.recycler.ProductAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +41,8 @@ class WishListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         navController = Navigation.findNavController(view)
         //LOADER
+        HomeFragment.needSuspend = true
+
         isFinished = false
         //RECYCLER VIEW
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_wishlist)

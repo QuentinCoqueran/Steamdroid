@@ -16,7 +16,6 @@ data class Game (
 )
 
 class GameTypeAdapter : TypeAdapter<Game>() {
-
     override fun read(input: JsonReader): Game {
         val game = Game()
         val token  = input.peek()
@@ -114,7 +113,7 @@ class GameTypeAdapter : TypeAdapter<Game>() {
             }
             input.endObject()
         }
-        return game;
+        return game
     }
 
     override fun write(out: JsonWriter?, value: Game?) {

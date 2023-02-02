@@ -1,4 +1,4 @@
-package com.example.steamdroid.home
+package com.example.steamdroid.model
 
 data class BestSellersResponse(
     val response: Response

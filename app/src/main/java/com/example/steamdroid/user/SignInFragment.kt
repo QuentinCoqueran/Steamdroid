@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-
 class SignInFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
@@ -54,15 +53,7 @@ class SignInFragment : Fragment() {
         createAccountRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
         }
-        // A SUPPRIMER
-        //GAME DETAILS
-/*        forgotPasswordRedirect.setOnClickListener {
-            navController.navigate(R.id.action_signInFragment_to_gameDetailsFragment)
-        }*/
-        //HOME
-/*        forgotPasswordRedirect.setOnClickListener {
-            navController.navigate(R.id.action_signInFragment_to_homeFragment)
-        }*/
+
         forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_initializationPasswordFragment)
         }
@@ -71,17 +62,17 @@ class SignInFragment : Fragment() {
     private fun isConnected() {
         val user = auth.currentUser
         if (user != null) {
-            auth.signOut();
+            auth.signOut()
             navController.navigate(R.id.action_signInFragment_to_homeFragment)
         }
     }
 
-    public override fun onStart() {
+    override fun onStart() {
         super.onStart()
         // Check if user is signed in
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            reload();
+            reload()
         }
     }
 
