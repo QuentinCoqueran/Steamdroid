@@ -161,7 +161,7 @@ class GameDetailsFragment : Fragment() {
                     gameDescription.setTextColor(resources.getColor(R.color.white))
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.error_server), Toast.LENGTH_SHORT).show()
             }
         }
 

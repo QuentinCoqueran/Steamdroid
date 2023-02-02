@@ -91,6 +91,13 @@
         android:textColor="@color/placeholder"
         android:textColorHint="@color/white" />
 
+    <ProgressBar
+        android:id="@+id/progressBarWishlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/create_account"
         android:layout_width="match_parent"

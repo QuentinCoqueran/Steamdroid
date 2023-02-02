@@ -2,29 +2,28 @@ package com.example.steamdroid.user
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.steamdroid.R
-
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 
 class SignInFragment : Fragment() {
-
+    private val handler = Handler()
     private lateinit var auth: FirebaseAuth
     private lateinit var navController: NavController
-
+    private var isFinished = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,21 +47,13 @@ class SignInFragment : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 signIn(email, password)
             } else {
-                Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.error_empty_signin), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
         createAccountRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
         }
-        // A SUPPRIMER
-        //GAME DETAILS
-/*        forgotPasswordRedirect.setOnClickListener {
-            navController.navigate(R.id.action_signInFragment_to_gameDetailsFragment)
-        }*/
-        //HOME
-/*        forgotPasswordRedirect.setOnClickListener {
-            navController.navigate(R.id.action_signInFragment_to_homeFragment)
-        }*/
         forgotPasswordRedirect.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_initializationPasswordFragment)
         }
@@ -76,29 +67,21 @@ class SignInFragment : Fragment() {
         }
     }
 
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            reload();
-        }
-    }
-
     fun signIn(email: String, password: String, redirect: Boolean = true) {
+        isFinished = false
+        showWaitingDots()
         auth = Firebase.auth
         (context as Activity?)?.let {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(it) { task ->
+                    isFinished = true
                     if (task.isSuccessful) {
-                        //redirect to home
                         if (redirect) {
                             navController.navigate(R.id.action_signInFragment_to_homeFragment)
                         }
                     } else {
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
                         Toast.makeText(
-                            context, "Authentication failed.",
+                            context, getString(R.string.error_empty_auth),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -106,11 +89,22 @@ class SignInFragment : Fragment() {
         }
     }
 
-    private fun reload() {
-
+    private fun showWaitingDots() {
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarWishlist)
+        if (progressBar != null) {
+            progressBar.visibility = View.VISIBLE
+        }
+        updateDots()
     }
 
-    companion object {
-        private const val TAG = "EmailPassword"
+    private fun updateDots() {
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarWishlist)
+        if (isFinished) {
+            if (progressBar != null) {
+                progressBar.visibility = View.GONE
+            }
+            return
+        }
+        handler.postDelayed({ updateDots() }, 1000)
     }
 }

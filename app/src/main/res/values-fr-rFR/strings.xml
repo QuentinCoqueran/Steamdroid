@@ -57,4 +57,7 @@
     <string name="empty_likes">empty_likes</string>
     <string name="back_game_details">back_game_details</string>
     <string name="back_ground">back_ground</string>
+    <string name="error_server">Une erreur est survenue, veuillez réessayer</string>
+    <string name="error_empty_signin">Veuillez remplir tous les champs</string>
+    <string name="error_empty_auth">Erreur d\'authentification</string>
 </resources>

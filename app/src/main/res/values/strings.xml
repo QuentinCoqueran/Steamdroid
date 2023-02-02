@@ -52,4 +52,7 @@
     <string name="empty_likes">empty_likes</string>
     <string name="back_game_details">back_game_details</string>
     <string name="back_ground">back_ground</string>
+    <string name="error_server">Error Servor, please try again</string>
+    <string name="error_empty_signin">Please fill in all fields</string>
+    <string name="error_empty_auth">Authentication failed</string>
 </resources>
