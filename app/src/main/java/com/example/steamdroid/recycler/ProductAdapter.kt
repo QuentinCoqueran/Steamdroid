@@ -29,7 +29,6 @@ class ProductAdapter(private var products: List<Product>, private val parentFrag
         holder.updateView(products[position])
         holder.gameDetailsButton.setOnClickListener {
             val args = Bundle()
-            println(products[position].gameId.toString())
             args.putString("gameId", products[position].gameId.toString())
             when (parentFragment) {
                 is FavoritesFragment -> {
