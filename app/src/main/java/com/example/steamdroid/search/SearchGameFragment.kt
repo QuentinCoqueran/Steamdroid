@@ -125,6 +125,7 @@ class SearchGameFragment : Fragment() {
                                     setRecycler(products)
                                 }
                             }catch (e: Exception){
+                                println("ERERRRRRRROR --> $e")
                                 products.add(
                                     Product(
                                         i.appId,
