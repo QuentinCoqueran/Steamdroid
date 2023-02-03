@@ -122,7 +122,6 @@ class SearchGameFragment : Fragment() {
                                 isLoaded = true
                                 cpt++
                                 if (cpt == sendList.size) {
-                                    println("end of loop")
                                     setRecycler(products)
                                 }
                             }catch (e: Exception){
@@ -138,7 +137,6 @@ class SearchGameFragment : Fragment() {
                                 )
                                 cpt++
                                 if (cpt == sendList.size) {
-                                    println("end of loop")
                                     setRecycler(products)
                                 }
                             }
