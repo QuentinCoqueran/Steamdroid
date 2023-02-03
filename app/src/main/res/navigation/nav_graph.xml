@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main.xml"
     app:startDestination="@id/signInFragment">
 
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.example.steamdroid.user.SignInFragment"
-        android:label="SignInFragment" >
+        android:label="SignInFragment"
+        tools:layout="@layout/sign_in">
         <action
             android:id="@+id/action_signInFragment_to_createAccountFragment"
             app:destination="@id/createAccountFragment" />
@@ -17,9 +19,6 @@
         <action
             android:id="@+id/action_signInFragment_to_initializationPasswordFragment"
             app:destination="@id/initializationPasswordFragment" />
-        <action
-            android:id="@+id/action_signInFragment_to_gameDetailsFragment"
-            app:destination="@id/gameDetailsFragment" />
         <argument
             android:name="email"
             app:argType="string" />
@@ -31,7 +30,8 @@
     <fragment
         android:id="@+id/createAccountFragment"
         android:name="com.example.steamdroid.user.CreateAccountFragment"
-        android:label="CreateAccountFragment" >
+        android:label="CreateAccountFragment"
+        tools:layout="@layout/create_account">
         <action
             android:id="@+id/action_createAccountFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -48,7 +48,8 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.steamdroid.home.HomeFragment"
-        android:label="HomeFragment" >
+        android:label="HomeFragment"
+        tools:layout="@layout/home">
         <action
             android:id="@+id/action_homeFragment_to_wishListFragment"
             app:destination="@id/wishListFragment" />
@@ -71,7 +72,8 @@
     <fragment
         android:id="@+id/initializationPasswordFragment"
         android:name="com.example.steamdroid.user.InitializationPasswordFragment"
-        android:label="InitializationPasswordFragment" >
+        android:label="InitializationPasswordFragment"
+        tools:layout="@layout/initialization_password">
         <action
             android:id="@+id/action_initializationPasswordFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
@@ -82,7 +84,8 @@
     <fragment
         android:id="@+id/wishListFragment"
         android:name="com.example.steamdroid.wishlist.WishListFragment"
-        android:label="WishListFragment" >
+        android:label="WishListFragment"
+        tools:layout="@layout/wishlist">
         <action
             android:id="@+id/action_wishListFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -93,7 +96,8 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.example.steamdroid.favoris.FavoritesFragment"
-        android:label="FavoritesFragment" >
+        android:label="FavoritesFragment"
+        tools:layout="@layout/favoris">
         <action
             android:id="@+id/action_favoritesFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -104,7 +108,8 @@
     <fragment
         android:id="@+id/gameDetailsFragment"
         android:name="com.example.steamdroid.game_details.GameDetailsFragment"
-        android:label="GameDetailsFragment" >
+        android:label="GameDetailsFragment"
+        tools:layout="@layout/game_details">
         <action
             android:id="@+id/action_gameDetailsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -118,7 +123,8 @@
     <fragment
         android:id="@+id/searchGameFragment"
         android:name="com.example.steamdroid.search.SearchGameFragment"
-        android:label="SearchGameFragment" >
+        android:label="SearchGameFragment"
+        tools:layout="@layout/search_game">
         <action
             android:id="@+id/action_searchGameFragment_to_gameDetailsFragment"
             app:destination="@id/gameDetailsFragment" />
