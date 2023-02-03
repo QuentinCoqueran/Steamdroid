@@ -18,6 +18,7 @@ import com.example.steamdroid.R
 import com.example.steamdroid.home.HomeFragment
 import com.example.steamdroid.recycler.GameReviewAdpater
 import com.example.steamdroid.RetrofitBuilder
+import com.example.steamdroid.search.SearchGameFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
@@ -35,6 +36,7 @@ class GameDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         HomeFragment.needSuspend = true
+        SearchGameFragment.needSuspend = true
         navController = Navigation.findNavController(view)
         val gameId = arguments?.getString("gameId")?.toInt()
 

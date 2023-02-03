@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.steamdroid.R
 import com.example.steamdroid.RetrofitBuilder
+import com.example.steamdroid.home.HomeFragment
 import com.example.steamdroid.home.HomeFragment.Companion.inProgress
 import com.example.steamdroid.home.HomeFragment.Companion.isLoaded
 import com.example.steamdroid.home.HomeFragment.Companion.searchGameList
@@ -28,6 +29,8 @@ class SearchGameFragment : Fragment() {
 
     companion object {
         var needSuspend = false
+        var allProducts = mutableListOf<Product>()
+        var allSearchGames = mutableListOf<SearchGame>()
     }
 
     private val handler = Handler()
@@ -53,10 +56,25 @@ class SearchGameFragment : Fragment() {
         val lang = getString(R.string.lang)
         val currency = getString(R.string.currency)
 
+        //RECYCLER
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_home)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+        //////////////////////////////////////////
+
         showWaitingDots()
 
         var actualList = mutableListOf<SearchGame>()
+
+        if (allProducts.isNotEmpty()){
+            val adapter = ProductAdapter(allProducts, this)
+            recyclerView.adapter = adapter
+            println("size AP: ${allProducts.size}")
+            println("size AS: ${allSearchGames.size}")
+            val list = allSearchGames.subList(allProducts.size, allSearchGames.size).toMutableList()
+            actualList = list
+        }
+
         var multiplier = 1
         val cross = view.findViewById<ImageView>(R.id.white_cross)
 
@@ -85,6 +103,9 @@ class SearchGameFragment : Fragment() {
                         )
                     } as MutableList<SearchGame>
                     actualList = list
+                    allSearchGames = actualList.toMutableList()
+                    println("AS first size: ${allSearchGames.size}")
+
                     var max = 5
                     if (list.size in 1..4) {
                         max = list.size
@@ -96,10 +117,14 @@ class SearchGameFragment : Fragment() {
                     val sendList = list.subList(0, max).toMutableList()
                     list.subList(0, max).clear()
                     actualList = list
+
+                    println("AS second size: ${allSearchGames.size}")
+
+
                     val products = mutableListOf<Product>()
                     var cpt = 0
-                    GlobalScope.launch(Dispatchers.Main) {
-                        for (i in sendList) {
+                    for (i in sendList) {
+                        GlobalScope.launch(Dispatchers.Main) {
                             try {
                                 val result = withContext(Dispatchers.Default) {
                                     delay(500)
@@ -122,10 +147,12 @@ class SearchGameFragment : Fragment() {
                                 isLoaded = true
                                 cpt++
                                 if (cpt == sendList.size) {
-                                    println("end of loop")
+                                    allProducts = products
+                                    println("AP first size: ${allProducts.size}")
                                     setRecycler(products)
                                 }
                             }catch (e: Exception){
+                                println("ERERRRRRRROR --> $e")
                                 products.add(
                                     Product(
                                         i.appId,
@@ -138,7 +165,7 @@ class SearchGameFragment : Fragment() {
                                 )
                                 cpt++
                                 if (cpt == sendList.size) {
-                                    println("end of loop")
+                                    allProducts = products
                                     setRecycler(products)
                                 }
                             }
@@ -201,6 +228,7 @@ class SearchGameFragment : Fragment() {
                                     multiplier++
                                     isFinished = true
                                     updateRecycler(newList)
+                                    allProducts.addAll(newList)
                                 }
                             }catch (e: Exception){
                                 newList.add(
@@ -218,6 +246,7 @@ class SearchGameFragment : Fragment() {
                                     multiplier++
                                     isFinished = true
                                     updateRecycler(newList)
+                                    allProducts.addAll(newList)
                                 }
                             }
 
@@ -261,7 +290,6 @@ class SearchGameFragment : Fragment() {
 
                 isFinished = true
                 val adapter = recyclerView.adapter as ProductAdapter
-                adapter.updateProducts(list)
                 adapter.notifyItemRangeInserted(adapter.itemCount, list.size)
             }
         }
