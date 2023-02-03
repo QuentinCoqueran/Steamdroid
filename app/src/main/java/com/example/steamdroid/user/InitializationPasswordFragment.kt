@@ -31,6 +31,8 @@ class InitializationPasswordFragment : Fragment() {
         val sendEmail = view.findViewById<Button>(R.id.reset_action_button)
         val emailInput = view.findViewById<TextInputEditText>(R.id.email_input_reset)
 
+        emailInput.setText(arguments?.getString("email"))
+
         sendEmail.setOnClickListener {
             val email = emailInput.text.toString()
             if (email.isNotEmpty()) {
@@ -48,7 +50,9 @@ class InitializationPasswordFragment : Fragment() {
             }
         }
         logInRedirect.setOnClickListener {
-            navController.navigate(R.id.action_initializationPasswordFragment_to_signInFragment)
+            val args = Bundle()
+            args.putString("email", emailInput.text.toString())
+            navController.navigate(R.id.action_initializationPasswordFragment_to_signInFragment, args)
         }
         auth = FirebaseAuth.getInstance()
     }

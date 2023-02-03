@@ -43,6 +43,10 @@ class CreateAccountFragment : Fragment() {
         val logInRedirect = view.findViewById<Button>(R.id.log_in_redirect)
         val validatePassword = view.findViewById<TextInputEditText>(R.id.password_confirm_label)
         var checkPass = false
+
+        emailInput.setText(arguments?.getString("email"))
+        passwordInput.setText(arguments?.getString("password"))
+
         createAccount.setOnClickListener {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
@@ -66,7 +70,10 @@ class CreateAccountFragment : Fragment() {
         }
 
         logInRedirect.setOnClickListener {
-            navController.navigate(R.id.action_createAccountFragment_to_signInFragment2)
+            val args = Bundle()
+            args.putString("email", emailInput.text.toString())
+            args.putString("password", passwordInput.text.toString())
+            navController.navigate(R.id.action_createAccountFragment_to_signInFragment2, args)
         }
 
         usernameInput.doOnTextChanged { text, _, _, _ ->

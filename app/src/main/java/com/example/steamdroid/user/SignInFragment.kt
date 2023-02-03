@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.example.steamdroid.R
 import com.google.firebase.auth.FirebaseAuth
@@ -35,11 +36,18 @@ class SignInFragment : Fragment() {
         navController = Navigation.findNavController(view)
         auth = Firebase.auth
         isConnected()
+
+        val args = Bundle()
+
         val emailInput = view.findViewById<EditText>(R.id.email_input)
         val passwordInput = view.findViewById<TextView>(R.id.password_input)
         val loginButton = view.findViewById<TextView>(R.id.login_button)
         val createAccountRedirect = view.findViewById<TextView>(R.id.create_account_redirect)
         val forgotPasswordRedirect = view.findViewById<TextView>(R.id.text_view)
+
+        emailInput.setText(arguments?.getString("email"))
+        passwordInput.text = arguments?.getString("password")
+
         loginButton.setOnClickListener {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
@@ -51,10 +59,13 @@ class SignInFragment : Fragment() {
             }
         }
         createAccountRedirect.setOnClickListener {
-            navController.navigate(R.id.action_signInFragment_to_createAccountFragment)
+            args.putString("email", emailInput.text.toString())
+            args.putString("password", passwordInput.text.toString())
+            navController.navigate(R.id.action_signInFragment_to_createAccountFragment, args)
         }
         forgotPasswordRedirect.setOnClickListener {
-            navController.navigate(R.id.action_signInFragment_to_initializationPasswordFragment)
+            args.putString("email", emailInput.text.toString())
+            navController.navigate(R.id.action_signInFragment_to_initializationPasswordFragment, args)
         }
     }
 
